@@ -1,6 +1,7 @@
 import {inject, Lazy} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {RestService} from '../../rest-service';
+import {SecureService} from '../../utils/secure-service';
 
 const serviceUri = require('../../host').sales + '/docs/sales';
 const serviceUriSalesVoids = require('../../host').sales + '/docs/salesvoids';
@@ -9,7 +10,7 @@ const serviceUriCardType = require('../../host').master + '/cardtypes';
 const serviceUriPromo = require('../../host').sales + '/promos'; 
 const serviceUriFinishedgood = require('../../host').master + '/finishedgoods';
 
-export class Service extends RestService {
+export class Service extends SecureService {
 
     constructor(http, aggregator) {
         super(http, aggregator);
