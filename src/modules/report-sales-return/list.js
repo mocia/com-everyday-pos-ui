@@ -45,6 +45,12 @@ export class List {
         this.getShift();
                     
         this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => {
+            for(var store of this.stores) {
+                if(store._id.toString() === this.data.filter.storeId.toString()) {
+                    this.data.filter.store = store;
+                    break;
+                }
+            } 
             this.getTargetPerMonth();
             this.getShift();
         });

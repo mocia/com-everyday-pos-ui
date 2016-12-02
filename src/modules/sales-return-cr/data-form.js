@@ -165,6 +165,12 @@ export class DataForm {
             this.addItem();
         });
         this.bindingEngine.propertyObserver(this.data, "storeId").subscribe((newValue, oldValue) => {
+            for(var store of this.stores) {
+                if(store._id.toString() === this.data.storeId.toString()) {
+                    this.data.store = store;
+                    break;
+                }
+            } 
             this.getShift();
             this.refreshPromo(-1, -1);
         });
