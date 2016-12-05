@@ -245,7 +245,7 @@ export class View {
         var hemat = 0;
         hemat += discountSubTotal;
         
-        this.printStruk = ""; 
+        this.printStruk = "";
         this.printStruk += "<table style='width:100%;'>";
         // this.printStruk += "    <tr>";
         // this.printStruk += "        <td colspan='3'> this.data.salesDetail.paymentType </td>";
@@ -402,7 +402,7 @@ export class View {
         this.printStruk += "    <tr>";
         this.printStruk += "        <td colspan='3' style='font-size:7pt;'> <center>TERIMA KASIH ATAS KUNJUNGAN ANDA</center> </td>";
         this.printStruk += "    </tr>";   
-        this.printStruk += "</table>";   
+        this.printStruk += "</table>";
           
     }
 }
