@@ -499,14 +499,14 @@ export class DataForm {
                             if ( indexReturnItem == -1 || indexReturnItem == returnIndex ) 
                             {  
                                 if(results[resultIndex]) 
-                                { 
+                                {
                                     var promoResult = results[resultIndex][0];
                                     if(promoResult) 
                                     {
                                         returnItem.promoId = promoResult._id;
                                         returnItem.promo = promoResult;
                                         if(promoResult.reward.type == "discount-product") {
-                                            for(var reward of promo.reward.rewards) {
+                                            for(var reward of promoResult.reward.rewards) {
                                                 if(reward.unit == "percentage") {
                                                     returnItem.discount1 = reward.discount1;
                                                     returnItem.discount2 = reward.discount2;
