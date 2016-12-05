@@ -18,7 +18,8 @@ export class View {
             this.data = data;
             this.data.dateString = this.getStringDate(new Date(this.data.date));
             this.checkPaymentType();
-            this.generatePrintStruk();
+            //this.generatePrintStruk();
+            this.generatePrintStrukTable();
         })
     }
 
@@ -103,7 +104,7 @@ export class View {
         this.printStruk += "    <div class='col-xs-12'> No. NPWP: 31.579.110.3-532.000 </div>";
         this.printStruk += "</div>";
         this.printStruk += "<div class='row'>";
-        this.printStruk += "    <div class='col-xs-12'> ====================================================== </div>";
+        this.printStruk += "    <div class='col-xs-12'> ================================================================ </div>";
         this.printStruk += "</div>"; 
         this.printStruk += "<div class='row'>";
         this.printStruk += "    <div class='col-xs-3'> Kasir </div>"; 
@@ -118,7 +119,7 @@ export class View {
         this.printStruk += "    <div class='col-xs-9'> " + this.data.dateString + " </div>"; 
         this.printStruk += "</div>"; 
         this.printStruk += "<div class='row'>";
-        this.printStruk += "    <div class='col-xs-12'> ====================================================== </div>";
+        this.printStruk += "    <div class='col-xs-12'> ================================================================ </div>";
         this.printStruk += "</div>";  
         for(var item of this.data.items) {
             var totalPrice = item.quantity * item.price;
@@ -164,7 +165,7 @@ export class View {
             this.printStruk += "</div>";
         } 
         this.printStruk += "<div class='row'>";
-        this.printStruk += "    <div class='col-xs-12'> ====================================================== </div>";
+        this.printStruk += "    <div class='col-xs-12'> ================================================================ </div>";
         this.printStruk += "</div>";   
         this.printStruk += "<div>";
         this.printStruk += "    <div class='row'>";
@@ -218,7 +219,7 @@ export class View {
         this.printStruk += "    <div class='col-xs-12'> Hemat: " + hemat.toLocaleString() + " </div>";
         this.printStruk += "</div>";  
         this.printStruk += "<div class='row'>";
-        this.printStruk += "    <div class='col-xs-12'> ====================================================== </div>";
+        this.printStruk += "    <div class='col-xs-12'> ================================================================ </div>";
         this.printStruk += "</div>";  
         this.printStruk += "<div class='row'>";
         this.printStruk += "    <div class='col-xs-12' style='font-size:6pt;'> <center>Harga sudah termasuk PPN dan tas belanja</center> </div>";
@@ -230,7 +231,7 @@ export class View {
         this.printStruk += "    <div class='col-xs-12' style='font-size:6pt;'> <center>SETELAH TRANSAKSI</center> </div>";
         this.printStruk += "</div>";  
         this.printStruk += "<div class='row'>";
-        this.printStruk += "    <div class='col-xs-12'> ====================================================== </div>";
+        this.printStruk += "    <div class='col-xs-12'> ================================================================ </div>";
         this.printStruk += "</div>";  
         this.printStruk += "<div class='row'>";
         this.printStruk += "    <div class='col-xs-12'> <center>TERIMA KASIH ATAS KUNJUNGAN ANDA</center> </div>";
@@ -245,47 +246,49 @@ export class View {
         hemat += discountSubTotal;
         
         this.printStruk = ""; 
-        this.printStruk += "<table>";
+        this.printStruk += "<table style='width:100%;'>";
         // this.printStruk += "    <tr>";
         // this.printStruk += "        <td colspan='3'> this.data.salesDetail.paymentType </td>";
         // this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> " + this.data.store.name + " </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> " + this.data.store.name + " </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> " + this.data.store.address + " </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> " + this.data.store.address + " </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> " + this.data.store.phone + " </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> " + this.data.store.phone + " </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> No. NPWP: 31.579.110.3-532.000 </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> No. NPWP: 31.579.110.3-532.000 </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> ====================================================== </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> =============================== </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'>";
-        this.printStruk += "            <div class='col-xs-3'> Kasir </div>"; 
-        this.printStruk += "            <div class='col-xs-9'> " + this.data.store.code + "/" + this.data._createdBy + " </div>"; 
+        this.printStruk += "        <td colspan='3' class='text-left'>";
+        this.printStruk += "            Kasir : " + this.data.store.code + "/" + this.data._createdBy;
+        // this.printStruk += "            <div class='col-xs-3'> Kasir </div>"; 
+        // this.printStruk += "            <div class='col-xs-9'> " + this.data.store.code + "/" + this.data._createdBy + " </div>"; 
         this.printStruk += "        </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'>";
-        this.printStruk += "            <div class='col-xs-3'> Nomor </div>"; 
-        this.printStruk += "            <div class='col-xs-9'> " + this.data.code + " </div>";  
+        this.printStruk += "        <td colspan='3' class='text-left'>";
+        this.printStruk += "            Nomor : " + this.data.code;
+        // this.printStruk += "            <div class='col-xs-3'> Nomor </div>"; 
+        // this.printStruk += "            <div class='col-xs-9'> " + this.data.code + " </div>";  
         this.printStruk += "        </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'>";
-        this.printStruk += "            <div class='col-xs-3'> Tanggal </div>"; 
-        this.printStruk += "            <div class='col-xs-9'> " + this.data.dateString + " </div>";  
+        this.printStruk += "        <td colspan='3' class='text-left'>";
+        this.printStruk += "            Tanggal : " + this.data.dateString;
+        // this.printStruk += "            <div class='col-xs-3'> Tanggal </div>"; 
+        // this.printStruk += "            <div class='col-xs-9'> " + this.data.dateString + " </div>";  
         this.printStruk += "        </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> ====================================================== </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> =============================== </td>";
         this.printStruk += "    </tr>";
-        // this.printStruk += "</table>";
          
         for(var item of this.data.items) {
             var totalPrice = item.quantity * item.price;
@@ -296,19 +299,19 @@ export class View {
             hemat += discount1Nominal + discount2Nominal + item.discountNominal + discountSpecialNominal;
             
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td> " + item.item.code + " </td>";
-            this.printStruk += "        <td colspan='2'> " + item.item.name + " </td>";
+            this.printStruk += "        <td class='text-left'> " + item.item.code + " </td>";
+            this.printStruk += "        <td colspan='2' class='text-left'> " + item.item.name + " </td>";
             this.printStruk += "    </tr>";
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td> " + item.quantity.toLocaleString() + " </td>";
-            this.printStruk += "        <td> " + item.price.toLocaleString() + " </td>";
-            this.printStruk += "        <td> " + item.total.toLocaleString() + " </td>";
+            this.printStruk += "        <td class='text-right'> " + item.quantity.toLocaleString() + " X &nbsp; </td>";
+            this.printStruk += "        <td class='text-left'> " + item.price.toLocaleString() + " </td>";
+            this.printStruk += "        <td class='text-right'> " + item.total.toLocaleString() + " </td>";
             this.printStruk += "    </tr>";
              
             if(item.discount1 > 0 || item.discount2 > 0) {
                 
                 this.printStruk += "    <tr>";
-                this.printStruk += "        <td colspan='3'> Disc. Item";
+                this.printStruk += "        <td colspan='3' class='text-left'> Disc. Item ";
                  
                 if(item.discount1 > 0) {
                     this.printStruk += item.discount1 + "%"; 
@@ -321,86 +324,85 @@ export class View {
             } 
             if(item.discountNominal > 0) {
                 this.printStruk += "    <tr>";
-                this.printStruk += "        <td colspan='3'> Disc. Nominal " + item.discountNominal.toLocaleString() + " </td>";
+                this.printStruk += "        <td colspan='3' class='text-left'> Disc. Nominal " + item.discountNominal.toLocaleString() + " </td>";
                 this.printStruk += "    </tr>";
             }
             if(item.specialDiscount > 0) {
                 this.printStruk += "    <tr>";
-                this.printStruk += "        <td colspan='3'> Special Disc. " + item.specialDiscount + "% : " + discountSpecialNominal.toLocaleString() + " </td>";
+                this.printStruk += "        <td colspan='3' class='text-left'> Special Disc. " + item.specialDiscount + "% : " + discountSpecialNominal.toLocaleString() + " </td>";
                 this.printStruk += "    </tr>";
             }
-            // this.printStruk += "    <tr>";
-            // this.printStruk += "        <td colspan='3'> </td>";
-            // this.printStruk += "    </tr>";
         } 
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> ====================================================== </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> =============================== </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td> Total Item : </td>";
-        this.printStruk += "        <td> Subtotal : </td>";
-        this.printStruk += "        <td> " + this.data.subTotal.toLocaleString() + " </td>";
+        this.printStruk += "        <td class='text-left'> Total Item : </td>";
+        this.printStruk += "        <td class='text-right'> Subtotal : </td>";
+        this.printStruk += "        <td class='text-right'> " + this.data.subTotal.toLocaleString() + " </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td> " + this.data.totalProduct.toLocaleString() + " </td>";
-        this.printStruk += "        <td> Disc : </td>";
-        this.printStruk += "        <td> " + discountSubTotal.toLocaleString() + " </td>";
+        this.printStruk += "        <td class='text-left'> " + this.data.totalProduct.toLocaleString() + " </td>";
+        this.printStruk += "        <td class='text-right'> Disc : </td>";
+        this.printStruk += "        <td class='text-right'> " + discountSubTotal.toLocaleString() + " </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='2'> Grand Total : </td>";
-        this.printStruk += "        <td> " + this.data.grandTotal.toLocaleString() + " </td>";
+        this.printStruk += "        <td colspan='2' class='text-right'> Grand Total : </td>";
+        this.printStruk += "        <td class='text-right'> " + this.data.grandTotal.toLocaleString() + " </td>";
         this.printStruk += "    </tr>";
          
         if(this.isCash) {
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td colspan='2'> Tunai : </td>";
-            this.printStruk += "        <td> " + this.data.salesDetail.cashAmount.toLocaleString() + " </td>";
+            this.printStruk += "        <td colspan='2' class='text-right'> Tunai : </td>";
+            this.printStruk += "        <td class='text-right'> " + this.data.salesDetail.cashAmount.toLocaleString() + " </td>";
             this.printStruk += "    </tr>";
         }
         if(this.isCard) { 
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td colspan='2'> " + this.data.salesDetail.card + " Card : </td>";
-            this.printStruk += "        <td> " + this.data.salesDetail.cardAmount.toLocaleString() + " </td>";
+            this.printStruk += "        <td colspan='2' class='text-right'> " + this.data.salesDetail.card + " Card : </td>";
+            this.printStruk += "        <td class='text-right'> " + this.data.salesDetail.cardAmount.toLocaleString() + " </td>";
             this.printStruk += "    </tr>";
         }
         if(this.data.salesDetail.voucher.value > 0) {
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td colspan='2'> Voucher : </td>";
-            this.printStruk += "        <td> " + this.data.salesDetail.voucher.value.toLocaleString() + " </td>";
+            this.printStruk += "        <td colspan='2' class='text-right'> Voucher : </td>";
+            this.printStruk += "        <td class='text-right'> " + this.data.salesDetail.voucher.value.toLocaleString() + " </td>";
             this.printStruk += "    </tr>";
         }
         if(this.isCash) {
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td colspan='2'> Kembali : </td>";
-            this.printStruk += "        <td> " + exchange.toLocaleString() + " </td>";
+            this.printStruk += "        <td colspan='2' class='text-right'> Kembali : </td>";
+            this.printStruk += "        <td class='text-right'> " + exchange.toLocaleString() + " </td>";
             this.printStruk += "    </tr>";
         }
         if(this.isCard) {
+            var cardNumberMasking = "XXXX-XXXX-XXXX-" + this.data.salesDetail.cardNumber.substring(this.data.salesDetail.cardNumber.length - 4, this.data.salesDetail.cardNumber.length);
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td colspan='3'> Bank: " + this.data.salesDetail.bank.name + " - " + this.data.salesDetail.cardNumber + " </td>";
+            this.printStruk += "        <td colspan='3' class='text-left'> Bank: " + this.data.salesDetail.bank.name + " - " + cardNumberMasking + " </td>";
             this.printStruk += "    </tr>";
         }
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> Hemat: " + hemat.toLocaleString() + " </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> Hemat: " + hemat.toLocaleString() + " </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> ====================================================== </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> =============================== </td>";
         this.printStruk += "    </tr>"; 
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> <center>Harga sudah termasuk PPN dan tas belanja</center> </td>";
+        this.printStruk += "        <td colspan='3' style='font-size:8pt;'> <center>Harga sudah termasuk PPN dan tas belanja</center> </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> <center>BARANG CACAT KARENA PRODUSEN DAPAT DITUKAR DALAM 7 HARI</center> </td>";
+        this.printStruk += "        <td colspan='3' style='font-size:7pt;'> <center>BARANG CACAT KARENA PRODUSEN DAPAT DITUKAR DALAM 7 HARI</center> </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> <center>SETELAH TRANSAKSI</center> </td>";
+        this.printStruk += "        <td colspan='3' style='font-size:7pt;'> <center>SETELAH TRANSAKSI</center> </td>";
         this.printStruk += "    </tr>"; 
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> ====================================================== </td>";
+        this.printStruk += "        <td colspan='3' class='text-left'> =============================== </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
-        this.printStruk += "        <td colspan='3'> <center>TERIMA KASIH ATAS KUNJUNGAN ANDA</center> </td>";
+        this.printStruk += "        <td colspan='3' style='font-size:7pt;'> <center>TERIMA KASIH ATAS KUNJUNGAN ANDA</center> </td>";
         this.printStruk += "    </tr>";   
+        this.printStruk += "</table>";   
           
     }
 }
