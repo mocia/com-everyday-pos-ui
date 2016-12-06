@@ -27,8 +27,9 @@ export class Service extends SecureService {
         return super.get(endpoint);
     }
 
-    getSalesVoidsByCode(code) {
-        var endpoint = `${serviceUriSalesVoids}?code=${code}`;
+    getSalesVoidsByCode(storeId, code) {
+        //var endpoint = `${serviceUriSalesVoids}?code=${code}`;
+        var endpoint = `${serviceUriStore}/${storeId}/sales/docs/salesvoids?code=${code}`;
         return super.get(endpoint);
     }
 

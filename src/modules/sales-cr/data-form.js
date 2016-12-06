@@ -128,7 +128,7 @@ export class DataForm {
     
     search() {
         var reference = this.data.reference
-        this.service.getSalesVoidsByCode(this.data.reference)
+        this.service.getSalesVoidsByCode(this.data.storeId, this.data.reference)
             .then(salesVoidsResult => {
                 var salesVoids = salesVoidsResult[0]
                 if (salesVoids) {
