@@ -4,6 +4,7 @@ import {RestService} from '../../rest-service';
 import {SecureService} from '../../utils/secure-service';
 
 const serviceUri = require('../../host').sales + '/docs/sales';
+const serviceUriStore = require('../../host').store;
 const serviceUriSalesVoids = require('../../host').sales + '/docs/salesvoids';
 const serviceUriBank = require('../../host').master + '/banks';
 const serviceUriCardType = require('../../host').master + '/cardtypes';
@@ -16,8 +17,8 @@ export class Service extends SecureService {
         super(http, aggregator);
     }
 
-    search(keyword) {
-        var endpoint = `${serviceUri}?keyword=${keyword}`;
+    search(storeId, keyword) {
+        var endpoint = `${serviceUriStore}/${storeId}/sales/docs/sales?keyword=${keyword}`;
         return super.get(endpoint);
     }
 

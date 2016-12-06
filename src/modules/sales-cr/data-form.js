@@ -17,7 +17,7 @@ export class DataForm {
         this.bindingEngine = bindingEngine;
         this.session = session; 
         
-        this.stores = session.stores; 
+        //this.stores = session.stores; 
         
         this.isCard = false;
         this.isCash = false;
@@ -77,9 +77,9 @@ export class DataForm {
     }
 
     attached() {
-        this.data.storeId = this.stores[0]._id;
-        this.data.store = this.stores[0];
-        this.getShift();
+        this.data.storeId = this.session.store._id;
+        this.data.store = this.session.store;
+        this.data.shift = this.session.shift;
         
         this.data.datePicker = this.getStringDate(new Date());
         this.data.date = new Date();
@@ -108,30 +108,12 @@ export class DataForm {
                 }
             });
         this.bindingEngine.propertyObserver(this.data, "storeId").subscribe((newValue, oldValue) => {
-            for(var store of this.stores) {
-                if(store._id.toString() === this.data.storeId.toString()) {
-                    this.data.store = store;
-                    break;
-                }
-            } 
-            this.getShift();
             this.refreshPromo(-1);
         });
         this.bindingEngine.propertyObserver(this.data, "date").subscribe((newValue, oldValue) => {
             this.refreshPromo(-1);
         }); 
-    }
-
-    getShift(){
-        var today = new Date(); 
-        for (var shift of this.data.store.shifts) {
-            var dateFrom = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateFrom)));
-            var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
-            if (dateFrom < today && today < dateTo) {
-                this.data.shift = shift.shift;
-            }
-        }
-    }
+    } 
     
     search() {
         var reference = this.data.reference
@@ -140,8 +122,8 @@ export class DataForm {
                 var salesVoids = salesVoidsResult[0]
                 if (salesVoids) {
                     if (salesVoids.isVoid == true) {
-                        this.data.store = salesVoids.store;
-                        this.data.storeId = salesVoids.storeId;
+                        //this.data.store = salesVoids.store;
+                        //this.data.storeId = salesVoids.storeId;
                         this.data.datePicker = this.getStringDate(new Date(salesVoids.date));
                         this.data.date = new Date(salesVoids.date);
                         this.data.reference = salesVoids.code;
@@ -172,14 +154,7 @@ export class DataForm {
             .catch(e => {
                 console.log(e);
             })
-    }
-
-
-    storeChanged(e) {
-        var store = e.detail;
-        if (store)
-            this.data.storeId = store._id;
-    }
+    } 
 
     addItem() {
         var item = {};

@@ -77,9 +77,9 @@ export class DataForm {
     }
     
     attached() {    
-        this.data.storeId = this.stores[0]._id;
-        this.data.store = this.stores[0];
-        this.getShift();
+        this.data.storeId = this.session.store._id;
+        this.data.store = this.session.store;
+        this.data.shift = this.session.shift;
         
         this.itemReturs = [];
         this.isCard = false;
@@ -165,36 +165,12 @@ export class DataForm {
             this.addItem();
         });
         this.bindingEngine.propertyObserver(this.data, "storeId").subscribe((newValue, oldValue) => {
-            for(var store of this.stores) {
-                if(store._id.toString() === this.data.storeId.toString()) {
-                    this.data.store = store;
-                    break;
-                }
-            } 
-            this.getShift();
             this.refreshPromo(-1, -1);
         });
         this.bindingEngine.propertyObserver(this.data, "date").subscribe((newValue, oldValue) => {
             this.refreshPromo(-1, -1);
         });
-    }  
-    
-    getShift() {
-        var today = new Date();
-        for(var shift of this.data.store.shifts) { 
-            var dateFrom = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateFrom)));
-            var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
-            if( dateFrom < today && today < dateTo ) { 
-                this.data.shift = shift.shift;
-            }
-        }
     }
-    
-    storeChanged(e) {
-        var store = e.detail;
-        if (store)
-            this.data.storeId = store._id;
-    } 
     
     salesChanged(e) {
         var sales = e.detail;

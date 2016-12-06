@@ -15,11 +15,11 @@ export class Service extends SecureService {
         super(http, aggregator);
     }
 
-    search(keyword) {
-        var endpoint = `${serviceUri}?keyword=${keyword}`;
+    search(storeId, keyword) {
+        var endpoint = `${serviceUriStore}/${storeId}/sales/docs/salesreturns?keyword=${keyword}`;
         return super.get(endpoint);
     }
-
+    
     getById(id) {
         var endpoint = `${serviceUri}/${id}`;
         return super.get(endpoint);

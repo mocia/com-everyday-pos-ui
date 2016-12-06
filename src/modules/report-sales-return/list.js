@@ -7,8 +7,6 @@ import {Session} from '../../utils/session';
 @inject(Router, Service, BindingEngine, Session)
 export class List {
 
-    //storeApiUri = require('../../host').master + '/stores';
-
     constructor(router, service, bindingEngine, session) {
         this.router = router;
         this.service = service;
@@ -38,21 +36,13 @@ export class List {
     }
 
     attached() {
-        this.shifts = [];
-        this.data.filter.storeId = this.stores[0]._id;
-        this.data.filter.store = this.stores[0];
+        this.data.filter.shift = 1;
+        this.data.filter.storeId = this.session.store._id;
+        this.data.filter.store =  this.session.store;
         this.getTargetPerMonth();
-        this.getShift();
                     
         this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => {
-            for(var store of this.stores) {
-                if(store._id.toString() === this.data.filter.storeId.toString()) {
-                    this.data.filter.store = store;
-                    break;
-                }
-            } 
             this.getTargetPerMonth();
-            this.getShift();
         });
     }
     
@@ -63,14 +53,6 @@ export class List {
                     this.targetPerMonth = this.data.filter.store.salesTarget;
     }
     
-    getShift() {
-        this.shifts = []; 
-        for (var shift of this.data.filter.store.shifts) {
-            this.shifts.push(shift.shift);
-        }
-        this.data.filter.shift = this.shifts[0];
-    }
-
     filter() {
         this.error = { filter: {}, results: [] };
         var datefrom = new Date(this.data.filter.dateFrom);

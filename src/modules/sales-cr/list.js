@@ -1,15 +1,18 @@
 import {inject, Lazy} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 import {Service} from './service';
+import {Session} from '../../utils/session';
 
 
-@inject(Router, Service)
+@inject(Router, Service, Session)
 export class List {
     data = [];
-    constructor(router, service) {
+    constructor(router, service, session) {
         this.router = router;
         this.service = service;
+        this.session = session;
         this.filter = "";
+        this.storeId = this.session.store._id;
     }
 
     activate() {
@@ -17,7 +20,7 @@ export class List {
     }
     
     getData() {
-        this.service.search(this.filter)
+        this.service.search(this.storeId, this.filter)
             .then(data => { 
                 this.data = data;
                 for(var i of this.data) {
