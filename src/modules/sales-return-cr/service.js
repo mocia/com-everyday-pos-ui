@@ -4,6 +4,7 @@ import {RestService} from '../../rest-service';
 import {SecureService} from '../../utils/secure-service';
 
 const serviceUri = require('../../host').sales + '/docs/salesreturns';
+const serviceUriStore = require('../../host').store;
 const serviceUriBank = require('../../host').master + '/banks';
 const serviceUriCardType = require('../../host').master + '/cardtypes';
 const serviceUriPromo = require('../../host').sales + '/promos'; 
