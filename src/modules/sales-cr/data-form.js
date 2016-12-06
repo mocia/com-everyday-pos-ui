@@ -16,7 +16,8 @@ export class DataForm {
         this.service = service;
         this.bindingEngine = bindingEngine;
         this.session = session; 
-        
+        this.readOnlyTrue = true;
+        this.readOnlyFalse = false;
         //this.stores = session.stores; 
         
         this.isCard = false;
@@ -113,6 +114,16 @@ export class DataForm {
         this.bindingEngine.propertyObserver(this.data, "date").subscribe((newValue, oldValue) => {
             this.refreshPromo(-1);
         }); 
+        this.bindingEngine.propertyObserver(this.data.salesDetail.voucher, "value").subscribe((newValue, oldValue) => {
+            this.refreshVoucher();
+        }); 
+        this.bindingEngine.propertyObserver(this.data.salesDetail, "cardAmount").subscribe((newValue, oldValue) => {
+            this.refreshDetail();
+        });     
+        this.bindingEngine.propertyObserver(this.data.salesDetail, "cashAmount").subscribe((newValue, oldValue) => {
+            this.refreshDetail();
+        });        
+            
     } 
     
     search() {
@@ -237,6 +248,7 @@ export class DataForm {
     }
 
     refreshVoucher() {
+        console.log(this.data.salesDetail.voucher.value);
         this.data.salesDetail.cashAmount = 0;
         this.refreshDetail();
     }
@@ -371,11 +383,11 @@ export class DataForm {
                                 if (promo.reward.type == "discount-product") {
                                     for (var reward of promo.reward.rewards) {
                                         if (reward.unit == "percentage") {
-                                            item.discount1 = reward.discount1;
-                                            item.discount2 = reward.discount2;
+                                            item.discount1 = parseInt(reward.discount1);
+                                            item.discount2 = parseInt(reward.discount2);
                                         }
                                         else if (reward.unit == "nominal") {
-                                            item.discountNominal = reward.nominal;
+                                            item.discountNominal = parseInt(reward.nominal);
                                         }
                                     }
                                 }
