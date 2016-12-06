@@ -14,7 +14,7 @@ export class List {
         this.service = service;
         this.bindingEngine = bindingEngine;
         this.session = session;
-        this.stores = session.stores; 
+        this.stores = this.session.stores; 
 
         this.data = { filter: {}, results: [] };
         this.error = { filter: {}, results: [] };
@@ -37,21 +37,13 @@ export class List {
     }
 
     attached() {
-        this.shifts = [];
-        this.data.filter.storeId = this.stores[0]._id;
-        this.data.filter.store = this.stores[0];
+        this.data.filter.shift = 1;
+        this.data.filter.storeId = this.session.store._id;
+        this.data.filter.store = this.session.store;
         this.getTargetPerMonth();
-        this.getShift();
                     
         this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => {
-            for(var store of this.stores) { 
-                if(store._id.toString() === this.data.filter.storeId.toString()) {
-                    this.data.filter.store = store; 
-                    break;
-                }
-            } 
             this.getTargetPerMonth();
-            this.getShift();
         });
     }
     
@@ -62,32 +54,22 @@ export class List {
                     this.targetPerMonth = this.data.filter.store.salesTarget;
     }
     
-    getShift() {
-        this.shifts = []; 
-        for (var shift of this.data.filter.store.shifts) { 
-            this.shifts.push(shift.shift);
-        }
-        this.data.filter.shift = this.shifts[0];
-    }
-    
     filter() {
         this.error = { filter: {}, results: [] };
         var datefrom = new Date(this.data.filter.dateFrom);
         var dateto = new Date(this.data.filter.dateTo);
 
         if (this.data.filter.storeId == undefined || this.data.filter.storeId == '')
-            this.error.filter.storeId = "Please choose Store";
+            this.error.filter.storeId = "Pilih Toko";
         else if (dateto < datefrom)
-            this.error.filter.dateTo = "Date To must bigger than from";
+            this.error.filter.dateTo = "Tanggal To Harus Lebih Besar Dari From";
         else {
             var getData = []; 
-            var e = document.getElementById("ddlShift");
-            var strUser = e.options[e.selectedIndex].text;
             for(var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) { 
                 var date = new Date(d);
                 var fromString = this.getStringDate(date) + 'T00:00:00';
                 var toString = this.getStringDate(date) + 'T23:59:59';
-                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, strUser));
+                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, this.data.filter.shift));
            }
             Promise.all(getData)
                 .then(salesPerDays => {
@@ -274,7 +256,7 @@ export class List {
         this.reportHTML += "                <th>Disc Penjualan (Nominal)</th>";
         this.reportHTML += "                <th>Omset on Hand</th>";
         this.reportHTML += "                <th>Tipe Pembayaran</th>";
-        this.reportHTML += "                <th>Kartu</th>";
+        this.reportHTML += "                <th>Jenis Kartu</th>";
         this.reportHTML += "            </tr>";
         this.reportHTML += "        </thead>";
         this.reportHTML += "        <tbody>";
