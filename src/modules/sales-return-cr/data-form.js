@@ -16,6 +16,8 @@ export class DataForm {
         this.bindingEngine = bindingEngine; 
         this.session = session; 
          
+        this.readOnlyFalse = false;
+        this.readOnlyTrue = true;
         this.stores = session.stores; 
         
         var getData = [];
@@ -169,6 +171,12 @@ export class DataForm {
         });
         this.bindingEngine.propertyObserver(this.data, "date").subscribe((newValue, oldValue) => {
             this.refreshPromo(-1, -1);
+        }); 
+        this.bindingEngine.propertyObserver(this.data.salesDetail.voucher, "value").subscribe((newValue, oldValue) => {
+            this.refreshVoucher();
+        });
+        this.bindingEngine.propertyObserver(this.data.salesDetail, "cashAmount").subscribe((newValue, oldValue) => {
+            this.refreshDetail();
         });
     }
     
@@ -484,11 +492,11 @@ export class DataForm {
                                         if(promoResult.reward.type == "discount-product") {
                                             for(var reward of promoResult.reward.rewards) {
                                                 if(reward.unit == "percentage") {
-                                                    returnItem.discount1 = reward.discount1;
-                                                    returnItem.discount2 = reward.discount2;
+                                                    returnItem.discount1 = parseInt(reward.discount1);
+                                                    returnItem.discount2 = parseInt(reward.discount2);
                                                 }
                                                 else if(reward.unit == "nominal") {
-                                                    returnItem.discountNominal = reward.nominal;
+                                                    returnItem.discountNominal = parseInt(reward.nominal);
                                                 }
                                             }
                                         }
