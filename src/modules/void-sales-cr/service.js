@@ -4,10 +4,11 @@ import {RestService} from '../../rest-service';
 import {SecureService} from '../../utils/secure-service';
 
 const serviceUri = require('../../host').sales + '/docs/salesvoids';
+const serviceUriStoreSales = require('../../host').store;
 const serviceUriUpdate = require('../../host').sales + '/docs/sales';
 const serviceUriBank = require('../../host').master + '/banks';
 const serviceUriCardType = require('../../host').master + '/cardtypes';
-const serviceUriPromo = require('../../host').sales + '/promos'; 
+const serviceUriPromo = require('../../host').sales + '/promos';
 const serviceUriStore = require('../../host').master + '/stores';
 const serviceUriTransferInDoc = require('../../host').inventory + '/docs/transfer-in';
 
@@ -18,11 +19,11 @@ export class Service extends SecureService {
         super(http, aggregator);
     }
 
-    search() {
-        var endpoint = `${serviceUri}`;
+    search(storeId, keyword) {
+        var endpoint = `${serviceUriStoreSales}/${storeId}/sales/docs/salesvoids?keyword=${keyword}`;
         return super.get(endpoint);
     }
-  
+
     getById(id) {
         var endpoint = `${serviceUri}/${id}`;
         return super.get(endpoint);
@@ -31,7 +32,7 @@ export class Service extends SecureService {
     create(data) {
         var endpoint = `${serviceUri}`;
         return super.post(endpoint, data);
-    } 
+    }
 
     // update(data) {
     //     var endpoint = `${serviceUri}`;
@@ -46,46 +47,41 @@ export class Service extends SecureService {
     voidSales(data) {
         var endpoint = `${serviceUri}`;
         return super.put(endpoint, data);
-    } 
-    
-    
+    }
+
     getBank() {
         return super.get(serviceUriBank);
     }
-    
+
     getCardType() {
         return super.get(serviceUriCardType);
     }
 
-    
     getStore() {
         return super.get(serviceUriStore);
     }
 
-    getTrans()
-    {
+    getTrans() {
         return super.get(serviceUri);
     }
 
-    getTransByStoreName(storename, isTransByStoreName)
-    {
+    getTransByStoreName(storename, isTransByStoreName) {
         var endpoint = `${serviceUri}/${storename}/${isTransByStoreName}`;
         return super.get(endpoint);
     }
-    
+
     getPromoByStoreDatetimeItemQuantity(storeId, datetime, itemId, quantity) {
         var endpoint = `${serviceUriPromo}/${storeId}/${datetime}/${itemId}/${quantity}`;
         return super.get(endpoint);
     }
-    createTransferIn(data)
-  {
-      var endpoint = `${serviceUriTransferInDoc}`;
-      return super.post(endpoint, data);
-  }
+    
+    createTransferIn(data) {
+        var endpoint = `${serviceUriTransferInDoc}`;
+        return super.post(endpoint, data);
+    }
 
-  getOutByCode(code) 
-  {
-      var endpoint = `${serviceUri}?keyword=${code}`;
-      return super.get(endpoint);
-  }
+    getOutByCode(code) {
+        var endpoint = `${serviceUri}?keyword=${code}`;
+        return super.get(endpoint);
+    }
 }
