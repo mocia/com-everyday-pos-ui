@@ -1,17 +1,19 @@
 import {inject, Lazy, BindingEngine} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 import {Service} from './service';
+import {Session} from '../../utils/session';
 
 
-@inject(Router, Service, BindingEngine)
+@inject(Router, Service, BindingEngine, Session)
 export class List {
 
-    storeApiUri = require('../../host').master + '/stores';
+    // storeApiUri = require('../../host').master + '/stores';
 
-    constructor(router, service, bindingEngine) {
+    constructor(router, service, bindingEngine, session) {
         this.router = router;
         this.service = service;
         this.bindingEngine = bindingEngine;
+        this.session = session;
 
         this.data = { filter: {}, results: [] };
         this.error = { filter: {}, results: [] };
@@ -43,7 +45,6 @@ export class List {
         this.subtotalArrTotal = 0;
         this.totalOmsetBruto = 0;
         this.totalOmsetNetto = 0;
-        this.targetPerMonth = 0;
         this.sisaTargetNominal = 0;
         this.sisaTargetPercentage = 0;
     }
@@ -54,12 +55,12 @@ export class List {
 
 
     attached() {
-        this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => {
-            this.targetPerMonth = 0;
-            if (this.data.filter.store)
-                if (this.data.filter.store.salesTarget)
-                    this.targetPerMonth = this.data.filter.store.salesTarget;
-        });
+        this.data.filter.shift = 1;
+        this.data.filter.storeId = this.session.store._id;
+        this.data.filter.store = this.session.store;
+        
+        // this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => {
+        // });
     }
 
     filter() {
@@ -73,14 +74,11 @@ export class List {
             this.error.filter.dateTo = "Date To must bigger than from";
         else {
             var getData = [];
-            var e = document.getElementById("ddlShift");
-            var strUser = e.options[e.selectedIndex].text;
             for (var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) {
                 var date = new Date(d);
                 var fromString = this.getStringDate(date) + 'T00:00:00';
                 var toString = this.getStringDate(date) + 'T23:59:59';
-
-                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, strUser));
+                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString,  this.data.filter.shift));
             }
             Promise.all(getData)
                 .then(salesPerDays => {
