@@ -13,6 +13,7 @@ export function configure(config) {
 
         './auto-suggests/auto-suggest',
         './auto-suggests/store-auto-suggest',
-        './auto-suggests/sales-auto-suggest'
+        './auto-suggests/sales-auto-suggest',
+        './auto-suggests/voidable-auto-suggest'
     );
 }
