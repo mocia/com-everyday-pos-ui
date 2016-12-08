@@ -1,20 +1,5 @@
 <template>
     <require from="customs/elements/horsey"></require>
-    <form class="form-horizontal">
-        
-       <!-- <div class="form-group ${error.filter.storeId?'has-error':''}">
-            <label for="store" class="col-sm-2 control-label">Toko</label>
-            <div class="col-sm-10">
-                    <select class="form-control" name="store" change.delegate="setCombobox()" id="ddlStore"> 
-                        <option value="semua">Semua</option>
-                        <option repeat.for="store of Stores" value="${store._id}">${store.name}</option>
-                    </select>
-                    <span class="help-block">${error.salesDetail.cardTypeId}</span>
-                </div>
-        </div> -->
-        
-        
-    </form>
     <table class="table">
         <thead>
             <tr>
@@ -29,45 +14,47 @@
         <tbody>
             <tr repeat.for="item of data.items">
                 <td> 
-                    <div class="form-group ${error.items[$index].code?'has-error':''}">
+                    <sales-auto-suggest label="" value.bind="item.sales" error.bind="error.items[$index].salesId" read-only.bind="false" change.delegate="salesChanged($event, item)"></sales-auto-suggest>
+                    <!--<div class="form-group ${error.items[$index].salesId?'has-error':''}">
                         <horsey src.bind="salesApiUri" selection.bind="item.sales" value.bind="item.salesId" options.bind="{value:'_id', label:'code'}"></horsey>
-                <!--<input class="form-control" type="text" name="articleVariantId" value.bind="item.articleVariantId"/>-->
                         <span class="help-block">${error.items[$index].salesId}</span>
-                    </div>
+                    </div>-->
                 </td>
                 
                 <td> 
-                    <div class="form-group ${error.items[$index].code?'has-error':''}">
-                        <input class="form-control" type="text" name="store" value.bind="item.storeName" readonly.bind="true" />
-
-                <!--<input class="form-control" type="text" name="articleVariantId" value.bind="item.articleVariantId"/>-->
-                        <span class="help-block">${error.items[$index].code}</span>
-                    </div>
+                    <textbox label="" value.bind="item.storeName" error.bind="error.items[$index].storeName" read-only.bind="true"></textbox>
+                    <!--<div class="form-group">
+                        <input class="form-control" type="text" name="storeName" value.bind="item.storeName" readonly.bind="true" />
+                    </div>-->
                 </td>
+                
                 <!--<td><input class="form-control" type="text"  name="quantityOut" value.bind="item.quantityOut" readonly/></td> -->
+                                                  
                 <td>
-                    <div class="form-group ${error.items[$index].code?'has-error':''}"> 
+                    <numeric label="" value.bind="item.grandTotal" error.bind="error.items[$index].grandTotal" read-only.bind="true"></numeric>
+                    <!--<div class="form-group ${error.items[$index].code?'has-error':''}"> 
                         <input class="form-control" type="number" name="grandTotal" value.bind="item.grandTotal" readonly.bind="true" />
                         <span class="help-block">${error.items[$index].code}</span>
-                    </div>
+                    </div>-->
                 </td>
+                
                 <td>
-                    <div class="form-group ${error.items[$index].code?'has-error':''}">
+                    <textbox label="" value.bind="item._createdBy" error.bind="error.items[$index]._createdBy" read-only.bind="true"></textbox>
+                    <!--<div class="form-group">
                         <input class="form-control" type="text" name="createdBy" value.bind="item._createdBy" readonly.bind="true" />
-                        <span class="help-block">${error.items[$index].code}</span>
-                    </div>
+                    </div>-->
                 </td>
                 <td>
-                    <div class="form-group ${error.items[$index].code?'has-error':''}">
-                        <input class="form-control" type="text" name="createdDate" value.bind="item.date" readonly.bind="true" />
-                        <span class="help-block">${error.items[$index].code}</span>
-                    </div>
+                    <textbox label="" value.bind="item.date" error.bind="error.items[$index].date" read-only.bind="true"></textbox>
+                    <!--<div class="form-group">
+                        <input class="form-control" type="text" name="date" value.bind="item.date" readonly.bind="true" />
+                    </div>-->
                 </td>
                 <td><button href="#" class="btn btn-danger btn-sm pull-right" click.delegate="removeItem(item)">Remove</button></td>
             </tr> 
         </tbody>
     </table>
-    <div class="alert alert-info text-center" role="alert" if.bind="data.subCounters.length == 0">
+    <div class="alert alert-info text-center" role="alert" if.bind="data.items.length == 0">
         There is no data found in the list.
     </div>
 </template>
