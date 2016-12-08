@@ -173,7 +173,7 @@ export class DataForm {
             this.refreshPromo(-1, -1);
         }); 
         this.bindingEngine.propertyObserver(this.data.salesDetail.voucher, "value").subscribe((newValue, oldValue) => {
-            this.refreshVoucher();
+            this.refreshCash();
         });
         this.bindingEngine.propertyObserver(this.data.salesDetail, "cashAmount").subscribe((newValue, oldValue) => {
             this.refreshDetail();
@@ -301,7 +301,7 @@ export class DataForm {
             payment = 0; 
         this.data.total = payment;
         this.data.grandTotal = this.data.total;
-        this.refreshDetail();
+        this.refreshCash();
     }
     
     checkPaymentType() {
@@ -334,11 +334,15 @@ export class DataForm {
             if(parseInt(this.data.salesDetail.cardAmount) < 0)
                 this.data.salesDetail.cardAmount = 0;
         }
-        else if(this.isCard) //card
+        else if(this.isCard) { //card
             this.data.salesDetail.cardAmount = this.data.total; 
-        else if(this.isCash) //cash
-            if(parseInt(this.data.salesDetail.cashAmount) < parseInt(this.data.total))
+        }
+        else if(this.isCash) { //cash
+            //if(parseInt(this.data.salesDetail.cashAmount) < parseInt(this.data.total)) {
+            if(parseInt(this.data.salesDetail.cashAmount) <= 0) {
                 this.data.salesDetail.cashAmount = this.data.total; 
+            }
+        }
         
         var refund = parseInt(this.data.salesDetail.cashAmount) + parseInt(this.data.salesDetail.cardAmount) - parseInt(this.data.total);
         if(refund < 0)
@@ -399,7 +403,7 @@ export class DataForm {
         this.data.date = new Date(this.data.datePicker);        
     }
     
-    refreshVoucher() {
+    refreshCash() {
         this.data.salesDetail.cashAmount = 0;
         this.refreshDetail();
     }
