@@ -1,17 +1,19 @@
 import {inject, Lazy, BindingEngine} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 import {Service} from './service';
+import {Session} from '../../utils/session';
 
 
-@inject(Router, Service, BindingEngine)
+@inject(Router, Service, BindingEngine, Session)
 export class List {
 
-    storeApiUri = require('../../host').master + '/stores';
+    // storeApiUri = require('../../host').master + '/stores';
 
-    constructor(router, service, bindingEngine) {
+    constructor(router, service, bindingEngine, session) {
         this.router = router;
         this.service = service;
         this.bindingEngine = bindingEngine;
+        this.session = session;
 
         this.data = { filter: {}, results: [] };
         this.error = { filter: {}, results: [] };
@@ -22,15 +24,9 @@ export class List {
         this.isFilter = false;
         this.reportHTML = ""
 
-        var getData = [];
-        getData.push(this.service.getStore());
-        Promise.all(getData)
-            .then(results => {
-                this.Stores = results[0];
-            })
-
         this.totalQty = 0;
         this.totalCash = 0;
+        this.totalVoucher = 0;
         this.totalTempDebit = 0;
         this.totalTempCredit = 0;
         this.totalTempCreditVisa = 0;
@@ -43,9 +39,19 @@ export class List {
         this.subtotalArrTotal = 0;
         this.totalOmsetBruto = 0;
         this.totalOmsetNetto = 0;
-        this.targetPerMonth = 0;
         this.sisaTargetNominal = 0;
         this.sisaTargetPercentage = 0;
+
+
+        this.data.filter.shift = 1;
+        this.data.filter.storeId = this.session.store._id;
+        this.data.filter.store = this.session.store;
+        this.data.filter.user = this.session.username;
+        this.service.getStore(this.data.filter.storeId)
+            .then(result => {
+                this.data.filter.store = result;
+            })
+        this.detailData = [];
     }
 
     activate() {
@@ -54,12 +60,8 @@ export class List {
 
 
     attached() {
-        this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => {
-            this.targetPerMonth = 0;
-            if (this.data.filter.store)
-                if (this.data.filter.store.salesTarget)
-                    this.targetPerMonth = this.data.filter.store.salesTarget;
-        });
+        // this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => {
+        // });
     }
 
     filter() {
@@ -73,14 +75,11 @@ export class List {
             this.error.filter.dateTo = "Date To must bigger than from";
         else {
             var getData = [];
-            var e = document.getElementById("ddlShift");
-            var strUser = e.options[e.selectedIndex].text;
             for (var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) {
                 var date = new Date(d);
                 var fromString = this.getStringDate(date) + 'T00:00:00';
                 var toString = this.getStringDate(date) + 'T23:59:59';
-
-                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, strUser));
+                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, this.data.filter.shift));
             }
             Promise.all(getData)
                 .then(salesPerDays => {
@@ -113,13 +112,21 @@ export class List {
                                     itemData.debitNominal = 0;
                                     itemData.creditNominal = parseInt(data.salesDetail.cardAmount);
                                 }
-
+                                
+                                itemData.paymentType = data.salesDetail.paymentType
+                                
                                 if (data.salesDetail.bank.name != null) {
                                     itemData.bank = data.salesDetail.bank.name;
+                                }
+                                else
+                                    itemData.bank = "Kartu tidak Teridentifikasi";
+                                    
+                                if (data.salesDetail.bankCard.name != null) {
                                     itemData.bankCard = data.salesDetail.bankCard.name;
                                 }
                                 else
-                                    itemData.bank = "Cash";
+                                    itemData.bankCard = "Kartu tidak Teridentifikasi";
+                                    
                                 if (data.salesDetail.cardType.name == "Mastercard") {
                                     itemData.debitNominalLainnya = 0;
                                     itemData.creditMasterNominal = parseInt(data.salesDetail.cardAmount);
@@ -227,8 +234,7 @@ export class List {
         this.reportHTML += "            </tr>";
         this.reportHTML += "        </thead>";
         this.reportHTML += "        <tbody>";
-
-        var totalTransaksi = 0;
+ 
         var totalTotalTransaksi = 0;
 
         for (var data of this.data.results) {
@@ -237,6 +243,7 @@ export class List {
             var tempDebit = 0;
             var tempCredit = 0;
             var tempVoucher = 0;
+            var totalTransaksi = 0;
             for (var item of data.items) {
                 if (!item.isVoid) {
                     totalTransaksi++;
@@ -250,40 +257,23 @@ export class List {
                 if (!item.isVoid) {
                     totalTotalTransaksi++;
                     var isItemRowSpan = false;
-                    this.reportHTML += "        <tr>";
-
-                    if (!isTanggalRowSpan)
-                        this.reportHTML += "        <td width='300px' rowspan='" + data.tanggalRowSpan + "'>" + data.tanggal.getDate() + " " + months[data.tanggal.getMonth()] + " " + data.tanggal.getFullYear() + "</td>";
-
-                    if (!isTanggalRowSpan)
-                        this.reportHTML += "        <td rowspan='" + data.tanggalRowSpan + "'>" + totalTransaksi + "</td>";
-
-
-                    if (!isTanggalRowSpan)
-                        this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + tempCash + "</td>";
-
-                    if (!isTanggalRowSpan)
-                        this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + tempDebit + "</td>";
-
-                    if (!isTanggalRowSpan)
-                        this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + tempCredit + "</td>";
-
-
-                    if (!isTanggalRowSpan)
-                        this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + tempVoucher + "</td>";
                     var totalOmset = tempCash + tempCredit + tempDebit + tempVoucher;
-                    if (!isTanggalRowSpan)
-                        this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + totalOmset + "</td>";
+                    this.reportHTML += "        <tr>";
+                    if (!isTanggalRowSpan) {
+                        this.reportHTML += "        <td width='300px'>" + data.tanggal.getDate() + " " + months[data.tanggal.getMonth()] + " " + data.tanggal.getFullYear() + "</td>";
+                        this.reportHTML += "        <td>" + parseInt(totalTransaksi).toLocaleString() + "</td>";
+                        this.reportHTML += "        <td>" + parseInt(tempCash).toLocaleString() + "</td>";
+                        this.reportHTML += "        <td>" + parseInt(tempDebit).toLocaleString() + "</td>";
+                        this.reportHTML += "        <td>" + parseInt(tempCredit).toLocaleString() + "</td>";
+                        this.reportHTML += "        <td>" + parseInt(tempVoucher).toLocaleString() + "</td>";
+                        this.reportHTML += "        <td>" + parseInt(totalOmset).toLocaleString() + "</td>";
+                    }
                     this.reportHTML += "        </tr>";
                     isTanggalRowSpan = true;
                 }
-                isItemRowSpan = true;
-
-                this.reportHTML += "<tr></tr>";
-
-            }
-
-
+                isItemRowSpan = true;  
+                this.reportHTML += "<tr></tr>"; 
+            } 
             this.reportHTML += "<tr></tr>";
         }
         this.reportHTML += "        <td>Total</td>";
@@ -291,8 +281,7 @@ export class List {
         var totalDebit = 0;
         var totalCredit = 0;
         var totalVoucher = 0;
-        for (var data of this.data.results) {
-
+        for (var data of this.data.results) { 
             for (var item of data.items) {
                 if (!item.isVoid) {
                     totalCash += item.cashNominal;
@@ -303,23 +292,54 @@ export class List {
             }
         }
         this.totalCash = totalCash;
+        this.totalVoucher = totalVoucher;
         var totalTotalOmset = totalCash + totalCredit + totalDebit + totalVoucher;
-        this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalTotalTransaksi + "</td>";
+        this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalTotalTransaksi.toLocaleString() + "</td>";
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalCash.toLocaleString() + "</td>";
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalDebit.toLocaleString() + "</td>";
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalCredit.toLocaleString() + "</td>";
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalVoucher.toLocaleString() + "</td>";
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalTotalOmset.toLocaleString() + "</td>";
-
         this.reportHTML += "        </tbody>";
         this.reportHTML += "    </table>";
+        this.subtotalArrTotal = totalTotalOmset + this.data.filter.store.salesCapital;
 
+
+        var detailData = [];
+        for (var data of this.data.results) {
+            var tanggal = data.tanggal.getDate() + " " + months[data.tanggal.getMonth()] + " " + data.tanggal.getFullYear();
+            for (var item of data.items) {
+                if (!item.isVoid && item.paymentType == "Card") {
+                    var isAny = false;
+                    for (var resultdata of detailData) {
+                        if (resultdata.tanggal == tanggal && resultdata.bank == item.bank && resultdata.bankCard == item.bankCard) {
+                            isAny = true;
+                            resultdata.debitCardNominal += parseInt(item.debitNominalLainnya);
+                            resultdata.creditCardNominal += parseInt(item.creditNominalLainnya);
+                            resultdata.creditVisaNominal += parseInt(item.creditVisaNominal);
+                            resultdata.creditMasterNominal += parseInt(item.creditMasterNominal);
+                            break;
+                        }
+                    }
+                    if (!isAny) {
+                        var row = {};
+                        row.tanggal = tanggal
+                        row.bank = item.bank;
+                        row.bankCard = item.bankCard;
+                        row.debitCardNominal = parseInt(item.debitNominalLainnya);
+                        row.creditCardNominal = parseInt(item.creditNominalLainnya);
+                        row.creditVisaNominal = parseInt(item.creditVisaNominal);
+                        row.creditMasterNominal = parseInt(item.creditMasterNominal);
+                        detailData.push(row);
+                    }
+                }
+            }
+        }
         this.reportHTMLDetail = "Payment Details - Card";
         this.reportHTMLDetail += "    <table class='table table-fixed'>";
         this.reportHTMLDetail += "        <thead>";
-
         this.reportHTMLDetail += "            <tr style='background-color:#282828; color:#ffffff;'>";
-        this.reportHTMLDetail += "                <th>Tanggal</th>";
+        this.reportHTMLDetail += "                <th width='300px'>Tanggal</th>";
         this.reportHTMLDetail += "                <th>Bank (EDC)</th>";
         this.reportHTMLDetail += "                <th>Bank (Kartu)</th>";
         this.reportHTMLDetail += "                <th>Debit Card (nominal)</th>";
@@ -329,136 +349,35 @@ export class List {
         this.reportHTMLDetail += "            </tr>";
         this.reportHTMLDetail += "        </thead>";
         this.reportHTMLDetail += "        <tbody>";
+        for (var resultdata of detailData) {
+            this.reportHTMLDetail += "<tr>";
+            this.reportHTMLDetail += "  <td>" + resultdata.tanggal + "</td>";
+            this.reportHTMLDetail += "  <td>" + resultdata.bank + "</td>";
+            this.reportHTMLDetail += "  <td>" + resultdata.bankCard + "</td>";
+            this.reportHTMLDetail += "  <td>" + resultdata.debitCardNominal.toLocaleString() + "</td>";
+            this.reportHTMLDetail += "  <td>" + resultdata.creditCardNominal.toLocaleString() + "</td>";
+            this.reportHTMLDetail += "  <td>" + resultdata.creditVisaNominal.toLocaleString() + "</td>";
+            this.reportHTMLDetail += "  <td>" + resultdata.creditMasterNominal.toLocaleString() + "</td>";
+            this.reportHTMLDetail += "</tr>";
 
-
-        var i = 0;
-        var k = 0;
-        var tempBank = [];
-        var tempBankCard = [];
-        for (var data of this.data.results) {
-            for (var item of data.items) {
-                tempBank[k] = item.bank;
-                tempBankCard[k] = item.bankCard;
-                k++;
-            }
+            this.totalTempDebit += resultdata.debitCardNominal;
+            this.totalTempCredit += resultdata.creditCardNominal;
+            this.totalTempCreditVisa += resultdata.creditVisaNominal;
+            this.totalTempCreditMaster += resultdata.creditMasterNominal;
         }
-        var unique = tempBank.filter((v, i, a) => a.indexOf(v) === i);
-        this.unique = unique;
-        this.unique.sort();
+        this.reportHTMLDetail += "      <tr>";
+        this.reportHTMLDetail += "          <td>Total</td>";
+        this.reportHTMLDetail += "          <td></td>";
+        this.reportHTMLDetail += "          <td></td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempDebit.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCredit.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditVisa.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditMaster.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "      </tr>";
+        this.reportHTMLDetail += "   </tbody>";
+        this.reportHTMLDetail += "</table>";
 
-        var unique2 = tempBankCard.filter((v, i, a) => a.indexOf(v) === i);
-        this.unique2 = unique2;
-        this.unique2.sort();
-        for (var j = 0; j < unique.length; j++) {
-            var totalTempDebit = 0;
-            var totalTempCredit = 0;
-            var totalTempCreditMaster = 0;
-            var totalTempCreditVisa = 0;
-
-            for (var data of this.data.results) {
-                var isTanggalRowSpan = false;
-                var tempDebit = 0;
-                var tempCredit = 0;
-                var tempCreditMaster = 0;
-                var tempCreditVisa = 0;
-                var isItemRowSpan = 0;
-
-                for (var item of data.items) {
-                    if (!item.isVoid) {
-                        if (item.bank == unique[j] && item.bank != "Cash") {
-                            tempDebit += item.debitNominalLainnya;
-                            tempCredit += item.creditNominalLainnya;
-                            tempCreditMaster += item.creditMasterNominal;
-                            tempCreditVisa += item.creditVisaNominal;
-                        }
-                    }
-                }
-
-                for (var item of data.items) {
-                    if (item.bank == unique[j] && item.bank != "Cash" && !item.isVoid) {
-
-                        this.reportHTML += "        <tr>";
-                        if (!isTanggalRowSpan)
-                            this.reportHTMLDetail += "        <td width='300px' rowspan='" + data.tanggalRowSpan + "'>" + data.tanggal.getDate() + " " + months[data.tanggal.getMonth()] + " " + data.tanggal.getFullYear() + "</td>";
-
-                        if (!isTanggalRowSpan){
-                            this.reportHTMLDetail += "        <td rowspan='" + data.tanggalRowSpan + "'>" + item.bank + "</td>";
-                            this.reportHTMLDetail += "        <td rowspan='" + data.tanggalRowSpan + "'>" + item.bankCard + "</td>";
-                             
-                        }
-                        if (!isTanggalRowSpan)
-                            this.reportHTMLDetail += "            <td rowspan='" + data.tanggalRowSpan + "'>" + tempDebit.toLocaleString() + "</td>";
-
-                        if (!isTanggalRowSpan)
-                            this.reportHTMLDetail += "            <td rowspan='" + data.tanggalRowSpan + "'>" + tempCredit.toLocaleString() + "</td>";
-
-                        if (!isTanggalRowSpan)
-                            this.reportHTMLDetail += "            <td rowspan='" + data.tanggalRowSpan + "'>" + tempCreditVisa.toLocaleString() + "</td>";
-
-                        if (!isTanggalRowSpan)
-                            this.reportHTMLDetail += "            <td rowspan='" + data.tanggalRowSpan + "'>" + tempCreditMaster.toLocaleString() + "</td>";
-
-                        isItemRowSpan++;
-
-                        if (!isTanggalRowSpan) {
-                            totalTempDebit += tempDebit;
-                            totalTempCredit += tempCredit;
-                            totalTempCreditMaster += tempCreditMaster;
-                            totalTempCreditVisa += tempCreditVisa;
-
-                            this.reportHTMLDetail += "<tr></tr>";
-
-                        }
-
-                        isTanggalRowSpan = true;
-
-                        this.reportHTMLDetail += "<tr></tr>";
-                    }
-
-                    this.reportHTMLDetail += "<tr></tr>";
-
-                }
-                this.reportHTMLDetail += "<tr></tr>";
-            }
-            if (unique[j] != "Cash") {
-                this.reportHTMLDetail += "        <td>Total</td>";
-
-                this.reportHTMLDetail += "        <td></td>";
-                this.reportHTMLDetail += "        <td></td>";
-                this.reportHTMLDetail += "<td style='background-color:#48cbe2;'>" + totalTempDebit + "</td>";
-                this.reportHTMLDetail += "<td style='background-color:#48cbe2;'>" + totalTempCredit + "</td>";
-                this.reportHTMLDetail += "<td style='background-color:#48cbe2;'>" + totalTempCreditVisa + "</td>";
-                this.reportHTMLDetail += "<td style='background-color:#48cbe2;'>" + totalTempCreditMaster + "</td>";
-
-                this.arrTotalTempDebit[j] = totalTempDebit;
-                this.totalTempDebit = totalTempDebit;
-                this.arrTotalTempCredit[j] = totalTempCredit;
-                this.totalTempCredit = totalTempCredit;
-                this.arrTotalTempCreditVisa[j] = totalTempCreditVisa;
-                this.totalTempCreditVisa = totalTempCreditVisa;
-                this.arrTotalTempCreditMaster[j] = totalTempCreditMaster;
-                this.totalTempCreditMaster = totalTempCreditMaster;
-
-                this.subtotalArrTotal += this.arrTotalTempDebit[j] + this.arrTotalTempCredit[j] + this.arrTotalTempCreditMaster[j] + this.arrTotalTempCreditVisa[j];
-            }
-            if (unique[j] == "Cash") {
-                var index = unique.indexOf("Cash");
-                if (index >= 0) {
-                    unique.splice(index, 1);
-                }
-            }
-
-
-
-
-        }
-        this.subtotalArrTotal += (this.totalCash + this.data.filter.store.salesCapital);
-
-        this.reportHTMLDetail += "        </tbody>";
-        this.reportHTMLDetail += "    </table>";
-
-
-
-
+        this.detailData = detailData;
+        //this.subtotalArrTotal = this.totalCash + this.data.filter.store.salesCapital + this.totalTempDebit + this.totalTempCredit + this.totalTempCreditVisa + this.totalTempCreditMaster;
     }
 }

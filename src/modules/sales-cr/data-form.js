@@ -16,7 +16,8 @@ export class DataForm {
         this.service = service;
         this.bindingEngine = bindingEngine;
         this.session = session; 
-        
+        this.readOnlyTrue = true;
+        this.readOnlyFalse = false;
         //this.stores = session.stores; 
         
         this.isCard = false;
@@ -113,11 +114,21 @@ export class DataForm {
         this.bindingEngine.propertyObserver(this.data, "date").subscribe((newValue, oldValue) => {
             this.refreshPromo(-1);
         }); 
+        this.bindingEngine.propertyObserver(this.data.salesDetail.voucher, "value").subscribe((newValue, oldValue) => {
+            this.refreshCash();
+        }); 
+        this.bindingEngine.propertyObserver(this.data.salesDetail, "cardAmount").subscribe((newValue, oldValue) => {
+            this.refreshDetail();
+        });     
+        this.bindingEngine.propertyObserver(this.data.salesDetail, "cashAmount").subscribe((newValue, oldValue) => {
+            this.refreshDetail();
+        });        
+            
     } 
     
     search() {
         var reference = this.data.reference
-        this.service.getSalesVoidsByCode(this.data.reference)
+        this.service.getSalesVoidsByCode(this.data.storeId, this.data.reference)
             .then(salesVoidsResult => {
                 var salesVoids = salesVoidsResult[0]
                 if (salesVoids) {
@@ -233,10 +244,10 @@ export class DataForm {
         this.data.sisaBayar = parseInt(this.data.total);
         this.data.grandTotal = parseInt(this.data.total);
         this.data.totalBayar = parseInt(this.data.grandTotal);
-        this.refreshDetail();
+        this.refreshCash();
     }
 
-    refreshVoucher() {
+    refreshCash() {
         this.data.salesDetail.cashAmount = 0;
         this.refreshDetail();
     }
@@ -252,11 +263,15 @@ export class DataForm {
             if (parseInt(this.data.salesDetail.cardAmount) < 0)
                 this.data.salesDetail.cardAmount = 0;
         }
-        else if (this.isCard) //card
+        else if (this.isCard) { //card 
             this.data.salesDetail.cardAmount = this.data.total;
-        else if (this.isCash) //cash
-            if (parseInt(this.data.salesDetail.cashAmount) < parseInt(this.data.total))
+        }
+        else if (this.isCash) { //cash
+            //if (parseInt(this.data.salesDetail.cashAmount) < parseInt(this.data.total)) {
+            if (parseInt(this.data.salesDetail.cashAmount) <= 0) {
                 this.data.salesDetail.cashAmount = this.data.total;
+            }
+        }
 
         var refund = parseInt(this.data.salesDetail.cashAmount) + parseInt(this.data.salesDetail.cardAmount) - parseInt(this.data.total);
         if (refund < 0)
@@ -371,11 +386,11 @@ export class DataForm {
                                 if (promo.reward.type == "discount-product") {
                                     for (var reward of promo.reward.rewards) {
                                         if (reward.unit == "percentage") {
-                                            item.discount1 = reward.discount1;
-                                            item.discount2 = reward.discount2;
+                                            item.discount1 = parseInt(reward.discount1);
+                                            item.discount2 = parseInt(reward.discount2);
                                         }
                                         else if (reward.unit == "nominal") {
-                                            item.discountNominal = reward.nominal;
+                                            item.discountNominal = parseInt(reward.nominal);
                                         }
                                     }
                                 }

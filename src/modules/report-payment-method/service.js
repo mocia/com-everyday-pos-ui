@@ -2,19 +2,18 @@ import {inject, Lazy} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {RestService} from '../../rest-service';
 import {SecureService} from '../../utils/secure-service';
-  
+
 const serviceUri = require('../../host').sales + '/docs/sales';
 const serviceUriStore = require('../../host').master + '/stores';
 const serviceUriTransferInDoc = require('../../host').inventory + '/docs/transfer-in';
 
-export class Service extends SecureService{
-  
+export class Service extends SecureService {
+
   constructor(http, aggregator) {
     super(http, aggregator);
-  } 
+  }
 
-  getAllSalesByFilter(store, dateFrom, dateTo, shift)
-  {
+  getAllSalesByFilter(store, dateFrom, dateTo, shift) {
     var endpoint = `${serviceUri}/${store}/${dateFrom}/${dateTo}/${shift}`;
     return super.get(endpoint);
   }
@@ -28,7 +27,7 @@ export class Service extends SecureService{
     return super.get(endpoint);
   }
 
-  
+
   getById(id) {
     var endpoint = `${serviceUri}/${id}`;
     return super.get(endpoint);
@@ -53,15 +52,15 @@ export class Service extends SecureService{
   getStorageById(id) {
     var endpoint = `${require('../../host').inventory + '/storages'}/${id}`;
     return super.get(endpoint);
-  } 
-  
-    getStore() {
-        return super.get(serviceUriStore);
-    }
+  }
 
-    createTransferIn(data)
-  {
-      var endpoint = `${serviceUriTransferInDoc}`;
-      return super.post(endpoint, data);
+  getStore(storeId) {
+    var endpoint = `${serviceUriStore}/${storeId}`;
+    return super.get(endpoint);
+  }
+
+  createTransferIn(data) {
+    var endpoint = `${serviceUriTransferInDoc}`;
+    return super.post(endpoint, data);
   }
 }
