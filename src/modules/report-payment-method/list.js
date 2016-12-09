@@ -362,10 +362,10 @@ export class List {
         this.reportHTMLDetail += "          <td>Total</td>";
         this.reportHTMLDetail += "          <td></td>";
         this.reportHTMLDetail += "          <td></td>";
-        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempDebit + "</td>";
-        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCredit + "</td>";
-        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditVisa + "</td>";
-        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditMaster + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempDebit.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCredit.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditVisa.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditMaster.toLocaleString() + "</td>";
         this.reportHTMLDetail += "      </tr>";
         this.reportHTMLDetail += "   </tbody>";
         this.reportHTMLDetail += "</table>";
