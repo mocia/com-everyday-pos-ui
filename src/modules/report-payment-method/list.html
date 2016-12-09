@@ -1,33 +1,33 @@
 <template>
     <require from="customs/elements/horsey"></require>
-    <h3>Report Payment Method</h3>
     <div class="display-wrapper">
-    <form class="form-horizontal"> 
-        <!--<div class="form-group ${error.filter.storeId?'has-error':''}">
-            <label for="store" class="col-sm-2 control-label">Toko</label>
-            <div class="col-sm-10">
-                <horsey src.bind="storeApiUri" selection.bind="data.filter.store" value.bind="data.filter.storeId" options.bind="{value:'_id', label:'name'}"></horsey>
-                <span class="help-block">${error.filter.storeId}</span>
+        <h3>Report Payment Method</h3>
+        <form class="form-horizontal"> 
+            <!--<div class="form-group ${error.filter.storeId?'has-error':''}">
+                <label for="store" class="col-sm-2 control-label">Toko</label>
+                <div class="col-sm-10">
+                    <horsey src.bind="storeApiUri" selection.bind="data.filter.store" value.bind="data.filter.storeId" options.bind="{value:'_id', label:'name'}"></horsey>
+                    <span class="help-block">${error.filter.storeId}</span>
+                </div>
+            </div> -->
+            <div class="form-group ${error.filter.dateFrom?'has-error':''}">
+                <label for="dateFrom" class="col-sm-2 control-label">From</label>
+                <div class="col-sm-10"> 
+                    <input type="date" class="form-control" name="date" value.bind="dateFromPicker" change.delegate="setDateFrom()"/>
+                    <span class="help-block">${error.filter.dateFrom}</span>
+                </div>
+            </div> 
+            <div class="form-group ${error.filter.dateTo?'has-error':''}">
+                <label for="dateTo" class="col-sm-2 control-label">To</label>
+                <div class="col-sm-10"> 
+                    <input type="date" class="form-control" name="date" value.bind="dateToPicker" change.delegate="setDateTo()"/>
+                    <span class="help-block">${error.filter.dateTo}</span>
+                </div>
             </div>
-        </div> -->
-        <div class="form-group ${error.filter.dateFrom?'has-error':''}">
-            <label for="dateFrom" class="col-sm-2 control-label">From</label>
-            <div class="col-sm-10"> 
-                <input type="date" class="form-control" name="date" value.bind="dateFromPicker" change.delegate="setDateFrom()"/>
-                <span class="help-block">${error.filter.dateFrom}</span>
-            </div>
-        </div> 
-        <div class="form-group ${error.filter.dateTo?'has-error':''}">
-            <label for="dateTo" class="col-sm-2 control-label">To</label>
-            <div class="col-sm-10"> 
-                <input type="date" class="form-control" name="date" value.bind="dateToPicker" change.delegate="setDateTo()"/>
-                <span class="help-block">${error.filter.dateTo}</span>
-            </div>
-        </div>
-        
-         <div class="form-group ${error.filter.storeId?'has-error':''}">
-            <label for="store" class="col-sm-2 control-label">Shift</label>
-            <div class="col-sm-10">
+            
+            <div class="form-group ${error.filter.storeId?'has-error':''}">
+                <label for="store" class="col-sm-2 control-label">Shift</label>
+                <div class="col-sm-10">
                     <select class="form-control" name="shift" value.bind="data.filter.shift"> 
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -37,137 +37,91 @@
                     </select>
                     <span class="help-block">${error.salesDetail.cardTypeId}</span>
                 </div>
-        </div>
-        <div class="btn-group col-sm-12">
-            <button class="btn btn-success pull-right" click.delegate="filter()">View Report</button>
-            <button class="btn btn-success pull-left" onclick="javascript:window.print();">Print Report</button>
-        </div> 
-        <div class="col-sm-12" if.bind="isFilter"> 
-            <div class="pre-scrollable" innerHTML.bind="reportHTML | sanitizeHTML"></div>
-            <div class="pre-scrollable" innerHTML.bind="reportHTMLDetail | sanitizeHTML"></div>
-            
-           
-        
-        </div>  
-        </div>
-        
-        <div class="print-wrapper a4">
-        <div class="row"><center><label class="header">REKAP SETORAN</label></center><br/></div>
-        <div class="row">
-            <div class="col-xs-6"">
+            </div>
+            <div class="btn-group col-sm-12">
+                <button class="btn btn-success pull-right" click.delegate="filter()">View Report</button>
+            </div> 
+            <div class="col-sm-12" if.bind="isFilter"> 
                 <div class="row">
-                    <div>
-                        Store Name : 
-                    
-                        ${data.filter.store.name}
-
-                        <br><br>
-                    </div>
+                    <button class="btn btn-success pull-left" onclick="javascript:window.print();">Print Report</button>
                 </div> 
                 <div class="row">
-                    <div>
-                        Store Address :
-
-                        ${data.filter.store.address}
-
-                        <br><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        Store Phone :
-                        
-                        ${data.filter.store.phone}
-
-                        <br><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        Kasir : (yang sedang login)
-                        
-                        <br><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        Shift
-                        
-                        <br><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        Tanggal :
-
-                        ${dateToPicker}
-                        
-                        <br><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                      ==================
-                      
-                        <br><br>  
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        Saldo Awal :
-                        
-                        ${data.filter.store.salesCapital}
-                        <br><br>
-                        
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        Tunai / Cash :
-
-                        ${totalCash}
-                        
-                        <br><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        <table class="table table-bordered">
-            
-                            <thead>
-                            <tr>
-                            <th class="text-center">Bank</th> 
-                            <th class="text-center">Debit Card</th> 
-                            <th class="text-center">Credit Card</th> 
-                            <th class="text-center">Credit Visa</th> 
-                            <th class="text-center">Credit Master</th> 
-                            </tr>
-                            </thead>
-                            <tbody>
-                                
-                                        <tr repeat.for="bank of unique">
-                                        <td class="text-center">${bank}</td>
-                                        <td class="text-center">${arrTotalTempDebit[$index]}</td>
-                                        <td class="text-center">${arrTotalTempCredit[$index]}</td>
-                                        <td class="text-center">${arrTotalTempCreditVisa[$index]}</td>
-                                        <td class="text-center">${arrTotalTempCreditMaster[$index]}</td>
-                                        </tr>
-
-                            
-                            </tbody>
-                            
-                        </table>
-                        <div>SUBTOTAL : ${subtotalArrTotal}</div>
-                    </div>
-                </div>
+                    <div class="pre-scrollable" innerHTML.bind="reportHTML | sanitizeHTML"></div>
+                    <div class="pre-scrollable" innerHTML.bind="reportHTMLDetail | sanitizeHTML"></div> 
+                </div> 
             </div>  
-            <br/>
+        </form> 
+    </div>
+          
+    <div class="print-wrapper struk">
+        <div class="row col-sm-12"><center><label class="header">REKAP SETORAN</label></center></div>
+        <div class="row col-sm-12">
+            Store Name : ${data.filter.store.name}
+        </div> 
+        <div class="row col-sm-12">
+            Store Address : ${data.filter.store.address}
+        </div> 
+        <div class="row col-sm-12">
+            Store Phone : ${data.filter.store.phone}
         </div>
-        
+        <div class="row col-sm-12">
+            Kasir : ${data.filter.user}
+        </div>
+        <div class="row col-sm-12">
+            Shift : ${data.filter.shift}
+        </div>
+        <!--<div class="row col-sm-12">
+            Tanggal : ${dateToPicker}
+        </div>-->
+        <div class="row col-sm-12">
+            ==================
+        </div> 
+        <div class="row col-sm-12">
+            Saldo Awal : ${data.filter.store.salesCapital.toLocaleString()}
+        </div> 
+        <div class="row col-sm-12">
+            Tunai / Cash : ${totalCash.toLocaleString()}
+        </div>   
+        <div class="row col-sm-12"> 
+            <!--<table class="table table-bordered"> 
+                <thead>
+                    <tr>
+                        <th class="text-center">Bank</th> 
+                        <th class="text-center">Bank Kartu</th> 
+                        <th class="text-center">Debit Card</th> 
+                        <th class="text-center">Credit Card</th> 
+                        <th class="text-center">Credit Visa</th> 
+                        <th class="text-center">Credit Master</th> 
+                    </tr>
+                </thead>
+                <tbody>    
+                    <tr repeat.for="data of detailData">
+                        <td class="text-center">${data.bank}</td>
+                        <td class="text-center">${data.bankCard}</td>
+                        <td class="text-center">${data.debitCardNominal.toLocaleString()}</td>
+                        <td class="text-center">${data.creditCardNominal.toLocaleString()}</td>
+                        <td class="text-center">${data.creditVisaNominal.toLocaleString()}</td>
+                        <td class="text-center">${data.creditMasterNominal.toLocaleString()}</td> 
+                    </tr>  
+                </tbody>    
+            </table>-->
+            <table class="table table-bordered"> 
+                <tr repeat.for="data of detailData">
+                    <td class="text-left">
+                        ${data.tanggal} <br/>
+                        EDC : ${data.bank} <br/>
+                        Kartu : ${data.bankCard} <br/>
+                        Debit Card : ${data.debitCardNominal.toLocaleString()} <br/>
+                        Credit Card : ${data.creditCardNominal.toLocaleString()} <br/>
+                        Credit Visa : ${data.creditVisaNominal.toLocaleString()} <br/>
+                        Credit Master : ${data.creditMasterNominal.toLocaleString()} <br/>
+                    </td>
+                </tr>   
+            </table>
+        </div>
+        <div class="row col-sm-12"> 
+            <b> SUBTOTAL : ${subtotalArrTotal.toLocaleString()} </b>
+        </div>
         <div style="page-break-after:always;"></div>
     </div><!-- /.print-wrapper -->
-        
-        
-        
-    </form> 
 </template>
