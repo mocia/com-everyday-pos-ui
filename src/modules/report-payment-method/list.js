@@ -295,7 +295,7 @@ export class List {
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalTotalOmset.toLocaleString() + "</td>";
         this.reportHTML += "        </tbody>";
         this.reportHTML += "    </table>";
-        this.subtotalArrTotal = this.totalTotalOmset + this.data.filter.store.salesCapital;
+        this.subtotalArrTotal = totalTotalOmset + this.data.filter.store.salesCapital;
 
 
         var detailData = [];
@@ -371,6 +371,6 @@ export class List {
         this.reportHTMLDetail += "</table>";
 
         this.detailData = detailData;
-        this.subtotalArrTotal = this.totalCash + this.data.filter.store.salesCapital + this.totalTempDebit + this.totalTempCredit + this.totalTempCreditVisa + this.totalTempCreditMaster;
+        //this.subtotalArrTotal = this.totalCash + this.data.filter.store.salesCapital + this.totalTempDebit + this.totalTempCredit + this.totalTempCreditVisa + this.totalTempCreditMaster;
     }
 }
