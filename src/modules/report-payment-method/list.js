@@ -228,8 +228,7 @@ export class List {
         this.reportHTML += "            </tr>";
         this.reportHTML += "        </thead>";
         this.reportHTML += "        <tbody>";
-
-        var totalTransaksi = 0;
+ 
         var totalTotalTransaksi = 0;
 
         for (var data of this.data.results) {
@@ -238,6 +237,7 @@ export class List {
             var tempDebit = 0;
             var tempCredit = 0;
             var tempVoucher = 0;
+            var totalTransaksi = 0;
             for (var item of data.items) {
                 if (!item.isVoid) {
                     totalTransaksi++;
@@ -295,7 +295,7 @@ export class List {
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalTotalOmset.toLocaleString() + "</td>";
         this.reportHTML += "        </tbody>";
         this.reportHTML += "    </table>";
-        this.subtotalArrTotal = this.totalTotalOmset + this.data.filter.store.salesCapital;
+        this.subtotalArrTotal = totalTotalOmset + this.data.filter.store.salesCapital;
 
 
         var detailData = [];
@@ -362,15 +362,15 @@ export class List {
         this.reportHTMLDetail += "          <td>Total</td>";
         this.reportHTMLDetail += "          <td></td>";
         this.reportHTMLDetail += "          <td></td>";
-        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempDebit + "</td>";
-        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCredit + "</td>";
-        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditVisa + "</td>";
-        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditMaster + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempDebit.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCredit.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditVisa.toLocaleString() + "</td>";
+        this.reportHTMLDetail += "          <td style='background-color:#48cbe2;'>" + this.totalTempCreditMaster.toLocaleString() + "</td>";
         this.reportHTMLDetail += "      </tr>";
         this.reportHTMLDetail += "   </tbody>";
         this.reportHTMLDetail += "</table>";
 
         this.detailData = detailData;
-        this.subtotalArrTotal = this.totalCash + this.data.filter.store.salesCapital + this.totalTempDebit + this.totalTempCredit + this.totalTempCreditVisa + this.totalTempCreditMaster;
+        //this.subtotalArrTotal = this.totalCash + this.data.filter.store.salesCapital + this.totalTempDebit + this.totalTempCredit + this.totalTempCreditVisa + this.totalTempCreditMaster;
     }
 }
