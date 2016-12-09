@@ -26,6 +26,7 @@ export class List {
 
         this.totalQty = 0;
         this.totalCash = 0;
+        this.totalVoucher = 0;
         this.totalTempDebit = 0;
         this.totalTempCredit = 0;
         this.totalTempCreditVisa = 0;
@@ -286,6 +287,7 @@ export class List {
             }
         }
         this.totalCash = totalCash;
+        this.totalVoucher = totalVoucher;
         var totalTotalOmset = totalCash + totalCredit + totalDebit + totalVoucher;
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalTotalTransaksi.toLocaleString() + "</td>";
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalCash.toLocaleString() + "</td>";
