@@ -117,10 +117,15 @@ export class List {
                                 
                                 if (data.salesDetail.bank.name != null) {
                                     itemData.bank = data.salesDetail.bank.name;
-                                    itemData.bankCard = data.salesDetail.bankCard.name;
                                 }
                                 else
                                     itemData.bank = "Kartu tidak Teridentifikasi";
+                                    
+                                if (data.salesDetail.bankCard.name != null) {
+                                    itemData.bankCard = data.salesDetail.bankCard.name;
+                                }
+                                else
+                                    itemData.bankCard = "Kartu tidak Teridentifikasi";
                                     
                                 if (data.salesDetail.cardType.name == "Mastercard") {
                                     itemData.debitNominalLainnya = 0;
