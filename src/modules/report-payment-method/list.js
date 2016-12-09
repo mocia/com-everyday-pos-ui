@@ -228,8 +228,7 @@ export class List {
         this.reportHTML += "            </tr>";
         this.reportHTML += "        </thead>";
         this.reportHTML += "        <tbody>";
-
-        var totalTransaksi = 0;
+ 
         var totalTotalTransaksi = 0;
 
         for (var data of this.data.results) {
@@ -238,6 +237,7 @@ export class List {
             var tempDebit = 0;
             var tempCredit = 0;
             var tempVoucher = 0;
+            var totalTransaksi = 0;
             for (var item of data.items) {
                 if (!item.isVoid) {
                     totalTransaksi++;
