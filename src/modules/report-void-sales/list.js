@@ -55,7 +55,7 @@ export class List {
         var datefrom = new Date(this.data.filter.dateFrom);
         var dateto = new Date(this.data.filter.dateTo);
         if (dateto < datefrom)
-            this.error.filter.dateTo = "Date To must bigger than from";
+            this.error.filter.dateTo = "Tanggal From Harus Lebih Besar Dari To";
         else {
             var getData = [];
             for (var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) {
