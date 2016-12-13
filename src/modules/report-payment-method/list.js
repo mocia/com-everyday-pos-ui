@@ -72,7 +72,7 @@ export class List {
         if (this.data.filter.storeId == undefined || this.data.filter.storeId == '')
             this.error.filter.storeId = "Please choose Store";
         else if (dateto < datefrom)
-            this.error.filter.dateTo = "Date To must bigger than from";
+            this.error.filter.dateTo = "Tanggal From Harus Lebih Besar Dari To";
         else {
             var getData = [];
             for (var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) {
