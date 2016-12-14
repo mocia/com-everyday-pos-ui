@@ -309,7 +309,7 @@ export class List {
         for (var data of this.data.results) {
             var tanggal = data.tanggal.getDate() + " " + months[data.tanggal.getMonth()] + " " + data.tanggal.getFullYear();
             for (var item of data.items) {
-                if (!item.isVoid && item.paymentType == "Card") {
+                if (!item.isVoid && item.paymentType != "Cash") {
                     var isAny = false;
                     for (var resultdata of detailData) {
                         if (resultdata.tanggal == tanggal && resultdata.bank == item.bank && resultdata.bankCard == item.bankCard) {
