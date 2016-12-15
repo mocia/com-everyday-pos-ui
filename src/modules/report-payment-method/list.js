@@ -72,7 +72,7 @@ export class List {
         if (this.data.filter.storeId == undefined || this.data.filter.storeId == '')
             this.error.filter.storeId = "Please choose Store";
         else if (dateto < datefrom)
-            this.error.filter.dateTo = "Date To must bigger than from";
+            this.error.filter.dateTo = "Tanggal From Harus Lebih Besar Dari To";
         else {
             var getData = [];
             for (var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) {
@@ -309,7 +309,7 @@ export class List {
         for (var data of this.data.results) {
             var tanggal = data.tanggal.getDate() + " " + months[data.tanggal.getMonth()] + " " + data.tanggal.getFullYear();
             for (var item of data.items) {
-                if (!item.isVoid && item.paymentType == "Card") {
+                if (!item.isVoid && item.paymentType != "Cash") {
                     var isAny = false;
                     for (var resultdata of detailData) {
                         if (resultdata.tanggal == tanggal && resultdata.bank == item.bank && resultdata.bankCard == item.bankCard) {

@@ -8,7 +8,7 @@
                 <th>Grand Total</th>
                 <th>Kasir</th>
                 <th>Tanggal Transaksi</th>
-                <th><button click.delegate="addItem()" class="btn btn-success btn-sm pull-right">Add Item</button></th>
+                <th><button click.delegate="addItem()" class="btn btn-success btn-sm pull-right">Tambah Transaksi</button></th>
             </tr>
         </thead>
         <tbody>
@@ -50,7 +50,7 @@
                         <input class="form-control" type="text" name="date" value.bind="item.date" readonly.bind="true" />
                     </div>-->
                 </td>
-                <td><button href="#" class="btn btn-danger btn-sm pull-right" click.delegate="removeItem(item)">Remove</button></td>
+                <td><button href="#" class="btn btn-danger btn-sm pull-right" click.delegate="removeItem(item)">Hapus</button></td>
             </tr> 
         </tbody>
     </table>
