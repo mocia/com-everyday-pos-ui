@@ -328,6 +328,11 @@ div.au-stagger {
     display: block;
   }
   
+  
+  .struk table tr td{
+    vertical-align: top;
+  }
+  
   .a4 {
     width: 207mm;
     height: 302mm;

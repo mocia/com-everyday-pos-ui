@@ -115,13 +115,13 @@ export class List {
                                 
                                 itemData.paymentType = data.salesDetail.paymentType
                                 
-                                if (data.salesDetail.bank.name != null) {
+                                if (data.salesDetail.bank.name != null  && data.salesDetail.bank._active != null && data.salesDetail.bank._active !== false) {
                                     itemData.bank = data.salesDetail.bank.name;
                                 }
                                 else
                                     itemData.bank = "Kartu tidak Teridentifikasi";
                                     
-                                if (data.salesDetail.bankCard.name != null) {
+                                if (data.salesDetail.bankCard.name != null && data.salesDetail.bankCard._active != null && data.salesDetail.bankCard._active !== false) {
                                     itemData.bankCard = data.salesDetail.bankCard.name;
                                 }
                                 else
