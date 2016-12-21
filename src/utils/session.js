@@ -95,13 +95,13 @@ export class Session {
     get shift() { 
         var local = this.local;
         var today = new Date(); 
-        local.shift = "0";
+        local.shift = 0;
         if(this.store.shifts) {
             for (var shift of this.store.shifts) {
                 var dateFrom = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateFrom)));
                 var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
                 if (dateFrom < today && today < dateTo) {
-                    local.shift = shift.shift;
+                    local.shift = parseInt(shift.shift);
                     break;
                 }
             } 

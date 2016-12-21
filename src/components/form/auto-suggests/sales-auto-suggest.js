@@ -8,7 +8,7 @@ import SalesAutoSuggestReact from '../../react/auto-suggests/sales-auto-suggest-
 @noView()
 @inject(Element)
 @customElement('sales-auto-suggest')
-export class SuppplierAutoSuggest {
+export class SalesAutoSuggest {
 
     @bindable({ defaultBindingMode: bindingMode.twoWay }) label;
     @bindable({ defaultBindingMode: bindingMode.twoWay }) value;

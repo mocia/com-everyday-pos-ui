@@ -379,7 +379,10 @@ export class View {
         if(this.isCard) {
             var cardNumberMasking = "XXXX-XXXX-XXXX-" + this.data.salesDetail.cardNumber.substring(this.data.salesDetail.cardNumber.length - 4, this.data.salesDetail.cardNumber.length);
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td colspan='3' class='text-left'> Bank: " + this.data.salesDetail.bank.name + " - " + cardNumberMasking + " </td>";
+            this.printStruk += "        <td colspan='3' class='text-left'> Bank : " + this.data.salesDetail.bankCard.name + " </td>";
+            this.printStruk += "    </tr>";
+            this.printStruk += "    <tr>";
+            this.printStruk += "        <td colspan='3' class='text-left'> Nomor Kartu : " + cardNumberMasking + " </td>";
             this.printStruk += "    </tr>";
         }
         this.printStruk += "    <tr>";

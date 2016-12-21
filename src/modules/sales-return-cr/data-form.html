@@ -24,7 +24,7 @@
             </div>
         </div>-->
         
-        <sales-auto-suggest label="Nomor Transaksi" value.bind="data.sales" error.bind="error.reference" read-only.bind="readOnly" change.delegate="salesChanged($event)"></sales-auto-suggest>
+        <returnable-auto-suggest label="Nomor Transaksi" value.bind="data.sales" error.bind="error.reference" read-only.bind="readOnly" change.delegate="salesChanged($event)"></returnable-auto-suggest>
         
         <!--<div class="form-group ${error.reference?'has-error':''}">
             <label for="reference" class="col-sm-2 control-label">Nomor Transaksi</label>
