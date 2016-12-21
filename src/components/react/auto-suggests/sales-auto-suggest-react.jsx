@@ -2,7 +2,7 @@ import React from 'react';
 import AutoSuggestReact from './auto-suggest-react.jsx';
 import {Session} from '../../../utils/session';
 
-const serviceUri = require('../../../host').store;
+const serviceUri = require('../../../host').sales + '/docs/sales';
 const empty = {
     code: '',
     name: '',
