@@ -78,11 +78,31 @@ export class DataForm {
         e.preventDefault(); // prevent the default action (scroll / move caret)
     }
     
+    getShift() {
+        var today = new Date();
+        this.data.shift = 0;
+        if (this.data.store.shifts) {
+            for (var shift of this.data.store.shifts) {
+                var dateFrom = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateFrom)));
+                var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
+                if (dateFrom < today && today < dateTo) {
+                    this.data.shift = parseInt(shift.shift);
+                    break;
+                }
+            }
+        }
+    }
+    
     attached() {    
         this.data.storeId = this.session.store._id;
         this.data.store = this.session.store;
-        this.data.shift = this.session.shift;
-        
+        this.data.shift = this.getShift();
+        this.service.getStore(this.data.storeId)
+            .then(result => {
+                this.data.store = result;
+                this.getShift();
+            })
+
         this.itemReturs = [];
         this.isCard = false;
         this.isCash = false;
