@@ -1,8 +1,8 @@
 <template>
     <require from="customs/elements/horsey"></require>
     <div class="display-wrapper">
-        <h3>Laporan Penjualan - Metode Pembayaran</h3>
-        <form class="form-horizontal"> 
+        <h1 class="page-header">Laporan Penjualan - Metode Pembayaran</h1>
+        <form class="form-horizontal">
             <!--<div class="form-group ${error.filter.storeId?'has-error':''}">
                 <label for="store" class="col-sm-2 control-label">Toko</label>
                 <div class="col-sm-10">
@@ -12,19 +12,19 @@
             </div> -->
             <div class="form-group ${error.filter.dateFrom?'has-error':''}">
                 <label for="dateFrom" class="col-sm-2 control-label">From</label>
-                <div class="col-sm-10"> 
-                    <input type="date" class="form-control" name="date" value.bind="dateFromPicker" change.delegate="setDateFrom()"/>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" name="date" value.bind="dateFromPicker" change.delegate="setDateFrom()" />
                     <span class="help-block">${error.filter.dateFrom}</span>
                 </div>
-            </div> 
+            </div>
             <div class="form-group ${error.filter.dateTo?'has-error':''}">
                 <label for="dateTo" class="col-sm-2 control-label">To</label>
-                <div class="col-sm-10"> 
-                    <input type="date" class="form-control" name="date" value.bind="dateToPicker" change.delegate="setDateTo()"/>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" name="date" value.bind="dateToPicker" change.delegate="setDateTo()" />
                     <span class="help-block">${error.filter.dateTo}</span>
                 </div>
             </div>
-            
+
             <div class="form-group ${error.filter.storeId?'has-error':''}">
                 <label for="store" class="col-sm-2 control-label">Shift</label>
                 <div class="col-sm-10">
@@ -40,27 +40,29 @@
             </div>
             <div class="btn-group col-sm-12">
                 <button class="btn btn-success pull-right" click.delegate="filter()">View Report</button>
-            </div> 
-            <div class="col-sm-12" if.bind="isFilter"> 
+            </div>
+            <div class="col-sm-12" if.bind="isFilter">
                 <div class="row">
                     <button class="btn btn-success pull-left" onclick="javascript:window.print();">Print Report</button>
-                </div> 
+                </div>
                 <div class="row">
                     <div class="pre-scrollable" innerHTML.bind="reportHTML | sanitizeHTML"></div>
-                    <div class="pre-scrollable" innerHTML.bind="reportHTMLDetail | sanitizeHTML"></div> 
-                </div> 
-            </div>  
-        </form> 
+                    <div class="pre-scrollable" innerHTML.bind="reportHTMLDetail | sanitizeHTML"></div>
+                </div>
+            </div>
+        </form>
     </div>
-          
+
     <div class="print-wrapper struk">
-        <div class="row col-sm-12"><center><label class="header">REKAP SETORAN</label></center></div>
+        <div class="row col-sm-12">
+            <center><label class="header">REKAP SETORAN</label></center>
+        </div>
         <div class="row col-sm-12">
             Store Name : ${data.filter.store.name}
-        </div> 
+        </div>
         <div class="row col-sm-12">
             Store Address : ${data.filter.store.address}
-        </div> 
+        </div>
         <div class="row col-sm-12">
             Store Phone : ${data.filter.store.phone}
         </div>
@@ -75,17 +77,17 @@
         </div>-->
         <div class="row col-sm-12">
             ==================
-        </div> 
+        </div>
         <div class="row col-sm-12">
             Saldo Awal : ${data.filter.store.salesCapital.toLocaleString()}
-        </div> 
+        </div>
         <div class="row col-sm-12">
             Tunai / Cash : ${totalCash.toLocaleString()}
-        </div>  
+        </div>
         <div class="row col-sm-12">
             Voucher : ${totalVoucher.toLocaleString()}
-        </div>   
-        <div class="row col-sm-12"> 
+        </div>
+        <div class="row col-sm-12">
             <!--<table class="table table-bordered"> 
                 <thead>
                     <tr>
@@ -108,23 +110,20 @@
                     </tr>  
                 </tbody>    
             </table>-->
-            <table class="table table-bordered"> 
+            <table class="table table-bordered">
                 <tr repeat.for="data of detailData">
                     <td class="text-left">
-                        ${data.tanggal} <br/>
-                        EDC : ${data.bank} <br/>
-                        Kartu : ${data.bankCard} <br/>
-                        Debit Card : ${data.debitCardNominal.toLocaleString()} <br/>
-                        Credit Card : ${data.creditCardNominal.toLocaleString()} <br/>
-                        Credit Visa : ${data.creditVisaNominal.toLocaleString()} <br/>
-                        Credit Master : ${data.creditMasterNominal.toLocaleString()} <br/>
+                        ${data.tanggal} <br/> EDC : ${data.bank} <br/> Kartu : ${data.bankCard} <br/> Debit Card : ${data.debitCardNominal.toLocaleString()}
+                        <br/> Credit Card : ${data.creditCardNominal.toLocaleString()} <br/> Credit Visa : ${data.creditVisaNominal.toLocaleString()}
+                        <br/> Credit Master : ${data.creditMasterNominal.toLocaleString()} <br/>
                     </td>
-                </tr>   
+                </tr>
             </table>
         </div>
-        <div class="row col-sm-12"> 
+        <div class="row col-sm-12">
             <b> SUBTOTAL : ${subtotalArrTotal.toLocaleString()} </b>
         </div>
         <div style="page-break-after:always;"></div>
-    </div><!-- /.print-wrapper -->
+    </div>
+    <!-- /.print-wrapper -->
 </template>

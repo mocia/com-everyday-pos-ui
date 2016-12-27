@@ -60,12 +60,12 @@
             </div>
         </div> 
         
-        <div class="form-group ${error.items?'has-error':''}">
+        <div class="${error.items?'has-error':''}">
             <button click.delegate="addItem()" class="btn btn-success btn-sm pull-right">Tambah Retur</button>
-            <table class="table"> 
+            <table class="table table-bordered"> 
                 <tr repeat.for="item of data.items">
                     <td colspan="12">
-                        <table class="table">
+                        <table class="table table-bordered"> 
                             <thead>
                                 <tr>
                                     <th>No.</th>
@@ -162,7 +162,7 @@
                                 <tr if.bind="item.returnItems.length > 0">
                                     <td></td>
                                     <td colspan="11">
-                                        <table class="table">
+                                        <table class="table table-bordered"> 
                                             <thead>
                                                 <tr>
                                                     <th>No.</th>

@@ -26,6 +26,10 @@ export class NavBar {
         });
     }
     
+    get isAuthenticated() {
+        return this.session.isAuthenticated;
+    }
+    
     logout() {
         this.session.remove();
         this.router.navigate('/')
