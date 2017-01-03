@@ -5,6 +5,7 @@ import {SecureService} from '../../utils/secure-service';
 
 const serviceUri = require('../../host').sales + '/docs/sales';
 const serviceUriStore = require('../../host').store;
+const serviceUriStoreMaster = require('../../host').master + '/stores';
 const serviceUriSalesVoids = require('../../host').sales + '/docs/salesvoids';
 const serviceUriBank = require('../../host').master + '/banks';
 const serviceUriCardType = require('../../host').master + '/cardtypes';
@@ -19,6 +20,11 @@ export class Service extends SecureService {
 
     search(storeId, keyword) {
         var endpoint = `${serviceUriStore}/${storeId}/sales/docs/sales?keyword=${keyword}`;
+        return super.get(endpoint);
+    }
+
+    getStore(storeId) {
+        var endpoint = `${serviceUriStoreMaster}/${storeId}`;
         return super.get(endpoint);
     }
 
@@ -44,9 +50,9 @@ export class Service extends SecureService {
         var postRequest = this.http.fetch(endpoint, request);
         this.publish(postRequest);
         return postRequest
-            .then(response => { 
+            .then(response => {
                 return response.json().then(result => {
-                    result.id = response.headers.get('Id'); 
+                    result.id = response.headers.get('Id');
                     this.publish(postRequest);
                     if (result.error) {
                         return Promise.reject(result.error);
@@ -54,7 +60,7 @@ export class Service extends SecureService {
                     else {
                         return Promise.resolve(result.id);
                     }
-                }); 
+                });
             });
         // return super.post(endpoint, data);
     }

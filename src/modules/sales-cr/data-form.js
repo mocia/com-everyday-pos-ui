@@ -15,11 +15,11 @@ export class DataForm {
         this.router = router;
         this.service = service;
         this.bindingEngine = bindingEngine;
-        this.session = session; 
+        this.session = session;
         this.readOnlyTrue = true;
         this.readOnlyFalse = false;
         //this.stores = session.stores; 
-        
+
         this.isCard = false;
         this.isCash = false;
         var getData = [];
@@ -77,11 +77,32 @@ export class DataForm {
         e.preventDefault(); // prevent the default action (scroll / move caret)
     }
 
+    getShift() {
+        var today = new Date();
+        this.data.shift = 0;
+        if (this.data.store.shifts) {
+            for (var shift of this.data.store.shifts) {
+                var dateFrom = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateFrom)));
+                var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
+                if (dateFrom < today && today < dateTo) {
+                    this.data.shift = parseInt(shift.shift);
+                    break;
+                }
+            }
+        }
+    }
+
     attached() {
         this.data.storeId = this.session.store._id;
         this.data.store = this.session.store;
-        this.data.shift = this.session.shift;
-        
+        this.data.shift = this.getShift();
+        this.service.getStore(this.data.storeId)
+            .then(result => {
+                this.data.store = result;
+                this.getShift();
+            })
+
+
         this.data.datePicker = this.getStringDate(new Date());
         this.data.date = new Date();
         this.data.discount = 0;
@@ -113,19 +134,19 @@ export class DataForm {
         });
         this.bindingEngine.propertyObserver(this.data, "date").subscribe((newValue, oldValue) => {
             this.refreshPromo(-1);
-        }); 
+        });
         this.bindingEngine.propertyObserver(this.data.salesDetail.voucher, "value").subscribe((newValue, oldValue) => {
             this.refreshCash();
-        }); 
+        });
         this.bindingEngine.propertyObserver(this.data.salesDetail, "cardAmount").subscribe((newValue, oldValue) => {
             this.refreshDetail();
-        });     
+        });
         this.bindingEngine.propertyObserver(this.data.salesDetail, "cashAmount").subscribe((newValue, oldValue) => {
             this.refreshDetail();
-        });        
-            
-    } 
-    
+        });
+
+    }
+
     search() {
         var reference = this.data.reference
         this.service.getSalesVoidsByCode(this.data.storeId, this.data.reference)
@@ -165,7 +186,7 @@ export class DataForm {
             .catch(e => {
                 console.log(e);
             })
-    } 
+    }
 
     addItem() {
         var item = {};

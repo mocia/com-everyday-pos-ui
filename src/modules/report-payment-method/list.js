@@ -221,7 +221,7 @@ export class List {
         var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         this.reportHTML = "Payment Summary";
-        this.reportHTML += "    <table class='table table-fixed'>";
+        this.reportHTML += "    <table class='table table-bordered'>";
         this.reportHTML += "        <thead>";
         this.reportHTML += "            <tr style='background-color:#282828; color:#ffffff;'>";
         this.reportHTML += "                <th>Tanggal</th>";
@@ -336,7 +336,7 @@ export class List {
             }
         }
         this.reportHTMLDetail = "Payment Details - Card";
-        this.reportHTMLDetail += "    <table class='table table-fixed'>";
+        this.reportHTMLDetail += "    <table class='table table-bordered'>";
         this.reportHTMLDetail += "        <thead>";
         this.reportHTMLDetail += "            <tr style='background-color:#282828; color:#ffffff;'>";
         this.reportHTMLDetail += "                <th width='300px'>Tanggal</th>";

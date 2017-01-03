@@ -1,7 +1,7 @@
 <template>
     <require from="../../customs/elements/horsey"></require>
-    <h3>Laporan Penjualan - Omset</h3>
-    <form class="form-horizontal"> 
+    <h1 class="page-header">Laporan Penjualan - Omset</h1>
+    <form class="form-horizontal">
         <!--<div class="form-group ${error.filter.storeId?'has-error':''}">
             <label for="store" class="col-sm-2 control-label">Toko</label>
             <div class="col-sm-10">
@@ -13,21 +13,21 @@
         </div>-->
         <div class="form-group ${error.filter.dateFrom?'has-error':''}">
             <label for="dateFrom" class="col-sm-2 control-label">From</label>
-            <div class="col-sm-10"> 
-                <input type="date" class="form-control" name="date" value.bind="dateFromPicker" change.delegate="setDateFrom()"/>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" name="date" value.bind="dateFromPicker" change.delegate="setDateFrom()" />
                 <span class="help-block">${error.filter.dateFrom}</span>
             </div>
-        </div> 
+        </div>
         <div class="form-group ${error.filter.dateTo?'has-error':''}">
             <label for="dateTo" class="col-sm-2 control-label">To</label>
-            <div class="col-sm-10"> 
-                <input type="date" class="form-control" name="date" value.bind="dateToPicker" change.delegate="setDateTo()"/>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" name="date" value.bind="dateToPicker" change.delegate="setDateTo()" />
                 <span class="help-block">${error.filter.dateTo}</span>
             </div>
         </div>
         <div class="form-group ${error.filter.storeId?'has-error':''}">
             <label for="store" class="col-sm-2 control-label">Shift</label>
-            <div class="col-sm-10"> 
+            <div class="col-sm-10">
                 <select class="form-control" name="shift" value.bind="data.filter.shift"> 
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -40,11 +40,11 @@
         </div>
         <div class="btn-group col-sm-12">
             <button class="btn btn-success pull-right" click.delegate="filter()">Tampilkan</button>
-        </div> 
-        <div class="col-sm-12" if.bind="isFilter"> 
+        </div>
+        <div class="col-sm-12" if.bind="isFilter">
             <div class="pre-scrollable" innerHTML.bind="reportHTML | sanitizeHTML"></div>
-            
-            <table>
+
+            <table class="table table-bordered">
                 <tr>
                     <td width='300px'>Total Pcs</td>
                     <td class='text-right'>${totalQty.toLocaleString()}</td>
@@ -70,11 +70,11 @@
                     <td class='text-right'>${sisaTargetPercentage.toLocaleString()} %</td>
                 </tr>
             </table>
-        
-        </div>  
-        
-        
-        
-        
-    </form> 
+
+        </div>
+
+
+
+
+    </form>
 </template>

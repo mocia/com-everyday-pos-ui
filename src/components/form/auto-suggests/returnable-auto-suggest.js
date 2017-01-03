@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 import {customElement, inject, bindable, bindingMode, noView} from 'aurelia-framework';
 
 import FieldReact from '../../react/basic/field-react.jsx';
-import StoreAutoSuggestReact from '../../react/auto-suggests/store-auto-suggest-react.jsx';
+import ReturnableAutoSuggestReact from '../../react/auto-suggests/returnable-auto-suggest-react.jsx';
 
 @noView()
 @inject(Element)
-@customElement('store-auto-suggest')
-export class StoreAutoSuggest {
+@customElement('returnable-auto-suggest')
+export class ReturnableAutoSuggest {
 
     @bindable({ defaultBindingMode: bindingMode.twoWay }) label;
     @bindable({ defaultBindingMode: bindingMode.twoWay }) value;
@@ -37,7 +37,7 @@ export class StoreAutoSuggest {
         this.options = { readOnly: (this.readOnly || '').toString().toLowerCase() === 'true' };
         this.reactComponent = ReactDOM.render(
             <FieldReact label={this.label} error={this.error}>
-                <StoreAutoSuggestReact value={this.value} options={this.options} onChange={this.handleValueChange} />
+                <ReturnableAutoSuggestReact value={this.value} options={this.options} onChange={this.handleValueChange} />
             </FieldReact>,
             this.element
         );
