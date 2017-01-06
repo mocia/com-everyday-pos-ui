@@ -96,11 +96,11 @@ export class DataForm {
     attached() {    
         this.data.storeId = this.session.store._id;
         this.data.store = this.session.store;
-        this.data.shift = this.getShift();
+        // this.data.shift = this.getShift();
         this.service.getStore(this.data.storeId)
             .then(result => {
                 this.data.store = result;
-                this.getShift();
+                // this.getShift();
             })
 
         this.itemReturs = [];
@@ -178,7 +178,8 @@ export class DataForm {
         this.bindingEngine.propertyObserver(this.data, "reference").subscribe((newValue, oldValue) => {
             this.itemReturs = [];
             for(var item of this.data.sales.items) {
-                this.itemReturs.push(item);
+                if(!item.isReturn)
+                    this.itemReturs.push(item);
             }
             while(this.data.items.length > 0) {
                 var item = this.data.items[0];
