@@ -178,7 +178,8 @@ export class DataForm {
         this.bindingEngine.propertyObserver(this.data, "reference").subscribe((newValue, oldValue) => {
             this.itemReturs = [];
             for(var item of this.data.sales.items) {
-                this.itemReturs.push(item);
+                if(!item.isReturn)
+                    this.itemReturs.push(item);
             }
             while(this.data.items.length > 0) {
                 var item = this.data.items[0];
