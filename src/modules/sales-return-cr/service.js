@@ -5,6 +5,7 @@ import {SecureService} from '../../utils/secure-service';
 
 const serviceUri = require('../../host').sales + '/docs/salesreturns';
 const serviceUriStore = require('../../host').store;
+const serviceUriStoreMaster = require('../../host').master + '/stores';
 const serviceUriBank = require('../../host').master + '/banks';
 const serviceUriCardType = require('../../host').master + '/cardtypes';
 const serviceUriPromo = require('../../host').sales + '/promos'; 
@@ -23,6 +24,11 @@ export class Service extends SecureService {
     
     getById(id) {
         var endpoint = `${serviceUri}/${id}`;
+        return super.get(endpoint);
+    }
+
+    getStore(storeId) {
+        var endpoint = `${serviceUriStoreMaster}/${storeId}`;
         return super.get(endpoint);
     }
 

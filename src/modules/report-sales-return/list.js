@@ -262,7 +262,7 @@ export class List {
         var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         this.reportHTML = "";
-        this.reportHTML += "    <table class='table table-fixed'>";
+        this.reportHTML += "    <table class='table table-bordered'>";
         this.reportHTML += "        <thead>";
         this.reportHTML += "            <tr style='background-color:#282828; color:#ffffff;'>";
         this.reportHTML += "                <th>Tanggal</th>";
