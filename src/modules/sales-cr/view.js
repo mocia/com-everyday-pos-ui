@@ -247,7 +247,7 @@ export class View {
         hemat += discountSubTotal;
         
         this.printStruk = "";
-        this.printStruk += "<table style='width:100%; class='table table-bordered' '>";
+        this.printStruk += "<table style='width:100%;'>";
         // this.printStruk += "    <tr>";
         // this.printStruk += "        <td colspan='3'> this.data.salesDetail.paymentType </td>";
         // this.printStruk += "    </tr>";
