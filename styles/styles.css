@@ -256,6 +256,9 @@ div.au-stagger {
     page-break-after: always;
     display: block;
     margin-top:.5cm;
+    position:absolute;
+    top:0;
+    left:0;
     /*margin-bottom:.5cm;*/
   }
   
@@ -355,6 +358,10 @@ div.au-stagger {
             
  .display-wrapper {
     display: none;
+  }
+
+  .side-nav-bar{
+    display:none;
   }
 }
 
