@@ -300,7 +300,7 @@ export class View {
             hemat += discount1Nominal + discount2Nominal + item.discountNominal + discountSpecialNominal;
 
             this.printStruk += "    <tr>";
-            this.printStruk += "        <td class='text-left'> " + item.item.code + " </td>";
+            this.printStruk += "        <td class='text-left' style='padding-right:6pt'> " + item.item.code + " </td>";
             this.printStruk += "        <td colspan='2' class='text-left'> " + item.item.name + " </td>";
             this.printStruk += "    </tr>";
             this.printStruk += "    <tr>";
