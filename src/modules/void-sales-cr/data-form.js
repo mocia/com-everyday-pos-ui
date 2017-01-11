@@ -7,7 +7,7 @@ export class DataForm {
     @bindable data = {};
     @bindable error = {};
 
-    salesApiUri = require('../../host').sales + '/docs/sales';
+    salesApiUri = 'sales/docs/sales';
 
     constructor(router, service, bindingEngine) {
         this.router = router;

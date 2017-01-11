@@ -1,21 +1,24 @@
-import {inject, Lazy} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-fetch-client';
-import {RestService} from '../../rest-service';
-import {SecureService} from '../../utils/secure-service';
+import { inject, Lazy } from 'aurelia-framework';
+import { HttpClient } from 'aurelia-fetch-client';
+import { RestService } from '../../utils/rest-service';
 
-const serviceUri = require('../../host').sales + '/docs/sales';
-const serviceUriStore = require('../../host').store;
-const serviceUriStoreMaster = require('../../host').master + '/stores';
-const serviceUriSalesVoids = require('../../host').sales + '/docs/salesvoids';
-const serviceUriBank = require('../../host').master + '/banks';
-const serviceUriCardType = require('../../host').master + '/cardtypes';
-const serviceUriPromo = require('../../host').sales + '/promos';
-const serviceUriFinishedgood = require('../../host').master + '/finishedgoods';
+import { Container } from 'aurelia-dependency-injection';
+import { Config } from "aurelia-api"
 
-export class Service extends SecureService {
+const serviceUri = 'sales/docs/sales';
+const serviceUriStore = 'store';
+const serviceUriStoreMaster = 'master/stores';
+const serviceUriSalesVoids = 'sales/docs/salesvoids';
+const serviceUriBank = 'master/banks';
+const serviceUriCardType = 'master/cardtypes';
+const serviceUriPromo = 'sales/promos';
+const serviceUriFinishedgood = 'master/finishedgoods';
 
-    constructor(http, aggregator) {
-        super(http, aggregator);
+export class Service extends RestService {
+
+    constructor(http, aggregator, config, api) {
+        super(http, aggregator, config, "pos");
+        // this.http = http;
     }
 
     search(storeId, keyword) {
@@ -44,10 +47,11 @@ export class Service extends SecureService {
         var header;
         var request = {
             method: 'POST',
-            headers: new Headers(Object.assign({}, this.header, header)),
+            headers: new Headers(Object.assign({'Content-type' : 'application/json'}, this.header, header)),
             body: JSON.stringify(data)
         };
-        var postRequest = this.http.fetch(endpoint, request);
+        var postRequest = this.endpoint.client.fetch(endpoint, request);
+        // var postRequest = this.service.post(endpoint, data);
         this.publish(postRequest);
         return postRequest
             .then(response => {
@@ -62,7 +66,6 @@ export class Service extends SecureService {
                     }
                 });
             });
-        // return super.post(endpoint, data);
     }
 
     getBank() {

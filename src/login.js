@@ -1,29 +1,37 @@
-import {Aurelia, inject} from 'aurelia-framework';
-import {Session} from './utils/session';
-import {AuthService} from './utils/auth-service';
+import { Aurelia, inject } from 'aurelia-framework';
+import { AuthService } from "aurelia-authentication";
 import '../styles/signin.css';
 
-@inject(Aurelia, Session, AuthService)
+
+@inject(Aurelia, AuthService)
 export class Login {
     username = "dev";
     password = "Standar123";
-    constructor(aurelia, session, authService) {
-        this.service = authService;
+
+    constructor(aurelia,authService) {
         this.aurelia = aurelia;
-        this.session = session;
-        if (this.session.isAuthenticated)
-            this.aurelia.setRoot('app');
+        this.authService = authService;
     }
 
     login() {
-        this.service.authenticate(this.username, this.password)
-            .then(token => {
-                this.service.me(token)
+        return this.authService.login({ "username": this.username, "password": this.password })
+            .then(response => {
+                console.log("success logged " + response);
+                this.authService.getMe(response.data)
                     .then(account => {
-                        this.session.token = token;
-                        this.session.data = account;
+                        // this.session.token = token;
+                        // this.session.data = account;
+                        if (account) {
+                            this.authService.authentication.storage.set("me", JSON.stringify(account));
+                        } else {
+                            this.authService.authentication.storage.remove("me");
+                        }
                         this.aurelia.setRoot('app');
                     })
             })
+            .catch(err => {
+                console.log(err);
+                console.log("login failure");
+            });
     }
 } 

@@ -1,13 +1,12 @@
 import {inject, Lazy} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
-import {RestService} from '../../rest-service';
-import {SecureService} from '../../utils/secure-service';
+import {RestService} from '../../utils/rest-service';
   
-const serviceUri = require('../../host').sales + '/docs/salesreturns';
-export class Service extends SecureService{
+const serviceUri = 'sales/docs/salesreturns';
+export class Service extends RestService{
   
-  constructor(http, aggregator) {
-    super(http, aggregator);
+  constructor(http, aggregator,config,api) {
+    super(http, aggregator,config,"pos");
   } 
 
   getAllSalesReturnByFilter(store, dateFrom, dateTo, shift)
