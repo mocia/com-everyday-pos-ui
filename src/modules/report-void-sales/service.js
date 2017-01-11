@@ -1,16 +1,18 @@
 import {inject, Lazy} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
-import {RestService} from '../../rest-service';
-import {SecureService} from '../../utils/secure-service';
+import {RestService} from '../../utils/rest-service';
 
-const serviceUri = require('../../host').sales + '/docs/salesvoids';
-const serviceUriStore = require('../../host').master + '/stores';
-const serviceUriTransferInDoc = require('../../host').inventory + '/docs/transfer-in';
+import { Container } from 'aurelia-dependency-injection';
+import { Config } from "aurelia-api"
 
-export class Service extends SecureService {
+const serviceUri =  'sales/docs/salesvoids';
+const serviceUriStore = 'master/stores';
+const serviceUriTransferInDoc ='inventory/docs/transfer-in';
 
-  constructor(http, aggregator) {
-    super(http, aggregator);
+export class Service extends RestService {
+
+  constructor(http, aggregator,config, api) {
+    super(http, aggregator,config,"pos");
   }
 
   getAllSalesByFilter(storeId, dateFrom, dateTo, shift) {
@@ -39,7 +41,9 @@ export class Service extends SecureService {
   }
 
   getModuleConfig() {
-    var endpoint = require('../../host').core + '/modules?keyword=EFR-KB/EXB';
+    var config = Container.instance.get(Config);
+    var endpoint = config.getEndpoint("core") + '/modules?keyword=EFR-KB/EXB';
+    // var endpoint = require('../../host').core + '/modules?keyword=EFR-KB/EXB';
     return super.get(endpoint)
       .then(results => {
         if (results && results.length == 1)
@@ -50,7 +54,9 @@ export class Service extends SecureService {
   }
 
   getStorageById(id) {
-    var endpoint = `${require('../../host').inventory + '/storages'}/${id}`;
+    var config = Container.instance.get(Config);
+    var endpoint = config.getEndpoint("inventory") + `'/storages'}/${id}`;
+    // var endpoint = `${require('../../host').inventory + '/storages'}/${id}`;
     return super.get(endpoint);
   }
 
