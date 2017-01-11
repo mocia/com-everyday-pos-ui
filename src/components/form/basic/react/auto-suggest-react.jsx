@@ -55,7 +55,6 @@ export default class AutoSuggestReact extends React.Component {
 
         Promise.resolve(typeof (suggestions) === "function" ? suggestions(value, filter) : suggestions)
             .then(results => {
-                console.log(results);
                 this.setState({ suggestions: results });
             });
     }
