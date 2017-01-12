@@ -52,6 +52,7 @@ export class DataForm {
                     }
                 })
                 this.CardTypes = results[1];
+                this.CardTypes.unshift({});
                 this.CardTypes.forEach(s => {
                     s.toString = function () {
                         return `${this.name ? this.name : ""}`
