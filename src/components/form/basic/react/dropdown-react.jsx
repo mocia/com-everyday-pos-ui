@@ -12,6 +12,7 @@ export default class DropdownReact extends React.Component {
     }
 
     init(props) {
+        console.log("init");
         var options = Object.assign({}, DropdownReact.defaultProps.options, props.options);
         var selections = options.selections;
         var defaultValue = selections.find((item, index) => {
@@ -24,25 +25,28 @@ export default class DropdownReact extends React.Component {
         this.setState({ value: initialValue, options: options });
     }
 
-    handleValueChange(event) {
+    handleValueChange(event) { 
+        console.log("handleValueChange");
         var selectedIndex = event.target.options.selectedIndex;
         var value = this.state.options.selections[selectedIndex];
-        console.log(selectedIndex);
         event.preventDefault();
         this.setState({ value: value });
         if (this.props.onChange)
             this.props.onChange(value);
     }
 
-    componentWillMount() {
+    componentWillMount() { 
+        console.log("componentWillMount");
         this.init(this.props);
     }
 
-    componentWillReceiveProps(props) {
+    componentWillReceiveProps(props) { 
+        console.log("componentWillReceiveProps");
         this.init(props);
     }
 
-    render() {
+    render() { 
+        console.log("render");
         if (this.state.options.readOnly)
             return (
                 <p className="form-control-static">{(this.state.value || '').toString()}</p>

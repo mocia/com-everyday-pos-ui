@@ -267,25 +267,32 @@ export class DataForm {
             this.addItem();
     }
 
-    sumRow(item, event) {
+    sumRow(item, eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
+        console.log("sumRow");
         var itemIndex = this.data.items.indexOf(item);
         var itemDetail = this.data.items[itemIndex];
-        var specialDiscount = event ? parseInt(event.srcElement.value) : parseInt(itemDetail.specialDiscount);
+        var specialDiscount = eventSpecialDiscount ? (eventSpecialDiscount.srcElement.value ? parseInt(eventSpecialDiscount.srcElement.value) : parseInt(eventSpecialDiscount.detail)) : parseInt(itemDetail.specialDiscount);
+        var discount1 = eventDiscount1 ? (eventDiscount1.srcElement.value ? parseInt(eventDiscount1.srcElement.value) : parseInt(eventDiscount1.detail)) : parseInt(itemDetail.discount1);
+        var discount2 = eventDiscount2 ? (eventDiscount2.srcElement.value ? parseInt(eventDiscount2.srcElement.value) : parseInt(eventDiscount2.detail)) : parseInt(itemDetail.discount2);
+        var discountNominal = eventDiscountNominal ? (eventDiscountNominal.srcElement.value ? parseInt(eventDiscountNominal.srcElement.value) : parseInt(eventDiscountNominal.detail)) : parseInt(itemDetail.discountNominal);
+        var margin = eventMargin ? (eventMargin.srcElement.value ? parseInt(eventMargin.srcElement.value) : parseInt(eventMargin.detail)) : parseInt(itemDetail.margin);
+        
         itemDetail.total = 0;
         if (parseInt(itemDetail.quantity) > 0) {
             //Price
             itemDetail.total = parseInt(itemDetail.quantity) * parseInt(itemDetail.price);
             //Diskon
-            itemDetail.total = (itemDetail.total * (1 - (parseInt(itemDetail.discount1) / 100)) * (1 - (parseInt(itemDetail.discount2) / 100))) - parseInt(itemDetail.discountNominal);
+            itemDetail.total = (itemDetail.total * (1 - (discount1 / 100)) * (1 - (discount2 / 100))) - discountNominal;
             //Spesial Diskon 
             itemDetail.total = itemDetail.total * (1 - (specialDiscount / 100));
             //Margin
-            itemDetail.total = itemDetail.total * (1 - (parseInt(itemDetail.margin) / 100));
+            itemDetail.total = itemDetail.total * (1 - (margin / 100));
         }
         this.sumTotal();
     }
 
     sumTotal(event) {
+        console.log("sumTotal");
         var discount = event ? parseInt(event.srcElement.value) : parseInt(this.data.discount);
         this.data.totalProduct = 0;
         this.data.subTotal = 0;
@@ -304,11 +311,13 @@ export class DataForm {
     }
 
     refreshCash() {
+        console.log("refreshCash");
         this.data.salesDetail.cashAmount = 0;
         this.refreshDetail();
     }
 
     refreshDetail() {
+        console.log("refreshDetail");
         this.data.total = parseInt(this.data.grandTotal) - parseInt(this.data.salesDetail.voucher.value);
         if (this.data.total < 0)
             this.data.total = 0;
@@ -340,9 +349,10 @@ export class DataForm {
     }
 
     checkPaymentType(event) {
+        console.log("checkPaymentType");
 
-        var paymentType = event ? event.srcElement.value : this.data.salesDetail.paymentType;
-
+        var paymentType = event ? (event.srcElement.value ? event.srcElement.value : event.detail) : this.data.salesDetail.paymentType;
+       
         this.isCard = false;
         this.isCash = false;
         if (paymentType.toLowerCase() == 'cash') {
@@ -409,6 +419,7 @@ export class DataForm {
         this.data.date = new Date(this.data.datePicker);
     }
     refreshPromo(indexItem) {
+        console.log("refreshPromo");
         var getPromoes = [];
         var storeId = this.data.storeId;
         var date = this.data.date;

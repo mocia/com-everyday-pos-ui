@@ -56,8 +56,25 @@ export class Dropdown {
      * 
      */
     valueChanged(newVal) {
-        console.log(`value CHanged (${this.label}): ${newVal}`);
         this.bind();
+        console.log(newVal);
+        var event;
+
+        if (document.createEvent) {
+            event = document.createEvent("CustomEvent");
+            event.initCustomEvent("change", true, true, newVal);
+        } else {
+            event = document.createEventObject();
+            event.eventType = "change";
+        }
+
+        event.eventName = "change";
+
+        if (document.createEvent) {
+            this.element.dispatchEvent(event);
+        } else {
+            this.element.fireEvent("on" + event.eventType, event);
+        }
     }
     errorChanged(newError) {
         this.bind();

@@ -251,11 +251,11 @@ export class List {
     }
 
     setDateFrom(e) {
-        this.data.filter.dateFrom = (e ? e.srcElement.value : this.dateFromPicker)  + 'T00:00:00';
+        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateFromPicker)+ 'T00:00:00';
     }
 
     setDateTo(e) {
-        this.data.filter.dateTo = (e ? e.srcElement.value : this.dateToPicker)  + 'T23:59:59';
+        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateToPicker)+ 'T23:59:59';
     }
 
     generateReportHTML() {
