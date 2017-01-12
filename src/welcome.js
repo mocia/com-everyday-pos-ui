@@ -1,4 +1,5 @@
 //import {computedFrom} from 'aurelia-framework';
+import { inject, bindable } from 'aurelia-framework';
 
 export class Welcome {
   heading = 'Welcome to Bateeq POS';

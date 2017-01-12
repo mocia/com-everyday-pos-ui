@@ -14,7 +14,7 @@
         <tbody>
             <tr repeat.for="item of data.items">
                 <td> 
-                    <voidable-auto-suggest label="" value.bind="item.sales" error.bind="error.items[$index].salesId" read-only.bind="false" change.delegate="salesChanged($event, item)"></voidable-auto-suggest>
+                    <voidable-auto-suggest value.bind="item.sales" error.bind="error.items[$index].salesId" read-only.bind="false" change.delegate="salesChanged($event, item)"></voidable-auto-suggest>
                     <!--<div class="form-group ${error.items[$index].salesId?'has-error':''}">
                         <horsey src.bind="salesApiUri" selection.bind="item.sales" value.bind="item.salesId" options.bind="{value:'_id', label:'code'}"></horsey>
                         <span class="help-block">${error.items[$index].salesId}</span>

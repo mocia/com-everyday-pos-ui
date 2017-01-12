@@ -1,18 +1,21 @@
 import {inject, Lazy} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
+import { AuthService } from 'aurelia-authentication';
 import {Service} from './service';
-import {Session} from '../../utils/session';
+import {LocalStorage} from '../../utils/storage';
 
 
-@inject(Router, Service, Session)
+@inject(Router, Service, AuthService, LocalStorage)
 export class List {
     data = [];
-    constructor(router, service, session) {
+    constructor(router, service, authService, localStorage) {
         this.router = router;
         this.service = service;
-        this.session = session;
         this.filter = "";
-        this.storeId = this.session.store._id;
+        this.authService = authService;
+        this.localStorage = localStorage;
+        this.storeId = this.localStorage.store._id;
+        // this.storeId = this.session.store._id;
     }
 
     activate() {

@@ -28,23 +28,27 @@
                 <span class="help-block">${error.shift}</span>
             </div>
         </div>-->
-        <div class="form-group ${error.date?'has-error':''}">
+        <!--<div class="form-group ${error.date?'has-error':''}">
             <label for="date" class="col-sm-2 control-label">Tanggal Transaksi</label>
             <div class="col-sm-10"> 
                 <input type="date" class="form-control" name="date" value.bind="data.datePicker" change.delegate="setDate()"/>  
                 <span class="help-block">${error.date}</span>
             </div>
-        </div>
-        <div class="form-group ${error.reference?'has-error':''}">
+        </div>-->
+        <datepicker label="Tanggal Transaksi" value.bind="data.date" error.bind="error.date" read-only.bind="(readOnly)"></datepicker>
+
+        <textbox label="Keterangan" value.bind="data.remark" error.bind="error.remark" read-only.bind="(readOnly)"></textbox>
+
+        <!--<div class="form-group ${error.reference?'has-error':''}">
             <label for="description" class="col-sm-2 control-label">Keterangan</label>
             <div class="col-sm-10"> 
                 <input type="text" class="form-control" name="remark" value.bind="data.remark"/>  
                 <span class="help-block">${error.remark}</span>
             </div>
-        </div>
+        </div>-->
         <div class="form-group ${error.reference?'has-error':''}">
-            <label for="description" class="col-sm-2 control-label">Nomor Referensi</label>
-            <div class="col-sm-10">
+            <label for="description" class="col-sm-4 control-label">Nomor Referensi</label>
+            <div class="col-sm-5">
                 <div class="input-group">
                     <input type="text" class="form-control" name="reference" id="reference" value.bind="data.reference" placeholder="search reference document"
                     />
@@ -76,17 +80,20 @@
                 <tbody>
                     <tr repeat.for="item of data.items">
                         <td>${$index+1}</td>
-                        <td>
-                            <div class="form-group ${error.items[$index].itemCode?'has-error':''}">  
+                        <td style="min-width: 150px">
+                            <!--<div class="form-group ${error.items[$index].itemCode?'has-error':''}">  
                                 <input type="text" class="form-control" name="itemCode" focus.bind="item.itemCodeFocus" readonly.bind="item.itemCodeReadonly" value.bind="item.itemCode" keypress.delegate="onEnterProduct($event, item)"/>  
                                 <span class="help-block">${error.items[$index].itemCode}</span> 
-                            </div>
+                            </div>-->
+                            <textbox label="" focus.bind="item.itemCodeFocus" error.bind="error.items[$index].itemCode" read-only.bind="item.itemCodeReadonly" value.bind="item.itemCode" keypress.delegate="onEnterProduct($event, item)"></textbox>
                         </td>
                         <td>
-                            <div class="form-group ${error.items[$index].itemId?'has-error':''}">  
+                            <!--<div class="form-group ${error.items[$index].itemId?'has-error':''}">  
                                 <input type="text" class="form-control" name="itemName" value.bind="item.item.name" readonly/>  
                                 <span class="help-block">${error.items[$index].itemId}</span> 
-                            </div>
+                            </div>-->
+                            <textbox label="" error.bind="error.items[$index].itemId" read-only.bind="item.itemCodeReadonly" value.bind="item.item.name"></textbox>
+                            
                         </td>
                         <td>
                             <numeric label="" value.bind="item.quantity" error.bind="error.items[$index].quantity" read-only.bind="readOnlyFalse" change.delegate="sumRow(item)"></numeric>
@@ -96,35 +103,36 @@
                             </div>-->
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.price" error.bind="error.items[$index].price" read-only.bind="readOnlyTrue" change.delegate="sumRow(item)"></numeric>
+                            <numeric label="" value.bind="item.price" error.bind="error.items[$index].price" read-only.bind="readOnlyTrue"></numeric>
                             <!--<div class="form-group ${error.items[$index].price?'has-error':''}">
                                 <input class="form-control" type="number" name="price" value.bind="item.price" change.delegate="sumRow(item)" readonly/>
                                 <span class="help-block">${error.items[$index].price}</span>
                             </div>-->
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.discount1" error.bind="error.items[$index].discount1" read-only.bind="readOnlyFalse" change.delegate="sumRow(item)"></numeric>
+                            <numeric label="" value.bind="item.discount1" error.bind="error.items[$index].discount1" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].discount1?'has-error':''}">
                                 <input class="form-control" type="number" name="discount1" value.bind="item.discount1" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].discount1}</span>
                             </div>-->
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.discount2" error.bind="error.items[$index].discount2" read-only.bind="readOnlyFalse" change.delegate="sumRow(item)"></numeric>
+                            <numeric label="" value.bind="item.discount2" error.bind="error.items[$index].discount2" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].discount2?'has-error':''}">
                                 <input class="form-control" type="number" name="discount2" value.bind="item.discount2" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].discount2}</span>
                             </div>-->
                         </td>
-                        <td>
-                            <numeric label="" value.bind="item.discountNominal" error.bind="error.items[$index].discountNominal" read-only.bind="readOnlyFalse" change.delegate="sumRow(item)"></numeric>
+                        <td>    
+                            <numeric label="" value.bind="item.discountNominal" error.bind="error.items[$index].discountNominal" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,null,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].discountNominal?'has-error':''}">
                                 <input class="form-control" type="number" name="discountNominal" value.bind="item.discountNominal" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].discountNominal}</span>
                             </div>-->
                         </td>
-                        <td>
-                            <div class="form-group ${error.items[$index].specialDiscount?'has-error':''}"> 
+                        <td style="min-width: 100px">
+                            <dropdown label="" value.bind="item.specialDiscount" error.bind="error.items[$index].specialDiscount" change.delegate="sumRow(item,$event)" items.bind="discounts"></dropdown>
+                            <!--<div class="form-group ${error.items[$index].specialDiscount?'has-error':''}"> 
                                 <select class="form-control" name="specialDiscount" value.bind="item.specialDiscount" change.delegate="sumRow(item)" />
                                     <option value="0">0%</option>
                                     <option value="5">5%</option>
@@ -149,17 +157,17 @@
                                     <option value="100">100%</option>
                                 </select>
                                 <span class="help-block">${error.items[$index].specialDiscount}</span>
-                            </div>
+                            </div>-->
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.margin" error.bind="error.items[$index].margin" read-only.bind="readOnlyFalse" change.delegate="sumRow(item)"></numeric>
+                            <numeric label="" value.bind="item.margin" error.bind="error.items[$index].margin" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,null,null,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].margin?'has-error':''}">
                                 <input class="form-control" type="number" name="margin" value.bind="item.margin" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].margin}</span>
                             </div>-->
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.total" error.bind="error.items[$index].total" read-only.bind="readOnlyTrue" change.delegate="sumRow(item)"></numeric>
+                            <numeric label="" value.bind="item.total" error.bind="error.items[$index].total" read-only.bind="readOnlyTrue"></numeric>
                             <!--<div class="form-group ${error.items[$index].total?'has-error':''}">
                                 <input class="form-control" type="number" name="total" value.bind="item.total" readonly />
                                 <span class="help-block">${error.items[$index].total}</span>
@@ -176,7 +184,9 @@
                     </tr>
                     <tr> 
                         <td colspan="10" style="text-align:right;">
-                            <div class="form-group">
+                            <dropdown label=""  value.bind="data.discount" change.delegate="sumTotal($event)" items.bind="discounts"></dropdown>
+                            
+                            <!--<div class="form-group">
                                 <div class="col-sm-11">Diskon</div>
                                 <select name="discount" class="col-sm-1 control-label" value.bind="data.discount" change.delegate="sumTotal()">
                                     <option value="0">0%</option>
@@ -201,7 +211,7 @@
                                     <option value="95">95%</option>
                                     <option value="100">100%</option>
                                 </select>
-                            </div> 
+                            </div> -->
                         </td>
                         <td style="text-align:right;">${data.totalDiscount.toLocaleString()}</td>
                         <td></td> 
@@ -223,7 +233,10 @@
     
     <div>
         <form class="form-horizontal"> 
-            <div class="form-group ${error.salesDetail.paymentType?'has-error':''}">
+
+            <dropdown label="Tipe Pembayaran" error.bind="error.salesDetail.paymentType" value.bind="data.salesDetail.paymentType" change.delegate="checkPaymentType($event)" items.bind="paymentTypes"></dropdown>
+
+            <!--<div class="form-group ${error.salesDetail.paymentType?'has-error':''}">
                 <label for="paymentType" class="col-sm-2 control-label">Tipe Pembayaran</label>
                 <div class="col-sm-10">
                     <select class="form-control" name="paymentType" value.bind="data.salesDetail.paymentType" change.delegate="checkPaymentType()">
@@ -234,7 +247,7 @@
                     </select>
                     <span class="help-block">${error.salesDetail.paymentType}</span>
                 </div>
-            </div>  
+            </div>  -->
             <!--<div class="form-group ${error.salesDetail.voucherId?'has-error':''}">
                 <label for="voucherId" class="col-sm-2 control-label">Voucher</label>
                 <div class="col-sm-10">
@@ -242,15 +255,21 @@
                     <span class="help-block">${error.salesDetail.voucherId}</span>
                 </div>
             </div>  -->   
-            <div class="form-group ${error.salesDetail.card?'has-error':''}" if.bind="isCard"> 
+            
+            <radiobutton label="Kartu" value.bind="data.salesDetail.card" error.bind="error.salesDetail.card" selections.bind="cards" if.bind="isCard"></radiobutton>
+
+            <!--<div class="form-group ${error.salesDetail.card?'has-error':''}" if.bind="isCard"> 
                 <label for="card" class="col-sm-2 control-label">Kartu</label>
                 <div class="col-sm-10"> 
                     <input type="radio" name="card" checked.bind="data.salesDetail.card" value="Debit"/> Debit
                     <input type="radio" name="card" checked.bind="data.salesDetail.card" value="Credit"/> Kredit  
                     <span class="help-block">${error.salesDetail.card}</span>
                 </div>
-            </div> 
-            <div class="form-group ${error.salesDetail.cardTypeId?'has-error':''}" if.bind="isCard">
+            </div> -->
+
+            <dropdown label="Jenis Kartu" value.bind="data.salesDetail.cardType" error.bind="error.salesDetail.cardTypeId" items.bind="CardTypes" if.bind="isCard"></dropdown>
+
+            <!--<div class="form-group ${error.salesDetail.cardTypeId?'has-error':''}" if.bind="isCard">
                 <label for="cardTypeId" class="col-sm-2 control-label">Jenis Kartu</label>
                 <div class="col-sm-10">
                     <select class="form-control" name="cardType" value.bind="data.salesDetail.cardTypeId"> 
@@ -259,7 +278,9 @@
                     </select>
                     <span class="help-block">${error.salesDetail.cardTypeId}</span>
                 </div>
-            </div>  
+            </div>  -->
+            <dropdown label="Bank (EDC)" value.bind="data.salesDetail.bank" error.bind="error.salesDetail.bankId" items.bind="Banks" if.bind="isCard"></dropdown>
+<!--            
             <div class="form-group ${error.salesDetail.bankId?'has-error':''}" if.bind="isCard">
                 <label for="bankId" class="col-sm-2 control-label">Bank (EDC)</label>
                 <div class="col-sm-10">
@@ -269,8 +290,10 @@
                     </select>
                     <span class="help-block">${error.salesDetail.bankId}</span>
                 </div>
-            </div>  
-            <div class="form-group ${error.salesDetail.bankCardId?'has-error':''}" if.bind="isCard">
+            </div>  -->
+            <dropdown label="Bank (Kartu)" value.bind="data.salesDetail.bankCard" error.bind="error.salesDetail.bankCardId" items.bind="Banks" if.bind="isCard"></dropdown>
+            
+            <!--<div class="form-group ${error.salesDetail.bankCardId?'has-error':''}" if.bind="isCard">
                 <label for="bankCardId" class="col-sm-2 control-label">Bank (Kartu)</label>
                 <div class="col-sm-10">
                     <select class="form-control" name="bankCard" value.bind="data.salesDetail.bankCardId">
@@ -279,21 +302,23 @@
                     </select>
                     <span class="help-block">${error.salesDetail.bankCardId}</span>
                 </div>
-            </div>  
-            <div class="form-group ${error.salesDetail.cardNumber?'has-error':''}" if.bind="isCard">
+            </div>  -->
+            <textbox label="Nomor Kartu" value.bind="data.salesDetail.cardNumber" error.bind="error.salesDetail.cardNumber" if.bind="isCard"></textbox>
+            <!--<div class="form-group ${error.salesDetail.cardNumber?'has-error':''}" if.bind="isCard">
                 <label for="cardNumber" class="col-sm-2 control-label">Nomor Kartu</label>
                 <div class="col-sm-10"> 
                     <input type="text" class="form-control" name="cardNumber" value.bind="data.salesDetail.cardNumber"/>  
                     <span class="help-block">${error.salesDetail.cardNumber}</span>
                 </div>
-            </div>
-            <div class="form-group ${error.salesDetail.cardName?'has-error':''}" if.bind="isCard">
+            </div>-->
+            <textbox label="Nama Kartu" value.bind="data.salesDetail.cardName" error.bind="error.salesDetail.cardName" if.bind="isCard"></textbox>
+            <!--<div class="form-group ${error.salesDetail.cardName?'has-error':''}" if.bind="isCard">
                 <label for="cardName" class="col-sm-2 control-label">Nama Kartu</label>
                 <div class="col-sm-10"> 
                     <input type="text" class="form-control" name="cardName" value.bind="data.salesDetail.cardName"/>  
                     <span class="help-block">${error.salesDetail.cardName}</span>
                 </div>
-            </div> 
+            </div> -->
             
             <numeric label="Total Bayar" value.bind="data.totalBayar" error.bind="error.totalBayar" read-only.bind="readOnlyTrue"></numeric>            
             <!--<div class="form-group">

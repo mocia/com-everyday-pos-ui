@@ -1,19 +1,22 @@
 import {inject, Lazy, BindingEngine} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
+import { AuthService } from 'aurelia-authentication';
 import {Service} from './service';
-import {Session} from '../../utils/session';
+import {LocalStorage} from '../../utils/storage';
 
 
-@inject(Router, Service, BindingEngine, Session)
+@inject(Router, Service, BindingEngine, AuthService,LocalStorage)
 export class List {
 
     // storeApiUri = require('../../host').master + '/stores';
+    shifts = [1,2,3,4,5];
 
-    constructor(router, service, bindingEngine, session) {
+    constructor(router, service, bindingEngine, authService, localStorage) {
         this.router = router;
         this.service = service;
         this.bindingEngine = bindingEngine;
-        this.session = session;
+        this.authService = authService;
+        this.localStorage = localStorage;
 
         this.data = { filter: {}, results: [] };
         this.error = { filter: {}, results: [] };
@@ -44,9 +47,9 @@ export class List {
 
 
         this.data.filter.shift = 1;
-        this.data.filter.storeId = this.session.store._id;
-        this.data.filter.store = this.session.store;
-        this.data.filter.user = this.session.username;
+        this.data.filter.storeId = this.localStorage.store._id;
+        this.data.filter.store = this.localStorage.store
+        this.data.filter.user = this.localStorage.me.data.username;
         this.service.getStore(this.data.filter.storeId)
             .then(result => {
                 this.data.filter.store = result;
@@ -189,12 +192,12 @@ export class List {
         return date;
     }
 
-    setDateFrom() {
-        this.data.filter.dateFrom = this.dateFromPicker + 'T00:00:00';
+    setDateFrom(e) {
+        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateFromPicker)+ 'T00:00:00';
     }
 
-    setDateTo() {
-        this.data.filter.dateTo = this.dateToPicker + 'T23:59:59';
+    setDateTo(e) {
+        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateToPicker)+ 'T23:59:59';
     }
 
     generateReportHTML() {

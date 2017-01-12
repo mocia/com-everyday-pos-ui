@@ -1,22 +1,21 @@
-import {inject, Lazy} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-fetch-client';
-import {RestService} from '../../rest-service';
-import {SecureService} from '../../utils/secure-service';
+import { inject, Lazy } from 'aurelia-framework';
+import { HttpClient } from 'aurelia-fetch-client';
+import { RestService } from '../../utils/rest-service';
 
-const serviceUri = require('../../host').sales + '/docs/salesvoids';
-const serviceUriStoreSales = require('../../host').store;
-const serviceUriUpdate = require('../../host').sales + '/docs/sales';
-const serviceUriBank = require('../../host').master + '/banks';
-const serviceUriCardType = require('../../host').master + '/cardtypes';
-const serviceUriPromo = require('../../host').sales + '/promos';
-const serviceUriStore = require('../../host').master + '/stores';
-const serviceUriTransferInDoc = require('../../host').inventory + '/docs/transfer-in';
+const serviceUri = 'sales/docs/salesvoids';
+const serviceUriStoreSales = 'store';
+const serviceUriUpdate = 'sales/docs/sales';
+const serviceUriBank = 'master/banks';
+const serviceUriCardType = 'master/cardtypes';
+const serviceUriPromo = 'sales/promos';
+const serviceUriStore = 'master/stores';
+// const serviceUriTransferInDoc = 'inventory/docs/transfer-in';
 
 
-export class Service extends SecureService {
+export class Service extends RestService {
 
-    constructor(http, aggregator) {
-        super(http, aggregator);
+    constructor(http, aggregator, config, api) {
+        super(http, aggregator, config, "pos");
     }
 
     search(storeId, keyword) {
@@ -74,9 +73,11 @@ export class Service extends SecureService {
         var endpoint = `${serviceUriPromo}/${storeId}/${datetime}/${itemId}/${quantity}`;
         return super.get(endpoint);
     }
-    
+
     createTransferIn(data) {
-        var endpoint = `${serviceUriTransferInDoc}`;
+        var config = Container.instance.get(Config);
+        var endpoint = config.getEndpoint("inventory") + "docs/transfer-in";
+        // var endpoint = `${serviceUriTransferInDoc}`;
         return super.post(endpoint, data);
     }
 

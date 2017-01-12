@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {customElement, inject, bindable, bindingMode, noView} from 'aurelia-framework';
+import { customElement, inject, bindable, bindingMode, noView } from 'aurelia-framework';
 
-import FieldReact from '../../react/basic/field-react.jsx';
-import DatePickerReact from '../../react/basic/datepicker-react.jsx';
+import FieldReact from './react/field-react.jsx';
+import DatePickerReact from './react/datepicker-react.jsx';
 import moment from 'moment';
 
 @noView()
@@ -16,6 +16,8 @@ export class Datepicker {
     @bindable({ defaultBindingMode: bindingMode.twoWay }) error;
     @bindable({ defaultBindingMode: bindingMode.twoWay }) readOnly;
     @bindable({ defaultBindingMode: bindingMode.twoWay }) format;
+    @bindable({ defaultBindingMode: bindingMode.twoWay }) min;
+    @bindable({ defaultBindingMode: bindingMode.twoWay }) max;
 
     reactComponent = {};
     constructor(element) {
@@ -33,7 +35,17 @@ export class Datepicker {
             this.options.format = this.format;
         else
             this.options.format = "DD MMMM YYYY";
-        
+
+        if (this.min)
+            this.options.min = this.min;
+        else
+            this.options.min = null;
+
+        if (this.max)
+            this.options.max = this.max;
+        else
+            this.options.max = null;
+
         this.reactComponent = ReactDOM.render(
             <FieldReact label={this.label} error={this.error}>
                 <DatePickerReact value={this.value} onChange={this.handleValueChange} options={this.options} />
@@ -63,8 +75,31 @@ export class Datepicker {
      */
     valueChanged(newVal) {
         this.bind();
+        var event;
+
+        if (document.createEvent) {
+            event = document.createEvent("CustomEvent");
+            event.initCustomEvent("change", true, true, newVal);
+        } else {
+            event = document.createEventObject();
+            event.eventType = "change";
+        }
+
+        event.eventName = "change";
+
+        if (document.createEvent) {
+            this.element.dispatchEvent(event);
+        } else {
+            this.element.fireEvent("on" + event.eventType, event);
+        }
     }
     errorChanged(newError) {
+        this.bind();
+    }
+    minChanged(newError) {
+        this.bind();
+    }
+    maxChanged(newError) {
         this.bind();
     }
 

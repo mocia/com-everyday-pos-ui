@@ -1,20 +1,26 @@
 import { inject, Lazy, BindingEngine } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
+import { AuthService } from 'aurelia-authentication';
 import { Service } from './service';
-import {Session} from '../../utils/session';
+import { LocalStorage } from '../../utils/storage';
 
 
-@inject(Router, Service, BindingEngine, Session)
+@inject(Router, Service, BindingEngine, AuthService, LocalStorage)
 export class List {
 
     //storeApiUri = require('../../host').master + '/stores';
 
-    constructor(router, service, bindingEngine, session) {
+    shifts = [1,2,3,4,5];
+
+    constructor(router, service, bindingEngine, authService, localStorage) {
         this.router = router;
         this.service = service;
         this.bindingEngine = bindingEngine;
-        this.session = session;
-        this.stores = this.session.stores; 
+        this.authService = authService;
+        this.localStorage = localStorage;
+
+        this.stores = this.localStorage.me.data.stores;
+        // this.stores = this.session.stores;
 
         this.data = { filter: {}, results: [] };
         this.error = { filter: {}, results: [] };
@@ -38,22 +44,38 @@ export class List {
 
     attached() {
         this.data.filter.shift = 1;
-        this.data.filter.storeId = this.session.store._id;
-        this.data.filter.store = this.session.store;
+        this.data.filter.storeId = this.localStorage.store._id;
+        this.data.filter.store = this.localStorage.store;
         this.getTargetPerMonth();
-                    
+
         this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => {
             this.getTargetPerMonth();
         });
     }
-    
+
     getTargetPerMonth() {
         this.targetPerMonth = 0;
-            if (this.data.filter.store)
-                if (this.data.filter.store.salesTarget)
-                    this.targetPerMonth = this.data.filter.store.salesTarget;
+        if (this.data.filter.store)
+            if (this.data.filter.store.salesTarget)
+                this.targetPerMonth = this.data.filter.store.salesTarget;
     }
-    
+
+    exportToExcel() {
+        this.error = { filter: {}, results: [] };
+        var datefrom = new Date(this.data.filter.dateFrom);
+        var dateto = new Date(this.data.filter.dateTo);
+
+        if (this.data.filter.storeId == undefined || this.data.filter.storeId == '')
+            this.error.filter.storeId = "Pilih Toko";
+        else if (dateto < datefrom)
+            this.error.filter.dateTo = "Tanggal To Harus Lebih Besar Dari From";
+        else {
+            var fromString = this.getStringDate(datefrom) + 'T00:00:00';
+            var toString = this.getStringDate(dateto) + 'T23:59:59';
+            this.service.generateExcel(this.data.filter.storeId, fromString, toString, this.data.filter.shift);
+        }
+    }
+
     filter() {
         this.error = { filter: {}, results: [] };
         var datefrom = new Date(this.data.filter.dateFrom);
@@ -64,13 +86,13 @@ export class List {
         else if (dateto < datefrom)
             this.error.filter.dateTo = "Tanggal To Harus Lebih Besar Dari From";
         else {
-            var getData = []; 
-            for(var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) { 
+            var getData = [];
+            for (var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) {
                 var date = new Date(d);
                 var fromString = this.getStringDate(date) + 'T00:00:00';
                 var toString = this.getStringDate(date) + 'T23:59:59';
                 getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, this.data.filter.shift));
-           }
+            }
             Promise.all(getData)
                 .then(salesPerDays => {
                     this.data.results = [];
@@ -103,7 +125,7 @@ export class List {
                                 itemData.details = [];
                                 result.tanggal = new Date(data.date);
                                 for (var item of data.items) {
-                                    if(!item.isReturn) {
+                                    if (!item.isReturn) {
                                         var detail = {};
                                         detail.barcode = item.item.code;
                                         detail.namaProduk = item.item.name;
@@ -157,7 +179,12 @@ export class List {
                                 //itemData.grandTotal = parseInt(itemData.subTotal) - parseInt(itemData.discountSaleNominal);
                                 itemData.grandTotal = parseInt(data.grandTotal);
                                 itemData.tipePembayaran = data.salesDetail.paymentType;
-                                itemData.card = data.salesDetail.cardType.name ? data.salesDetail.cardType.name : "";
+                                itemData.card = data.salesDetail.card ? data.salesDetail.card : "";
+                                itemData.cardType = data.salesDetail.cardType.name ? data.salesDetail.cardType.name : "";
+                                itemData.cashAmount = parseInt(data.salesDetail.cashAmount);
+                                itemData.cardAmount = parseInt(data.salesDetail.cardAmount);
+                                itemData.bankEDC = data.salesDetail.bank.name ? data.salesDetail.bank.name : "";
+                                itemData.bankCard = data.salesDetail.bankCard.name ? data.salesDetail.bankCard.name : "";
                                 itemData.itemRowSpan = itemRowSpan;
 
                                 totalSubTotal += parseInt(itemData.subTotal);
@@ -184,6 +211,7 @@ export class List {
                             result.totalGrandTotal = totalGrandTotal;
 
                             result.tanggalRowSpan = tanggalRowSpan;
+
                             this.data.results.push(result);
                         }
                     }
@@ -195,7 +223,7 @@ export class List {
 
     getStringDate(date) {
         var dd = date.getDate();
-        var mm = date.getMonth() + 1; //January is 0! 
+        var mm = date.getMonth() + 1; //January is 0!
         var yyyy = date.getFullYear();
         if (dd < 10) {
             dd = '0' + dd
@@ -207,12 +235,12 @@ export class List {
         return date;
     }
 
-    setDateFrom() {
-        this.data.filter.dateFrom = this.dateFromPicker + 'T00:00:00';
+    setDateFrom(e) {
+        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateFromPicker)+ 'T00:00:00';
     }
 
-    setDateTo() {
-        this.data.filter.dateTo = this.dateToPicker + 'T23:59:59';
+    setDateTo(e) {
+        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateToPicker)+ 'T23:59:59';
     }
 
     generateReportHTML() {
@@ -256,7 +284,12 @@ export class List {
         this.reportHTML += "                <th>Disc Penjualan (Nominal)</th>";
         this.reportHTML += "                <th>Omset on Hand</th>";
         this.reportHTML += "                <th>Tipe Pembayaran</th>";
+        this.reportHTML += "                <th>Kartu</th>";
         this.reportHTML += "                <th>Jenis Kartu</th>";
+        this.reportHTML += "                <th>Cash Amount</th>";
+        this.reportHTML += "                <th>Card Amount</th>";
+        this.reportHTML += "                <th>Bank EDC</th>";
+        this.reportHTML += "                <th>Bank Card</th>";
         this.reportHTML += "            </tr>";
         this.reportHTML += "        </thead>";
         this.reportHTML += "        <tbody>";
@@ -300,6 +333,11 @@ export class List {
                         this.reportHTML += "        <td style='background-color:#e0a545;' rowspan='" + item.itemRowSpan + "'>" + item.grandTotal.toLocaleString() + "</td>";
                         this.reportHTML += "        <td rowspan='" + item.itemRowSpan + "'>" + item.tipePembayaran + "</td>";
                         this.reportHTML += "        <td rowspan='" + item.itemRowSpan + "'>" + item.card + "</td>";
+                        this.reportHTML += "        <td rowspan='" + item.itemRowSpan + "'>" + item.cardType + "</td>";
+                        this.reportHTML += "        <td rowspan='" + item.itemRowSpan + "'>" + item.cashAmount.toLocaleString() + "</td>";
+                        this.reportHTML += "        <td rowspan='" + item.itemRowSpan + "'>" + item.cardAmount.toLocaleString() + "</td>";
+                        this.reportHTML += "        <td rowspan='" + item.itemRowSpan + "'>" + item.bankEDC + "</td>";
+                        this.reportHTML += "        <td rowspan='" + item.itemRowSpan + "'>" + item.bankCard + "</td>";
                     }
                     this.reportHTML += "        </tr>";
                     isTanggalRowSpan = true;
@@ -335,6 +373,11 @@ export class List {
             this.reportHTML += "        <td></td>";
             this.reportHTML += "        <td>" + data.totalDiscountSaleNominal.toLocaleString() + "</td>";
             this.reportHTML += "        <td>" + data.totalGrandTotal.toLocaleString() + "</td>";
+            this.reportHTML += "        <td></td>";
+            this.reportHTML += "        <td></td>";
+            this.reportHTML += "        <td></td>";
+            this.reportHTML += "        <td></td>";
+            this.reportHTML += "        <td></td>";
             this.reportHTML += "        <td></td>";
             this.reportHTML += "        <td></td>";
             this.reportHTML += "    </tr>";

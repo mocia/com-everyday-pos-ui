@@ -1,19 +1,20 @@
-import {inject, bindable, containerless, computedFrom} from 'aurelia-framework';
-import {Session} from './utils/session';
+import { inject, bindable, containerless, computedFrom } from 'aurelia-framework';
+import { AuthService } from "aurelia-authentication";
 
 @containerless()
-@inject(Session)
+@inject(AuthService)
 export class SideNavBar {
     @bindable router = null;
     @bindable navigations = null;
 
-    constructor(session) {
+    constructor(authService) {
         // this.router = router;
-        this.session = session; 
+        this.authService = authService;
         this.minimized = false;
         this.activeMenu = [];
         this.activeSubMenu = {};
         this.group = new Map();
+        this.isShown = true;
         // var a = new Array(this.router.navigation);
         // this.router.navigation.forEach(route => {
         //     console.log(1);
@@ -22,10 +23,11 @@ export class SideNavBar {
 
     }
 
-    get isAuthenticated()
-    {
-        return this.session.isAuthenticated;
+    @computedFrom('authService.authenticated')
+    get isAuthenticated() {
+        return this.authService.authenticated;
     }
+
 
     @computedFrom('activeMenu')
     get expand() {
@@ -45,7 +47,7 @@ export class SideNavBar {
     //         }
     //     }; 
     // }
-     attached() {
+    attached() {
         for (var route of this.router.navigation) {
             if (route.settings && ((route.settings.group || "").trim().length > 0)) {
                 var key = (route.settings.group || "").trim();
@@ -64,9 +66,15 @@ export class SideNavBar {
     }
 
     selectMenu(menu, title) {
-        this.activeMenu = menu;
-        this.activeTitle = title;
-        this.activeSubMenu = [];
+        if (this.activeMenu != menu) {
+            this.activeMenu = menu;
+            this.activeTitle = title;
+            this.activeSubMenu = [];
+        }else{
+            this.activeMenu = [];
+            this.activeTitle = '';
+            this.activeSubMenu = [];
+        }
     }
 
     selectSubMenu(subMenu) {
