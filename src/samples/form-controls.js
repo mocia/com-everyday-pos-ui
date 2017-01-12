@@ -52,4 +52,16 @@ export class FormControls {
                 console.log(response);
             });
     }
+
+    onDropdownChanged(e){
+        console.log("dropdown changed");
+    }
+
+    onTextboxChanged(e){
+        console.log("textbox changed")
+    }
+    
+    onNumericChanged(e){
+        console.log("numeric changed")
+    }
 }
