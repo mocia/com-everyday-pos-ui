@@ -293,7 +293,8 @@ export class DataForm {
 
     sumTotal(event) {
         console.log("sumTotal");
-        var discount = event ? parseInt(event.srcElement.value) : parseInt(this.data.discount);
+        var discount = event ? (event.srcElement.value ? parseInt(event.srcElement.value) : parseInt(event.detail)) : parseInt(this.data.discount);
+        // var discount = event ? parseInt(event.srcElement.value) : parseInt(this.data.discount);
         this.data.totalProduct = 0;
         this.data.subTotal = 0;
         this.data.totalDiscount = 0;
