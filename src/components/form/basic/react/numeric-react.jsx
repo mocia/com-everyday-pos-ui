@@ -44,7 +44,8 @@ export default class NumericReact extends React.Component {
 
         var postFix = usePostFix ? this.state.options.postFix : '';
         if (this.state.options.readOnly) {
-            control = <p className="form-control-static">{this.state.value} {postFix}</p>;
+            var v = parseFloat((this.state.value || 0).toString());
+            control = <p className="form-control-static">{v.toLocaleString()} {postFix}</p>;
         }
         else {
             control = <DynamicNumber className="form-control" value={this.state.value} onChange={this.handleValueChange}

@@ -15,6 +15,7 @@ export class Numeric {
     @bindable({ defaultBindingMode: bindingMode.twoWay }) error;
     @bindable({ defaultBindingMode: bindingMode.twoWay }) readOnly;
     @bindable({ defaultBindingMode: bindingMode.twoWay }) postfix;
+    @bindable({ defaultBindingMode: bindingMode.twoWay }) options;
 
     reactComponent = {};
     constructor(element) {
@@ -27,12 +28,14 @@ export class Numeric {
     }
 
     render() {
-        this.options = { readOnly: (this.readOnly || '').toString().toLowerCase() === 'true', postFix: this.postfix || "" };
+        var _basicOptions = { readOnly: (this.readOnly || '').toString().toLowerCase() === 'true', postFix: this.postfix || "" };
+        var opt = Object.assign({}, this.options,_basicOptions)
+        //this.options = { readOnly: (this.readOnly || '').toString().toLowerCase() === 'true', postFix: this.postfix || "" };
         this.value = parseFloat((this.value||'0').toString());
         
         this.reactComponent = ReactDOM.render(
             <FieldReact label={this.label} error={this.error}>
-                <NumericReact value={this.value} onChange={this.handleValueChange} options={this.options} />
+                <NumericReact value={this.value} onChange={this.handleValueChange} options={opt} />
             </FieldReact>,
             this.element
         );

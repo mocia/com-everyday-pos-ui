@@ -53,6 +53,8 @@ export class FormControls {
             });
     }
 
+    numericOptions = {separator:','};
+
     onDropdownChanged(e){
         console.log("dropdown changed");
     }
@@ -60,7 +62,7 @@ export class FormControls {
     onTextboxChanged(e){
         console.log("textbox changed")
     }
-    
+
     onNumericChanged(e){
         console.log("numeric changed")
     }

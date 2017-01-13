@@ -7,7 +7,7 @@
         <dropdown  label="object" value.bind="data.object" items.bind="objects" ></dropdown>
         <auto-suggest  label="Api" value.bind="data.apiAutoSuggestValue" options.bind="apiAutoSuggestOptions"></auto-suggest> 
         <currency-auto-suggest label="Currency" value.bind="data.currencyAutoSuggestValue" options.bind="currencyAutoSuggestValue"></auto-suggest> 
-        <numeric value.bind="data.numericValue" label="Numeric Label" postfix="Textbox Postfix" change.delegate="onNumericChanged($event)"></textbox>
+        <numeric options.bind="numericOptions" value.bind="data.numericValue" label="Numeric Label" postfix="Textbox Postfix" change.delegate="onNumericChanged($event)"></textbox>
     </div>
     <button click.delegate="showData()">Show Data</button>
     <button click.delegate="dialogPrompt()">Dialog:prompt</button>
