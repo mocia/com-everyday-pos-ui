@@ -96,35 +96,35 @@
                             
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.quantity" error.bind="error.items[$index].quantity" read-only.bind="readOnlyFalse" change.delegate="sumRow(item)"></numeric>
+                            <numeric options.bind="numericOptions" label="" value.bind="item.quantity" error.bind="error.items[$index].quantity" read-only.bind="readOnlyFalse" change.delegate="sumRow(item)"></numeric>
                             <!--<div class="form-group ${error.items[$index].quantity?'has-error':''}">
                                 <input class="form-control" type="number" name="quantity" value.bind="item.quantity" change.delegate="sumRow(item)" />
                                 <span class="help-block">${error.items[$index].quantity}</span>
                             </div>-->
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.price" error.bind="error.items[$index].price" read-only.bind="readOnlyTrue"></numeric>
+                            <numeric options.bind="numericOptions" label="" value.bind="item.price" error.bind="error.items[$index].price" read-only.bind="readOnlyTrue"></numeric>
                             <!--<div class="form-group ${error.items[$index].price?'has-error':''}">
                                 <input class="form-control" type="number" name="price" value.bind="item.price" change.delegate="sumRow(item)" readonly/>
                                 <span class="help-block">${error.items[$index].price}</span>
                             </div>-->
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.discount1" error.bind="error.items[$index].discount1" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,$event)"></numeric>
+                            <numeric options.bind="numericOptions" label="" value.bind="item.discount1" error.bind="error.items[$index].discount1" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].discount1?'has-error':''}">
                                 <input class="form-control" type="number" name="discount1" value.bind="item.discount1" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].discount1}</span>
                             </div>-->
                         </td>
                         <td>
-                            <numeric label="" value.bind="item.discount2" error.bind="error.items[$index].discount2" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,null,$event)"></numeric>
+                            <numeric options.bind="numericOptions" label="" value.bind="item.discount2" error.bind="error.items[$index].discount2" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].discount2?'has-error':''}">
                                 <input class="form-control" type="number" name="discount2" value.bind="item.discount2" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].discount2}</span>
                             </div>-->
                         </td>
                         <td>    
-                            <numeric label="" value.bind="item.discountNominal" error.bind="error.items[$index].discountNominal" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,null,null,$event)"></numeric>
+                            <numeric options.bind="numericOptions" label="" value.bind="item.discountNominal" error.bind="error.items[$index].discountNominal" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,null,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].discountNominal?'has-error':''}">
                                 <input class="form-control" type="number" name="discountNominal" value.bind="item.discountNominal" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].discountNominal}</span>
@@ -177,9 +177,13 @@
                     </tr> 
                     <tr>
                         <td colspan="3" style="text-align:right;">Total Kuantitas</td>
-                        <td style="text-align:right;">${data.totalProduct.toLocaleString()}</td> 
+                        <td style="text-align:right;">
+                            <numeric label="" value.bind="data.totalProduct" read-only.bind="readOnlyTrue"></numeric>
+                        </td> 
                         <td colspan="6" style="text-align:right;">Sub Total</td>
-                        <td style="text-align:right;">${data.subTotal.toLocaleString()}</td>
+                        <td style="text-align:right;">
+                            <numeric label="" value.bind="data.subTotal" read-only.bind="readOnlyTrue"></numeric>                            
+                        </td>
                         <td></td> 
                     </tr>
                     <tr> 
@@ -213,12 +217,14 @@
                                 </select>
                             </div> -->
                         </td>
-                        <td style="text-align:right;">${data.totalDiscount.toLocaleString()}</td>
+                        <td style="text-align:right;">
+                            <numeric label="" value.bind="data.totalDiscount" read-only.bind="readOnlyTrue"></numeric></td>
                         <td></td> 
                     </tr>
                     <tr> 
                         <td colspan="10" style="text-align:right;">Grand Total</td>
-                        <td style="text-align:right;">${data.grandTotal.toLocaleString()}</td>
+                        <td style="text-align:right;">
+                            <numeric label="" value.bind="data.grandTotal" read-only.bind="readOnlyTrue"></numeric></td>
                         <td></td> 
                     </tr>
                 </tbody>

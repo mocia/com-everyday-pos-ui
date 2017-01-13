@@ -318,6 +318,10 @@ div.au-stagger {
     border-bottom:0;
     line-height: 0.8em;
   }
+
+ table .form-group{
+   margin-bottom:0px !important;
+ }
   
   .struk {
     /*width: 76mm;*/
