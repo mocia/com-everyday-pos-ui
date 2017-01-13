@@ -26,6 +26,7 @@ export class Create {
     }
 
     save() {
+        debugger
         //remove itemId yang kosong
         for (var i = 0; i < this.data.items.length;) {
             var item = this.data.items[i];

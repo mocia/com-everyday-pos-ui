@@ -19,6 +19,10 @@ export class View {
                 this.data = data;
                 this.data.dateString = this.getStringDate(new Date(this.data.date));
                 this.data.timeString = this.getStringTime(new Date(this.data.date));
+                this.data.subTotal = parseInt(this.data.subTotal)
+                for(var item of this.data.items){
+                    item.total = parseInt(item.total);
+                }
                 this.checkPaymentType();
                 //this.generatePrintStruk();
                 this.generatePrintStrukTable();
