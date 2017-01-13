@@ -219,7 +219,7 @@
                                                                                                         </div>-->
                                                 </td>
                                                 <td>
-                                                    <numeric label="" value.bind="returnItem.price" error.bind="error.items[$parent.$index].returnItems[$index].price" change.delegate="sumRow(returnItem)"
+                                                    <numeric options.bind="numericOptions" label="" value.bind="returnItem.price" error.bind="error.items[$parent.$index].returnItems[$index].price" change.delegate="sumRow(returnItem)"
                                                         read-only.bind="readOnlyTrue"></numeric>
                                                     <!--<div class="form-group ${error.items[$parent.$index].returnItems[$index].price?'has-error':''}">
                                                                                                             <input class="form-control" type="number" name="price" value.bind="returnItem.price" change.delegate="sumRow(returnItem)" readonly/>
@@ -227,7 +227,7 @@
                                                                                                         </div>-->
                                                 </td>
                                                 <td>
-                                                    <numeric label="" value.bind="returnItem.discount1" error.bind="error.items[$parent.$index].returnItems[$index].discount1"
+                                                    <numeric options.bind="numericOptions" label="" value.bind="returnItem.discount1" error.bind="error.items[$parent.$index].returnItems[$index].discount1"
                                                         change.delegate="sumRow(returnItem, null, $event)" read-only.bind="readOnlyFalse"></numeric>
                                                     <!--<div class="form-group ${error.items[$parent.$index].returnItems[$index].discount1?'has-error':''}">
                                                                                                             <input class="form-control" type="number" name="discount1" value.bind="returnItem.discount1" change.delegate="sumRow(returnItem)"/>
@@ -235,7 +235,7 @@
                                                                                                         </div>-->
                                                 </td>
                                                 <td>
-                                                    <numeric label="" value.bind="returnItem.discount2" error.bind="error.items[$parent.$index].returnItems[$index].discount2"
+                                                    <numeric options.bind="numericOptions" label="" value.bind="returnItem.discount2" error.bind="error.items[$parent.$index].returnItems[$index].discount2"
                                                         change.delegate="sumRow(returnItem,null, null, $event)" read-only.bind="readOnlyFalse"></numeric>
                                                     <!--<div class="form-group ${error.items[$parent.$index].returnItems[$index].discount2?'has-error':''}">
                                                                                                             <input class="form-control" type="number" name="discount2" value.bind="returnItem.discount2" change.delegate="sumRow(returnItem)"/>
@@ -243,7 +243,7 @@
                                                                                                         </div>-->
                                                 </td>
                                                 <td>
-                                                    <numeric label="" value.bind="returnItem.discountNominal" error.bind="error.items[$parent.$index].returnItems[$index].discountNominal"
+                                                    <numeric options.bind="numericOptions" label="" value.bind="returnItem.discountNominal" error.bind="error.items[$parent.$index].returnItems[$index].discountNominal"
                                                         change.delegate="sumRow(returnItem,null,null, null, $event)" read-only.bind="readOnlyFalse"></numeric>
                                                     <!--<div class="form-group ${error.items[$parent.$index].returnItems[$index].discountNominal?'has-error':''}">
                                                                                                             <input class="form-control" type="number" name="discountNominal" value.bind="returnItem.discountNominal" change.delegate="sumRow(returnItem)"/>
@@ -282,7 +282,7 @@
                                                                                                         </div>-->
                                                 </td>
                                                 <td>
-                                                    <numeric label="" value.bind="returnItem.margin" error.bind="error.items[$parent.$index].returnItems[$index].margin" change.delegate="sumRow(returnItem,null,null,null, null, $event)"
+                                                    <numeric options.bind="numericOptions" label="" value.bind="returnItem.margin" error.bind="error.items[$parent.$index].returnItems[$index].margin" change.delegate="sumRow(returnItem,null,null,null, null, $event)"
                                                         read-only.bind="readOnlyFalse"></numeric>
                                                     <!--<div class="form-group ${error.items[$parent.$index].returnItems[$index].margin?'has-error':''}">
                                                                                                             <input class="form-control" type="number" name="margin" value.bind="returnItem.margin" change.delegate="sumRow(returnItem)"/>
@@ -308,17 +308,23 @@
                                                 </tr>
                                                 <tr if.bind="data.items.length > 0">
                                                     <td colspan="10" style="text-align:right;">Sub Total Barang Retur</td>
-                                                <td style="text-align:right;">${data.subTotalRetur}</td>
+                                                <td style="text-align:right;">
+                                                     <numeric label="" value.bind="data.subTotalRetur" read-only.bind="readOnlyTrue"></numeric> 
+                                                     </td>
                                                 <td></td>
                                                 </tr>
                                                 <tr if.bind="data.items.length > 0">
                                                     <td colspan="10" style="text-align:right;">Sub Total Barang Baru</td>
-                                                <td style="text-align:right;">${data.subTotal}</td>
+                                                <td style="text-align:right;">
+                                                     <numeric label="" value.bind="data.subTotal" read-only.bind="readOnlyTrue"></numeric>  
+                                                     </td>
                                                 <td></td>
                                                 </tr>
                                                 <tr if.bind="data.items.length > 0">
                                                     <td colspan="10" style="text-align:right;">Grand Total</td>
-                                                <td style="text-align:right;">${data.grandTotal}</td>
+                                                <td style="text-align:right;">
+                                                     <numeric label="" value.bind="data.grandTotal" read-only.bind="readOnlyTrue"></numeric> 
+                                                     </td>
                                                 <td></td>
                                                 </tr>
                                                 </table>
