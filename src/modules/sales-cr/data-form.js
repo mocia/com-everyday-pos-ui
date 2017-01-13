@@ -270,7 +270,6 @@ export class DataForm {
     }
 
     sumRow(item, eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
-        debugger
         console.log("sumRow");
         var itemIndex = this.data.items.indexOf(item);
         var itemDetail = this.data.items[itemIndex];
@@ -305,7 +304,7 @@ export class DataForm {
             this.data.subTotal = parseInt(this.data.subTotal) + parseInt(item.total);
             this.data.totalProduct = parseInt(this.data.totalProduct) + parseInt(item.quantity);
         }
-        this.data.totalDiscount = parseInt(this.data.subTotal) * discount / 100;
+        this.data.totalDiscount = parseInt(this.data.subTotal * discount / 100);
         this.data.total = parseInt(this.data.subTotal) - parseInt(this.data.totalDiscount);
         this.data.sisaBayar = parseInt(this.data.total);
         this.data.grandTotal = parseInt(this.data.total);
