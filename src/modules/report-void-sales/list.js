@@ -1,16 +1,18 @@
-import {inject, Lazy, BindingEngine} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-import {Service} from './service';
-import {Session} from '../../utils/session';
+import { inject, Lazy, BindingEngine } from 'aurelia-framework';
+import { Router } from 'aurelia-router';
+import { Service } from './service';
+import { LocalStorage } from '../../utils/storage';
 
-@inject(Router, Service, BindingEngine, Session)
+@inject(Router, Service, BindingEngine, LocalStorage)
 export class List {
 
-    constructor(router, service, bindingEngine, session) {
+    shifts = ["Semua", "1", "2", "3", "4", "5"];
+
+    constructor(router, service, bindingEngine, localStorage) {
         this.router = router;
         this.service = service;
         this.bindingEngine = bindingEngine;
-        this.session = session;
+        this.localStorage = localStorage;
 
         this.data = { filter: {}, results: [] };
         this.error = { filter: {}, results: [] };
@@ -44,8 +46,10 @@ export class List {
 
     attached() {
         this.data.filter.shift = 0;
-        this.data.filter.storeId = this.session.store._id;
-        this.data.filter.store = this.session.store;
+        this.data.filter.storeId = this.localStorage.store._id;
+        this.data.filter.store = this.localStorage.store;
+        // this.data.filter.storeId = this.session.store._id;
+        // this.data.filter.store = this.session.store;
         // this.bindingEngine.propertyObserver(this.data.filter, "storeId").subscribe((newValue, oldValue) => { 
         // }); 
     }
@@ -118,12 +122,21 @@ export class List {
         return date;
     }
 
-    setDateFrom() {
-        this.data.filter.dateFrom = this.dateFromPicker + 'T00:00:00';
+    setDateFrom(e) {
+        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateFromPicker)+ 'T00:00:00';
     }
 
-    setDateTo() {
-        this.data.filter.dateTo = this.dateToPicker + 'T23:59:59';
+    setDateTo(e) {
+        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateToPicker)+ 'T23:59:59';
+    }
+
+    setShift(e) {
+        var _shift = (e ? e.srcElement.value : this.shift);
+        if (_shift.toLowerCase() == 'semua'){
+            this.data.filter.shift = 0;
+        }else{
+            this.data.filter.shift = parseInt(_shift);
+        }
     }
 
     generateReportHTML() {

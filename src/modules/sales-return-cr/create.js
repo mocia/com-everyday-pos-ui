@@ -47,6 +47,12 @@ export class Create {
                 }  
             }
         } 
+        if (this.data.salesDetail.cardType)
+            this.data.salesDetail.cardTypeId = this.data.salesDetail.cardType._id;
+        if (this.data.salesDetail.bank)
+            this.data.salesDetail.bankId = this.data.salesDetail.bank._id;
+        if (this.data.salesDetail.bankCard)
+            this.data.salesDetail.bankCardId = this.data.salesDetail.bankCard._id;
         this.service.create(this.data)
             .then(id => {
                 this.detail(id);
