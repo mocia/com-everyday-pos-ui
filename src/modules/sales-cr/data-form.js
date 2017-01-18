@@ -31,7 +31,7 @@ export class DataForm {
         this.bindingEngine = bindingEngine;
         this.readOnlyTrue = true;
         this.readOnlyFalse = false;
-        this.numericOptions = {separator:','}
+        this.numericOptions = { separator: ',' }
         this.localStorage = localStorage;
 
         this.stores = this.localStorage.me.data.stores;
@@ -270,7 +270,6 @@ export class DataForm {
     }
 
     sumRow(item, eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
-        console.log("sumRow");
         var itemIndex = this.data.items.indexOf(item);
         var itemDetail = this.data.items[itemIndex];
         var specialDiscount = eventSpecialDiscount ? (eventSpecialDiscount.srcElement.value ? parseInt(eventSpecialDiscount.srcElement.value) : parseInt(eventSpecialDiscount.detail || 0)) : parseInt(itemDetail.specialDiscount);
@@ -278,17 +277,17 @@ export class DataForm {
         var discount2 = eventDiscount2 ? (eventDiscount2.srcElement.value ? parseInt(eventDiscount2.srcElement.value) : parseInt(eventDiscount2.detail || 0)) : parseInt(itemDetail.discount2);
         var discountNominal = eventDiscountNominal ? (eventDiscountNominal.srcElement.value ? parseInt(eventDiscountNominal.srcElement.value) : parseInt(eventDiscountNominal.detail || 0)) : parseInt(itemDetail.discountNominal);
         var margin = eventMargin ? (eventMargin.srcElement.value ? parseInt(eventMargin.srcElement.value) : parseInt(eventMargin.detail || 0)) : parseInt(itemDetail.margin);
-        
+
         itemDetail.total = 0;
         if (parseInt(itemDetail.quantity) > 0) {
             //Price
             itemDetail.total = parseInt(itemDetail.quantity) * parseInt(itemDetail.price);
             //Diskon
-            itemDetail.total = parseInt((itemDetail.total * (1 - (discount1 / 100)) * (1 - (discount2 / 100))) - discountNominal);
+            itemDetail.total = parseInt((itemDetail.total * (100 - discount1) / 100 * (100 - discount2) / 100) - discountNominal);
             //Spesial Diskon 
-            itemDetail.total = parseInt(itemDetail.total * (1 - (specialDiscount / 100)));
+            itemDetail.total = parseInt(itemDetail.total * (100 - specialDiscount) / 100);
             //Margin
-            itemDetail.total = parseInt(itemDetail.total * (1 - (margin / 100)));
+            itemDetail.total = parseInt(itemDetail.total * (100 - margin) / 100);
         }
         this.sumTotal();
     }
@@ -351,7 +350,7 @@ export class DataForm {
     checkPaymentType(event) {
 
         var paymentType = event ? (event.srcElement.value ? event.srcElement.value : event.detail) : this.data.salesDetail.paymentType;
-       
+
         this.isCard = false;
         this.isCash = false;
         if (paymentType.toLowerCase() == 'cash') {
