@@ -322,7 +322,6 @@ export class DataForm {
     }
 
     sumRow(item,eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
-        console.log("sumRow");
         var itemIndex = this.data.items.indexOf(item);
         var specialDiscount = eventSpecialDiscount ? (eventSpecialDiscount.srcElement.value ? parseInt(eventSpecialDiscount.srcElement.value) : parseInt(eventSpecialDiscount.detail || 0)) : parseInt(item.specialDiscount);
         var discount1 = eventDiscount1 ? (eventDiscount1.srcElement.value ? parseInt(eventDiscount1.srcElement.value) : parseInt(eventDiscount1.detail || 0)) : parseInt(item.discount1);
@@ -336,11 +335,11 @@ export class DataForm {
             //Price
             item.total = parseInt(item.quantity) * parseInt(item.price);
             //Diskon
-            item.total = parseInt((item.total * (1 - (discount1 / 100)) * (1 - (discount2 / 100))) - discountNominal);
+            item.total = parseInt((item.total * (100 - discount1) / 100 * (100 - discount2) / 100) - discountNominal);
             //Spesial Diskon 
-            item.total = parseInt(item.total * (1 - (specialDiscount / 100)));
+            item.total = parseInt(item.total * (100 - specialDiscount) / 100);
             //Margin
-            item.total = parseInt(item.total * (1 - (margin / 100)));
+            item.total = parseInt(item.total * (100 - margin) / 100);
         }
         this.sumTotal();
     }
