@@ -27,7 +27,7 @@
                 <span class="help-block">${error.filter.dateTo}</span>
             </div>
         </div>-->
-        <dropdown label="Shift" error.bind="error.filter.shift" value.bind="data.filter.shift" items.bind="shifts"></dropdown>
+        <dropdown label="Shift" error.bind="error.filter.shift" value.bind="shift" items.bind="shifts" change.delegate="setShift($event)"></dropdown>
         <!--<div class="form-group ${error.filter.shift?'has-error':''}">
             <label for="shift" class="col-sm-2 control-label">Shift</label>
             <div class="col-sm-10">
