@@ -10,7 +10,7 @@ export class List {
 
     //storeApiUri = require('../../host').master + '/stores';
 
-    shifts = [1,2,3,4,5];
+    shifts = ["Semua", "1", "2", "3", "4", "5"];
 
     constructor(router, service, bindingEngine, authService, localStorage) {
         this.router = router;
@@ -43,7 +43,7 @@ export class List {
     }
 
     attached() {
-        this.data.filter.shift = 1;
+        this.data.filter.shift = 0;
         this.data.filter.storeId = this.localStorage.store._id;
         this.data.filter.store = this.localStorage.store;
         this.getTargetPerMonth();
@@ -236,11 +236,21 @@ export class List {
     }
 
     setDateFrom(e) {
-        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateFromPicker)+ 'T00:00:00';
+        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateFromPicker)+ 'T00:00:00';
     }
 
     setDateTo(e) {
-        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : event.detail) : this.dateToPicker)+ 'T23:59:59';
+        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateToPicker)+ 'T23:59:59';
+    }
+    
+
+    setShift(e) {
+        var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
+        if (_shift.toLowerCase() == 'semua'){
+            this.data.filter.shift = 0;
+        }else{
+            this.data.filter.shift = parseInt(_shift);
+        }
     }
 
     generateReportHTML() {
