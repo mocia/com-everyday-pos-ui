@@ -1,23 +1,41 @@
-import {inject, bindable, BindingEngine} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-import {Service} from './service';
-import {Session} from '../../utils/session';
+import { inject, bindable, BindingEngine, observable } from 'aurelia-framework';
+import { Router } from 'aurelia-router';
+import { Service } from './service';
+import { LocalStorage } from '../../utils/storage';
 
-@inject(Router, Service, BindingEngine, Session)
+@inject(Router, Service, BindingEngine, LocalStorage)
 export class DataForm {
     @bindable data = {};
     @bindable error = {};
 
-    finishedGoodsApiUri = require('../../host').master + '/finishedgoods';
+    finishedGoodsApiUri = 'master/finishedgoods';
     voucherApiUri = '';
 
-    constructor(router, service, bindingEngine, session) {
+    discounts = [
+        0, 5, 10, 15,
+        20, 25, 30, 35,
+        40, 45, 50, 55,
+        60, 65, 70, 75,
+        80, 85, 90, 95,
+        100
+    ];
+
+    cards = [{ value: 'Debit', label: 'Debit' }, { value: 'Credit', label: 'Kredit' }];
+
+
+    paymentTypes = ['', 'Cash', 'Card', 'Partial'];
+
+    constructor(router, service, bindingEngine, localStorage) {
         this.router = router;
         this.service = service;
         this.bindingEngine = bindingEngine;
-        this.session = session;
         this.readOnlyTrue = true;
         this.readOnlyFalse = false;
+        this.numericOptions = { separator: ',' }
+        this.localStorage = localStorage;
+
+        this.stores = this.localStorage.me.data.stores;
+        // this.discounts.forEach(s => { s.toString = function () { return `${this.value}%` } });
         //this.stores = session.stores; 
 
         this.isCard = false;
@@ -28,7 +46,19 @@ export class DataForm {
         Promise.all(getData)
             .then(results => {
                 this.Banks = results[0];
+                this.Banks.unshift({});
+                this.Banks.forEach(s => {
+                    s.toString = function () {
+                        return `${this.name ? this.name : ""}`
+                    }
+                })
                 this.CardTypes = results[1];
+                this.CardTypes.unshift({});
+                this.CardTypes.forEach(s => {
+                    s.toString = function () {
+                        return `${this.name ? this.name : ""}`
+                    }
+                })
             })
     }
 
@@ -84,6 +114,9 @@ export class DataForm {
             for (var shift of this.data.store.shifts) {
                 var dateFrom = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateFrom)));
                 var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
+                if (dateFrom > dateTo) {
+                    dateTo.setDate(dateTo.getDate + 1);
+                }
                 if (dateFrom < today && today < dateTo) {
                     this.data.shift = parseInt(shift.shift);
                     break;
@@ -93,8 +126,10 @@ export class DataForm {
     }
 
     attached() {
-        this.data.storeId = this.session.store._id;
-        this.data.store = this.session.store;
+        // this.data.storeId = this.session.store._id;
+        // this.data.store = this.session.store;
+        this.data.storeId = this.localStorage.store._id;
+        this.data.store = this.localStorage.store;
         // this.data.shift = this.getShift();
         this.service.getStore(this.data.storeId)
             .then(result => {
@@ -105,7 +140,7 @@ export class DataForm {
 
         this.data.datePicker = this.getStringDate(new Date());
         this.data.date = new Date();
-        this.data.discount = 0;
+        // this.data.discount = 0;
         this.data.totalProduct = 0;
         this.data.subTotal = 0;
         this.data.totalDiscount = 0;
@@ -234,24 +269,32 @@ export class DataForm {
             this.addItem();
     }
 
-    sumRow(item) {
+    sumRow(item, eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
         var itemIndex = this.data.items.indexOf(item);
-        var itemDetail = this.data.items[itemIndex]
+        var itemDetail = this.data.items[itemIndex];
+        var specialDiscount = eventSpecialDiscount ? (eventSpecialDiscount.srcElement.value ? parseInt(eventSpecialDiscount.srcElement.value) : parseInt(eventSpecialDiscount.detail || 0)) : parseInt(itemDetail.specialDiscount);
+        var discount1 = eventDiscount1 ? (eventDiscount1.srcElement.value ? parseInt(eventDiscount1.srcElement.value) : parseInt(eventDiscount1.detail || 0)) : parseInt(itemDetail.discount1);
+        var discount2 = eventDiscount2 ? (eventDiscount2.srcElement.value ? parseInt(eventDiscount2.srcElement.value) : parseInt(eventDiscount2.detail || 0)) : parseInt(itemDetail.discount2);
+        var discountNominal = eventDiscountNominal ? (eventDiscountNominal.srcElement.value ? parseInt(eventDiscountNominal.srcElement.value) : parseInt(eventDiscountNominal.detail || 0)) : parseInt(itemDetail.discountNominal);
+        var margin = eventMargin ? (eventMargin.srcElement.value ? parseInt(eventMargin.srcElement.value) : parseInt(eventMargin.detail || 0)) : parseInt(itemDetail.margin);
+
         itemDetail.total = 0;
         if (parseInt(itemDetail.quantity) > 0) {
             //Price
             itemDetail.total = parseInt(itemDetail.quantity) * parseInt(itemDetail.price);
             //Diskon
-            itemDetail.total = (itemDetail.total * (1 - (parseInt(itemDetail.discount1) / 100)) * (1 - (parseInt(itemDetail.discount2) / 100))) - parseInt(itemDetail.discountNominal);
+            itemDetail.total = parseInt((itemDetail.total * (100 - discount1) / 100 * (100 - discount2) / 100) - discountNominal);
             //Spesial Diskon 
-            itemDetail.total = itemDetail.total * (1 - (parseInt(itemDetail.specialDiscount) / 100));
+            itemDetail.total = parseInt(itemDetail.total * (100 - specialDiscount) / 100);
             //Margin
-            itemDetail.total = itemDetail.total * (1 - (parseInt(itemDetail.margin) / 100));
+            itemDetail.total = parseInt(itemDetail.total * (100 - margin) / 100);
         }
         this.sumTotal();
     }
 
-    sumTotal() {
+    sumTotal(event) {
+        var discount = event ? (event.srcElement.value ? parseInt(event.srcElement.value) : parseInt(event.detail)) : parseInt(this.data.discount);
+        // var discount = event ? parseInt(event.srcElement.value) : parseInt(this.data.discount);
         this.data.totalProduct = 0;
         this.data.subTotal = 0;
         this.data.totalDiscount = 0;
@@ -260,7 +303,7 @@ export class DataForm {
             this.data.subTotal = parseInt(this.data.subTotal) + parseInt(item.total);
             this.data.totalProduct = parseInt(this.data.totalProduct) + parseInt(item.quantity);
         }
-        this.data.totalDiscount = parseInt(this.data.subTotal) * parseInt(this.data.discount) / 100;
+        this.data.totalDiscount = parseInt(this.data.subTotal * discount / 100);
         this.data.total = parseInt(this.data.subTotal) - parseInt(this.data.totalDiscount);
         this.data.sisaBayar = parseInt(this.data.total);
         this.data.grandTotal = parseInt(this.data.total);
@@ -304,16 +347,19 @@ export class DataForm {
             this.data.sisaBayar = 0;
     }
 
-    checkPaymentType() {
+    checkPaymentType(event) {
+
+        var paymentType = event ? (event.srcElement.value ? event.srcElement.value : event.detail) : this.data.salesDetail.paymentType;
+
         this.isCard = false;
         this.isCash = false;
-        if (this.data.salesDetail.paymentType.toLowerCase() == 'cash') {
+        if (paymentType.toLowerCase() == 'cash') {
             this.isCash = true;
         }
-        else if (this.data.salesDetail.paymentType.toLowerCase() == 'card') {
+        else if (paymentType.toLowerCase() == 'card') {
             this.isCard = true;
         }
-        else if (this.data.salesDetail.paymentType.toLowerCase() == 'partial') {
+        else if (paymentType.toLowerCase() == 'partial') {
             this.isCard = true;
             this.isCash = true;
         }
@@ -370,7 +416,6 @@ export class DataForm {
     setDate() {
         this.data.date = new Date(this.data.datePicker);
     }
-
     refreshPromo(indexItem) {
         var getPromoes = [];
         var storeId = this.data.storeId;

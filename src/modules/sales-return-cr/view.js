@@ -18,8 +18,11 @@ export class View {
             this.data = data; 
             this.data.dateString = this.getStringDate(new Date(this.data.date));
             this.data.timeString = this.getStringTime(new Date(this.data.date));
+            this.subTotal = parseInt(this.subTotal);
+            this.grandTotal = parseInt(this.grandTotal);
             for(var item of this.data.salesDocReturn.items) {
                 item.returnStatus = "Barang Baru";
+                item.total = parseInt(item.total);
                 if(item.isReturn)
                     item.returnStatus = "Retur"; 
             }
