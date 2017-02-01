@@ -72,10 +72,10 @@ export class List {
         else {
             var fromString = this.getStringDate(datefrom) + 'T00:00:00';
             var toString = this.getStringDate(dateto) + 'T23:59:59';
-            this.service.generateExcel(this.data.filter.storeId, fromString, toString, this.data.filter.shift);
+            this.service.generateExcel(this.data.filter.storeId, fromString, toString, this.data.filter.shift); 
         }
-    }
-
+    } 
+ 
     filter() {
         this.error = { filter: {}, results: [] };
         var datefrom = new Date(this.data.filter.dateFrom);
