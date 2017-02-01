@@ -15,23 +15,28 @@ export class Service extends RestService {
     return super.get(endpoint);
   }
 
-  generateExcel(storeId, dateFrom, dateTo, shift) {
-    var query = '';
-    if (dateFrom) {
-      if (query == '') query = `dateFrom=${dateFrom}`;
-      else query = `${query}&dateFrom=${dateFrom}`;
-    }
-    if (dateTo) {
-      if (query == '') query = `dateTo=${dateTo}`;
-      else query = `${query}&dateTo=${dateTo}`;
-    }
-    if (shift) {
-      if (query == '') query = `shift=${shift}`;
-      else query = `${query}&shift=${shift}`;
-    }
+  // generateExcel(storeId, dateFrom, dateTo, shift) {
+  //   var query = '';
+  //   if (dateFrom) {
+  //     if (query == '') query = `dateFrom=${dateFrom}`;
+  //     else query = `${query}&dateFrom=${dateFrom}`;
+  //   }
+  //   if (dateTo) {
+  //     if (query == '') query = `dateTo=${dateTo}`;
+  //     else query = `${query}&dateTo=${dateTo}`;
+  //   }
+  //   if (shift) {
+  //     if (query == '') query = `shift=${shift}`;
+  //     else query = `${query}&shift=${shift}`;
+  //   }
     
-    var endpoint = `${serviceReportUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
+  //   var endpoint = `${serviceReportUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
 
-    return super.getXls(endpoint);
-  }
+  //   return super.getXls(endpoint);
+  // }
+
+  generateExcel(storeId, dateFrom, dateTo, shift) {
+        var endpoint = `${serviceReportUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
+        return super.getXls(endpoint);
+    }
 }
