@@ -70,12 +70,10 @@ export class List {
         else if (dateto < datefrom)
             this.error.filter.dateTo = "Tanggal To Harus Lebih Besar Dari From";
         else {
-            var fromString = this.getStringDate(datefrom) + 'T00:00:00';
-            var toString = this.getStringDate(dateto) + 'T23:59:59';
-            this.service.generateExcel(this.data.filter.storeId, fromString, toString, this.data.filter.shift); 
+            this.service.generateExcel(this.data.filter.storeId, datefrom, dateto, this.data.filter.shift);
         }
-    } 
- 
+    }
+
     filter() {
         this.error = { filter: {}, results: [] };
         var datefrom = new Date(this.data.filter.dateFrom);
@@ -236,19 +234,19 @@ export class List {
     }
 
     setDateFrom(e) {
-        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateFromPicker)+ 'T00:00:00';
+        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateFromPicker) + 'T00:00:00';
     }
 
     setDateTo(e) {
-        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateToPicker)+ 'T23:59:59';
+        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateToPicker) + 'T23:59:59';
     }
-    
+
 
     setShift(e) {
         var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
-        if (_shift.toLowerCase() == 'semua'){
+        if (_shift.toLowerCase() == 'semua') {
             this.data.filter.shift = 0;
-        }else{
+        } else {
             this.data.filter.shift = parseInt(_shift);
         }
     }
