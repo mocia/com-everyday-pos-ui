@@ -30,7 +30,7 @@ export class DataForm {
 
         this.readOnlyFalse = false;
         this.readOnlyTrue = true;
-        this.numericOptions = {separator:','}
+        this.numericOptions = { separator: ',' }
         this.localStorage = localStorage;
 
         this.stores = this.localStorage.me.data.stores;
@@ -321,14 +321,14 @@ export class DataForm {
             this.addItemDetail(itemIndex);
     }
 
-    sumRow(item,eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
+    sumRow(item, eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
         var itemIndex = this.data.items.indexOf(item);
         var specialDiscount = eventSpecialDiscount ? (eventSpecialDiscount.srcElement.value ? parseInt(eventSpecialDiscount.srcElement.value) : parseInt(eventSpecialDiscount.detail || 0)) : parseInt(item.specialDiscount);
         var discount1 = eventDiscount1 ? (eventDiscount1.srcElement.value ? parseInt(eventDiscount1.srcElement.value) : parseInt(eventDiscount1.detail || 0)) : parseInt(item.discount1);
         var discount2 = eventDiscount2 ? (eventDiscount2.srcElement.value ? parseInt(eventDiscount2.srcElement.value) : parseInt(eventDiscount2.detail || 0)) : parseInt(item.discount2);
         var discountNominal = eventDiscountNominal ? (eventDiscountNominal.srcElement.value ? parseInt(eventDiscountNominal.srcElement.value) : parseInt(eventDiscountNominal.detail || 0)) : parseInt(item.discountNominal);
         var margin = eventMargin ? (eventMargin.srcElement.value ? parseInt(eventMargin.srcElement.value) : parseInt(eventMargin.detail || 0)) : parseInt(item.margin);
-        
+
         item.total = 0;
         // var specialDiscount = event ? parseInt(event.srcElement.value) : parseInt(item.specialDiscount);
         if (parseInt(item.quantity) > 0) {
@@ -389,6 +389,7 @@ export class DataForm {
     }
 
     refreshDetail() {
+        debugger
         this.data.total = 0;
         this.data.total = parseInt(this.data.grandTotal) - parseInt(this.data.salesDetail.voucher.value);
         if (this.data.total < 0)
@@ -485,8 +486,8 @@ export class DataForm {
                 var promo = item.promo;
                 var ro = '';
                 if (item.item) {
-                    if (item.item.article)
-                        ro = item.item.article.realizationOrder;
+                    if (item.item.item.article)
+                        ro = item.item.item.article.realizationOrder;
                 }
 
                 for (var returnItem of item.returnItems) {
