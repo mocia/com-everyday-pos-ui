@@ -1,58 +1,15 @@
 <template>
-    <require from="../../customs/elements/horsey"></require>
     <h1 class="page-header">Laporan Penjualan - Omset</h1>
     <form class="form-horizontal">
-        <!--<div class="form-group ${error.filter.storeId?'has-error':''}">
-            <label for="store" class="col-sm-2 control-label">Toko</label>
-            <div class="col-sm-10">
-                <select class="form-control" name="storeId" value.bind="data.filter.storeId"> 
-                    <option repeat.for="store of stores" value="${store._id}">${store.name}</option>
-                </select>
-                <span class="help-block">${error.filter.storeId}</span>
-            </div>
-        </div>-->
-
         <datepicker label="From" value.bind="dateFromPicker" error.bind="error.filter.dateFrom" read-only.bind="(readOnly)" change.delegate="setDateFrom($event)"></datepicker>
-
-        <!--<div class="form-group ${error.filter.dateFrom?'has-error':''}">
-            <label for="dateFrom" class="col-sm-2 control-label">From</label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" name="date" value.bind="dateFromPicker" change.delegate="setDateFrom()" />
-                <span class="help-block">${error.filter.dateFrom}</span>
-            </div>
-        </div>-->
         <datepicker label="To" value.bind="dateToPicker" error.bind="error.filter.dateTo" read-only.bind="(readOnly)" change.delegate="setDateTo($event)"></datepicker>
-
-        <!--<div class="form-group ${error.filter.dateTo?'has-error':''}">
-            <label for="dateTo" class="col-sm-2 control-label">To</label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" name="date" value.bind="dateToPicker" change.delegate="setDateTo()" />
-                <span class="help-block">${error.filter.dateTo}</span>
-            </div>
-        </div>-->
-
-       <dropdown label="Shift" error.bind="error.filter.shift" value.bind="shift" items.bind="shifts" change.delegate="setShift($event)"></dropdown>
-
-        <!--<div class="form-group ${error.filter.storeId?'has-error':''}">
-            <label for="store" class="col-sm-2 control-label">Shift</label>
-            <div class="col-sm-10">
-                <select class="form-control" name="shift" value.bind="data.filter.shift"> 
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <span class="help-block">${error.filter.shift}</span>
-            </div>
-        </div>-->
-        <div class="btn-group col-sm-offset-4 col-sm-5">
-            <button class="btn btn-success pull-right" click.delegate="filter()">Tampilkan</button>
-            <!--<button class="btn btn-success pull-right" click.delegate="exportToExcel()">Excel</button>-->
+        <dropdown label="Shift" error.bind="error.filter.shift" value.bind="shift" items.bind="shifts" change.delegate="setShift($event)"></dropdown>
+        <div class="btn-group col-sm-offset-4 col-sm-4">
+            <button class="btn btn-success pull-right" click.delegate="filter()">Tampilkan</button> 
         </div>
+        <a click.delegate="exportToExcel()" class='btn btn-primary'>Cetak Excel</a>
         <div class="col-sm-12" if.bind="isFilter">
             <div class="pre-scrollable" innerHTML.bind="reportHTML | sanitizeHTML"></div>
-
             <table class="table table-bordered">
                 <tr>
                     <td width='300px'>Total Pcs</td>
