@@ -1,12 +1,12 @@
-import {inject, Lazy, BindingEngine} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
+import { inject, Lazy, BindingEngine } from 'aurelia-framework';
+import { Router } from 'aurelia-router';
 import { AuthService } from 'aurelia-authentication';
-import {Service} from './service';
-import {LocalStorage} from '../../utils/storage';
+import { Service } from './service';
+import { LocalStorage } from '../../utils/storage';
 
 import moment from 'moment';
 
-@inject(Router, Service, BindingEngine, AuthService,LocalStorage)
+@inject(Router, Service, BindingEngine, AuthService, LocalStorage)
 export class List {
 
     // storeApiUri = require('../../host').master + '/stores';
@@ -21,10 +21,9 @@ export class List {
 
         this.data = { filter: {}, results: [] };
         this.error = { filter: {}, results: [] };
-        this.dateFromPicker = this.getStringDate(new Date());
-        this.dateToPicker = this.getStringDate(new Date());
-        this.setDateFrom();
-        this.setDateTo();
+
+        this.data.filter.dateFrom = new Date();
+        this.data.filter.dateTo = new Date();
         this.isFilter = false;
         this.reportHTML = ""
 
@@ -81,9 +80,9 @@ export class List {
             var getData = [];
             for (var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) {
                 var date = new Date(d);
-                var fromString = this.getStringDate(date) + 'T00:00:00';
-                var toString = this.getStringDate(date) + 'T23:59:59';
-                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, moment(fromString).format(), moment(toString).format(), this.data.filter.shift));
+                var from = moment(d).startOf('day');
+                var to = moment(d).endOf('day');
+                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, from.format(), to.format(), this.data.filter.shift));
             }
             Promise.all(getData)
                 .then(salesPerDays => {
@@ -116,21 +115,21 @@ export class List {
                                     itemData.debitNominal = 0;
                                     itemData.creditNominal = parseInt(data.salesDetail.cardAmount);
                                 }
-                                
+
                                 itemData.paymentType = data.salesDetail.paymentType
-                                
-                                if (data.salesDetail.bank.name != null  && data.salesDetail.bank._active != null && data.salesDetail.bank._active !== false) {
+
+                                if (data.salesDetail.bank.name != null && data.salesDetail.bank._active != null && data.salesDetail.bank._active !== false) {
                                     itemData.bank = data.salesDetail.bank.name;
                                 }
                                 else
                                     itemData.bank = "Kartu tidak Teridentifikasi";
-                                    
+
                                 if (data.salesDetail.bankCard.name != null && data.salesDetail.bankCard._active != null && data.salesDetail.bankCard._active !== false) {
                                     itemData.bankCard = data.salesDetail.bankCard.name;
                                 }
                                 else
                                     itemData.bankCard = "Kartu tidak Teridentifikasi";
-                                    
+
                                 if (data.salesDetail.cardType.name == "Mastercard") {
                                     itemData.debitNominalLainnya = 0;
                                     itemData.creditMasterNominal = parseInt(data.salesDetail.cardAmount);
@@ -193,19 +192,11 @@ export class List {
         return date;
     }
 
-    setDateFrom(e) {
-        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateFromPicker)+ 'T00:00:00';
-    }
-
-    setDateTo(e) {
-        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateToPicker)+ 'T23:59:59';
-    }
-
     setShift(e) {
         var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
-        if (_shift.toLowerCase() == 'semua'){
+        if (_shift.toLowerCase() == 'semua') {
             this.data.filter.shift = 0;
-        }else{
+        } else {
             this.data.filter.shift = parseInt(_shift);
         }
     }
@@ -230,7 +221,7 @@ export class List {
         this.totalTempCreditMaster = 0;
 
         this.totalCash = 0;
-        console.log(JSON.stringify(this.data.results));
+        
         var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         this.reportHTML = "Payment Summary";
@@ -247,7 +238,7 @@ export class List {
         this.reportHTML += "            </tr>";
         this.reportHTML += "        </thead>";
         this.reportHTML += "        <tbody>";
- 
+
         var totalTotalTransaksi = 0;
 
         for (var data of this.data.results) {
@@ -284,9 +275,9 @@ export class List {
                     this.reportHTML += "        </tr>";
                     isTanggalRowSpan = true;
                 }
-                isItemRowSpan = true;  
-                this.reportHTML += "<tr></tr>"; 
-            } 
+                isItemRowSpan = true;
+                this.reportHTML += "<tr></tr>";
+            }
             this.reportHTML += "<tr></tr>";
         }
         this.reportHTML += "        <td>Total</td>";
@@ -294,7 +285,7 @@ export class List {
         var totalDebit = 0;
         var totalCredit = 0;
         var totalVoucher = 0;
-        for (var data of this.data.results) { 
+        for (var data of this.data.results) {
             for (var item of data.items) {
                 if (!item.isVoid) {
                     totalCash += item.cashNominal;
