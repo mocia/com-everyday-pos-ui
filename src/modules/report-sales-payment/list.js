@@ -3,6 +3,7 @@ import { Router } from 'aurelia-router';
 import { AuthService } from 'aurelia-authentication';
 import { Service } from './service';
 import { LocalStorage } from '../../utils/storage';
+import moment from 'moment';
 
 
 @inject(Router, Service, BindingEngine, AuthService, LocalStorage)
@@ -91,7 +92,7 @@ export class List {
                 var date = new Date(d);
                 var fromString = this.getStringDate(date) + 'T00:00:00';
                 var toString = this.getStringDate(date) + 'T23:59:59';
-                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, this.data.filter.shift));
+                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, moment(fromString).format(), moment(toString).format(), this.data.filter.shift));
             }
             Promise.all(getData)
                 .then(salesPerDays => {
@@ -236,19 +237,19 @@ export class List {
     }
 
     setDateFrom(e) {
-        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateFromPicker)+ 'T00:00:00';
+        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateFromPicker) + 'T00:00:00';
     }
 
     setDateTo(e) {
-        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateToPicker)+ 'T23:59:59';
+        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateToPicker) + 'T23:59:59';
     }
-    
+
 
     setShift(e) {
         var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
-        if (_shift.toLowerCase() == 'semua'){
+        if (_shift.toLowerCase() == 'semua') {
             this.data.filter.shift = 0;
-        }else{
+        } else {
             this.data.filter.shift = parseInt(_shift);
         }
     }
