@@ -3,6 +3,7 @@ import { Router } from 'aurelia-router';
 import { AuthService } from 'aurelia-authentication';
 import { Service } from './service';
 import { LocalStorage } from '../../utils/storage';
+import moment from 'moment';
 
 
 @inject(Router, Service, BindingEngine, AuthService, LocalStorage)
@@ -89,7 +90,7 @@ export class List {
                 var date = new Date(d);
                 var fromString = this.getStringDate(date) + 'T00:00:00';
                 var toString = this.getStringDate(date) + 'T23:59:59';
-                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, this.data.filter.shift));
+                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, moment(fromString).format(), moment(toString).format(), this.data.filter.shift));
             }
             Promise.all(getData)
                 .then(salesPerDays => {
