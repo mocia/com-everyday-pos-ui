@@ -71,7 +71,9 @@ export class List {
         else if (dateto < datefrom)
             this.error.filter.dateTo = "Tanggal To Harus Lebih Besar Dari From";
         else {
-            this.service.generateExcel(this.data.filter.storeId, datefrom, dateto, this.data.filter.shift);
+            var fromString = this.getStringDate(datefrom) + 'T00:00:00';
+            var toString = this.getStringDate(dateto) + 'T23:59:59';
+            this.service.generateExcel(this.data.filter.storeId, moment(fromString).format(), moment(toString).format(), this.data.filter.shift);
         }
     }
 
