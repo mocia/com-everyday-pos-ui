@@ -244,7 +244,7 @@ export class DataForm {
         errorItem.itemCode = '';
         this.data.items.push(item);
         this.error.items.push(errorItem);
-        this.sumRow(item);
+        //this.sumRow(item);
 
     }
 
