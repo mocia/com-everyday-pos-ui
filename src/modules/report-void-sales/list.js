@@ -2,6 +2,7 @@ import { inject, Lazy, BindingEngine } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 import { Service } from './service';
 import { LocalStorage } from '../../utils/storage';
+import moment from 'moment';
 
 @inject(Router, Service, BindingEngine, LocalStorage)
 export class List {
@@ -16,10 +17,8 @@ export class List {
 
         this.data = { filter: {}, results: [] };
         this.error = { filter: {}, results: [] };
-        this.dateFromPicker = this.getStringDate(new Date());
-        this.dateToPicker = this.getStringDate(new Date());
-        this.setDateFrom();
-        this.setDateTo();
+        this.data.filter.dateFrom = new Date();
+        this.data.filter.dateTo = new Date();
         this.isFilter = false;
         this.reportHTML = ""
 
@@ -64,9 +63,9 @@ export class List {
             var getData = [];
             for (var d = datefrom; d <= dateto; d.setDate(d.getDate() + 1)) {
                 var date = new Date(d);
-                var fromString = this.getStringDate(date) + 'T00:00:00';
-                var toString = this.getStringDate(date) + 'T23:59:59';
-                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, fromString, toString, this.data.filter.shift));
+                var from = moment(d).startOf('day');
+                var to = moment(d).endOf('day');
+                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, from.format(), to.format(), this.data.filter.shift));
 
             }
             Promise.all(getData)
@@ -122,19 +121,11 @@ export class List {
         return date;
     }
 
-    setDateFrom(e) {
-        this.data.filter.dateFrom = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateFromPicker)+ 'T00:00:00';
-    }
-
-    setDateTo(e) {
-        this.data.filter.dateTo = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.dateToPicker)+ 'T23:59:59';
-    }
-
     setShift(e) {
         var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
-        if (_shift.toLowerCase() == 'semua'){
+        if (_shift.toLowerCase() == 'semua') {
             this.data.filter.shift = 0;
-        }else{
+        } else {
             this.data.filter.shift = parseInt(_shift);
         }
     }

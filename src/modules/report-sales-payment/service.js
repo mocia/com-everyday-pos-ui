@@ -29,14 +29,15 @@ export class Service extends RestService {
   //     if (query == '') query = `shift=${shift}`;
   //     else query = `${query}&shift=${shift}`;
   //   }
-    
+
   //   var endpoint = `${serviceReportUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
 
   //   return super.getXls(endpoint);
   // }
 
   generateExcel(storeId, dateFrom, dateTo, shift) {
-        var endpoint = `${serviceReportUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
-        return super.getXls(endpoint);
-    }
+    debugger
+    var endpoint = `${serviceReportUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
+    return super.getXls(endpoint);
+  }
 }
