@@ -1,8 +1,8 @@
 <template>
     <h1 class="page-header">Laporan Penjualan - Omset</h1>
     <form class="form-horizontal">
-        <datepicker label="From" value.bind="dateFromPicker" error.bind="error.filter.dateFrom" read-only.bind="(readOnly)" change.delegate="setDateFrom($event)"></datepicker>
-        <datepicker label="To" value.bind="dateToPicker" error.bind="error.filter.dateTo" read-only.bind="(readOnly)" change.delegate="setDateTo($event)"></datepicker>
+        <datepicker label="From" value.bind="data.filter.dateFrom" error.bind="error.filter.dateFrom" read-only.bind="(readOnly)"></datepicker>
+        <datepicker label="To" value.bind="data.filter.dateTo" error.bind="error.filter.dateTo" read-only.bind="(readOnly)"></datepicker>
         <dropdown label="Shift" error.bind="error.filter.shift" value.bind="shift" items.bind="shifts" change.delegate="setShift($event)"></dropdown>
         <div class="btn-group col-sm-offset-4 col-sm-4">
             <button class="btn btn-success pull-right" click.delegate="filter()">Tampilkan</button> 
