@@ -334,13 +334,15 @@ export class DataForm {
         // var specialDiscount = event ? parseInt(event.srcElement.value) : parseInt(item.specialDiscount);
         if (parseInt(item.quantity) > 0) {
             //Price
-            item.total = parseInt(item.quantity) * parseInt(item.price);
+            item.total = item.quantity * item.price;
             //Diskon
-            item.total = parseInt((item.total * (100 - discount1) / 100 * (100 - discount2) / 100) - discountNominal);
+            item.total = (item.total * (100 - discount1) / 100 * (100 - discount2) / 100) - discountNominal;
             //Spesial Diskon 
-            item.total = parseInt(item.total * (100 - specialDiscount) / 100);
+            item.total = item.total * (100 - specialDiscount) / 100;
             //Margin
-            item.total = parseInt(item.total * (100 - margin) / 100);
+            item.total = item.total * (100 - margin) / 100;
+
+            item.total = parseInt(Math.round(item.total));
         }
         this.sumTotal();
     }
