@@ -280,13 +280,15 @@ export class DataForm {
         itemDetail.total = 0;
         if (parseInt(itemDetail.quantity) > 0) {
             //Price
-            itemDetail.total = parseInt(itemDetail.quantity) * parseInt(itemDetail.price);
+            itemDetail.total = itemDetail.quantity * itemDetail.price;
             //Diskon
-            itemDetail.total = parseInt((itemDetail.total * (100 - discount1) / 100 * (100 - discount2) / 100) - discountNominal);
+            itemDetail.total = (itemDetail.total * (100 - discount1) / 100 * (100 - discount2) / 100) - discountNominal;
             //Spesial Diskon 
-            itemDetail.total = parseInt(itemDetail.total * (100 - specialDiscount) / 100);
+            itemDetail.total = itemDetail.total * (100 - specialDiscount) / 100;
             //Margin
-            itemDetail.total = parseInt(itemDetail.total * (100 - margin) / 100);
+            itemDetail.total = itemDetail.total * (100 - margin) / 100;
+
+            itemDetail.total = parseInt(Math.round(itemDetail.total));
         }
         this.sumTotal();
     }
