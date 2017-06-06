@@ -131,6 +131,13 @@ export class DataForm {
         this.data.storeId = this.localStorage.store._id;
         this.data.store = this.localStorage.store;
         // this.data.shift = this.getShift();
+        this.service.getPromoNow(this.getStringDate(new Date()), this.data.store.code)
+            .then(result => {
+                console.log(this.data.storeId);
+                this.promos = result.data;
+                this.data.salesDetail.promoDoc = [];
+            });
+
         this.service.getStore(this.data.storeId)
             .then(result => {
                 this.data.store = result;
