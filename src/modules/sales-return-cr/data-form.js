@@ -32,7 +32,7 @@ export class DataForm {
         this.readOnlyTrue = true;
         this.numericOptions = { separator: ',' }
         this.localStorage = localStorage;
-
+        
         this.stores = this.localStorage.me.data.stores;
         // this.stores = session.stores; 
 
@@ -120,11 +120,25 @@ export class DataForm {
     }
 
     attached() {
+        this.isPromos = false;
         this.data.storeId = this.localStorage.store._id;
         // this.data.storeId = this.session.store._id;
         this.data.store = this.localStorage.store;
         // this.data.store = this.session.store;
         // this.data.shift = this.getShift();
+
+        this.service.getPromoNow(this.getStringDate(new Date()), this.data.store.code)
+            .then(result => {
+                this.promos = result;
+                if (this.promos.length > 0) {
+                    this.isPromos = true;
+                } else {
+                    this.isPromos = false;
+                }
+                console.log(this.isPromos);
+                this.data.salesDetail.promoDoc = [];
+            });
+
         this.service.getStore(this.data.storeId)
             .then(result => {
                 this.data.store = result;

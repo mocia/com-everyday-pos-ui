@@ -126,6 +126,7 @@ export class DataForm {
     }
 
     attached() {
+        this.isPromos = false;
         // this.data.storeId = this.session.store._id;
         // this.data.store = this.session.store;
         this.data.storeId = this.localStorage.store._id;
@@ -134,6 +135,12 @@ export class DataForm {
         this.service.getPromoNow(this.getStringDate(new Date()), this.data.store.code)
             .then(result => {
                 this.promos = result;
+                if (this.promos.length > 0) {
+                    this.isPromos = true;
+                } else {
+                    this.isPromos = false;
+                }
+                console.log(this.isPromos);
                 this.data.salesDetail.promoDoc = [];
             });
 
