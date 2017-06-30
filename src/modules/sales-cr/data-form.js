@@ -126,11 +126,24 @@ export class DataForm {
     }
 
     attached() {
+        this.isPromos = false;
         // this.data.storeId = this.session.store._id;
         // this.data.store = this.session.store;
         this.data.storeId = this.localStorage.store._id;
         this.data.store = this.localStorage.store;
         // this.data.shift = this.getShift();
+        this.service.getPromoNow(this.getStringDate(new Date()), this.data.store.code)
+            .then(result => {
+                this.promos = result;
+                if (this.promos.length > 0) {
+                    this.isPromos = true;
+                } else {
+                    this.isPromos = false;
+                }
+                console.log(this.isPromos);
+                this.data.salesDetail.promoDoc = [];
+            });
+
         this.service.getStore(this.data.storeId)
             .then(result => {
                 this.data.store = result;
@@ -275,7 +288,7 @@ export class DataForm {
         var specialDiscount = eventSpecialDiscount ? (eventSpecialDiscount.srcElement.value ? parseInt(eventSpecialDiscount.srcElement.value) : parseInt(eventSpecialDiscount.detail || 0)) : parseInt(itemDetail.specialDiscount);
         var discount1 = eventDiscount1 ? (eventDiscount1.srcElement.value ? parseInt(eventDiscount1.srcElement.value) : parseInt(eventDiscount1.detail || 0)) : parseInt(itemDetail.discount1);
         var discount2 = eventDiscount2 ? (eventDiscount2.srcElement.value ? parseInt(eventDiscount2.srcElement.value) : parseInt(eventDiscount2.detail || 0)) : parseInt(itemDetail.discount2);
-        var discountNominal = eventDiscountNominal ? (eventDiscountNominal.detail >=0 ? parseInt(eventDiscountNominal.detail) : parseInt(item.discountNominal || 0)) : parseInt(itemDetail.discountNominal);
+        var discountNominal = eventDiscountNominal ? (eventDiscountNominal.detail >= 0 ? parseInt(eventDiscountNominal.detail) : parseInt(item.discountNominal || 0)) : parseInt(itemDetail.discountNominal);
         var margin = eventMargin ? (eventMargin.srcElement.value ? parseInt(eventMargin.srcElement.value) : parseInt(eventMargin.detail || 0)) : parseInt(itemDetail.margin);
         itemDetail.total = 0;
         if (parseInt(itemDetail.quantity) > 0) {
