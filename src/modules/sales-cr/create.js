@@ -9,7 +9,7 @@ export class Create {
     constructor(router, service) {
         this.router = router;
         this.service = service;
-        this.data = { items: [], salesDetail: { cardType: {}, bank: {}, voucher: {} } };
+        this.data = { items: [], salesDetail: { cardType: {}, bank: {}, voucher: {}, promoDoc: [] } };
         this.error = { items: [] };
     }
 

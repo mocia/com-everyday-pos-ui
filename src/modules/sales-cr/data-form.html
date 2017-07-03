@@ -240,6 +240,23 @@
     <div>
         <form class="form-horizontal"> 
 
+            <div class="form-group" if.bind="isPromos">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4"><strong>PROMO :</strong></div>
+                </div>
+                <br>
+                <ol>
+                    <ul repeat.for="promo of promos">
+                        <div class="col-sm-4">
+                            <label>
+                                <input type="checkbox" model.bind="promo._id" checked.bind="data.salesDetail.promoDoc"> ${promo.name}
+                            </label>
+                        </div>
+                    </ul>
+                </ol>
+            </div>
+
             <dropdown label="Tipe Pembayaran" error.bind="error.salesDetail.paymentType" value.bind="data.salesDetail.paymentType" change.delegate="checkPaymentType($event)" items.bind="paymentTypes"></dropdown>
 
             <!--<div class="form-group ${error.salesDetail.paymentType?'has-error':''}">

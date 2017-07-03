@@ -81,6 +81,11 @@ export class Service extends RestService {
         return super.get(endpoint);
     }
 
+    getPromoNow(datetime, storeId) {
+        var endpoint = `${serviceUriPromo}/all/${datetime}/${storeId}`;
+        return super.get(endpoint);
+    }
+
     getProductByCode(code) {
         var endpoint = `${serviceUriFinishedgood}/code/${code}`;
         return super.get(endpoint);
