@@ -103,7 +103,7 @@ export class DataForm {
                                                             dataItem.itemsDetails.forEach(itemDetail => {
 
                                                                 if (itemDetail.code === resultItem.code) {
-                                                                    
+
                                                                     if (product.discountMapping === "Diskon 1") {
                                                                         item.discount1 = product.discount;
                                                                     } else {
@@ -114,6 +114,24 @@ export class DataForm {
                                                         });
                                                     }
                                                 });
+                                            } else {
+                                                if (product.stores.code === thisStore.code) {
+
+                                                    product.items.forEach(dataItem => {
+
+                                                        dataItem.itemsDetails.forEach(itemDetail => {
+
+                                                            if (itemDetail.code === resultItem.code) {
+
+                                                                if (product.discountMapping === "Diskon 1") {
+                                                                    item.discount1 = product.discount;
+                                                                } else {
+                                                                    item.discount2 = product.discount;
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                }
                                             }
                                         });
                                     }
