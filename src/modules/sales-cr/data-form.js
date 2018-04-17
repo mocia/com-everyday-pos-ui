@@ -115,7 +115,6 @@ export class DataForm {
                                                     }
                                                 });
                                             } else {
-                                                debugger
                                                 if (product.stores.code === thisStore.code) {
 
                                                     product.items.forEach(dataItem => {
