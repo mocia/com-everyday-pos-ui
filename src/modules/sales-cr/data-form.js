@@ -102,12 +102,23 @@ export class DataForm {
 
                                                             dataItem.itemsDetails.forEach(itemDetail => {
 
-                                                                if (itemDetail.code === resultItem.code) {
-
-                                                                    if (product.discountMapping === "Diskon 1") {
-                                                                        item.discount1 = product.discount;
-                                                                    } else {
-                                                                        item.discount2 = product.discount;
+                                                                if (itemDetail.code.code) {
+                                                                    if (itemDetail.code.code === resultItem.code) {
+    
+                                                                        if (product.discountMapping === "Diskon 1") {
+                                                                            item.discount1 = product.discount;
+                                                                        } else {
+                                                                            item.discount2 = product.discount;
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    if (itemDetail.code === resultItem.code) {
+    
+                                                                        if (product.discountMapping === "Diskon 1") {
+                                                                            item.discount1 = product.discount;
+                                                                        } else {
+                                                                            item.discount2 = product.discount;
+                                                                        }
                                                                     }
                                                                 }
                                                             });
@@ -121,12 +132,23 @@ export class DataForm {
 
                                                         dataItem.itemsDetails.forEach(itemDetail => {
 
-                                                            if (itemDetail.code === resultItem.code) {
+                                                            if (itemDetail.code.code) {
+                                                                if (itemDetail.code.code === resultItem.code) {
 
-                                                                if (product.discountMapping === "Diskon 1") {
-                                                                    item.discount1 = product.discount;
-                                                                } else {
-                                                                    item.discount2 = product.discount;
+                                                                    if (product.discountMapping === "Diskon 1") {
+                                                                        item.discount1 = product.discount;
+                                                                    } else {
+                                                                        item.discount2 = product.discount;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                if (itemDetail.code === resultItem.code) {
+
+                                                                    if (product.discountMapping === "Diskon 1") {
+                                                                        item.discount1 = product.discount;
+                                                                    } else {
+                                                                        item.discount2 = product.discount;
+                                                                    }
                                                                 }
                                                             }
                                                         });
