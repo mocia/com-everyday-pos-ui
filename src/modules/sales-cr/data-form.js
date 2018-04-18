@@ -104,21 +104,15 @@ export class DataForm {
 
                                                                 if (itemDetail.code.code) {
                                                                     if (itemDetail.code.code === resultItem.code) {
-    
-                                                                        if (product.discountMapping === "Diskon 1") {
-                                                                            item.discount1 = product.discount;
-                                                                        } else {
-                                                                            item.discount2 = product.discount;
-                                                                        }
+
+                                                                        item.discount1 = product.discountOne;
+                                                                        item.discount2 = product.discountTwo;
                                                                     }
                                                                 } else {
                                                                     if (itemDetail.code === resultItem.code) {
-    
-                                                                        if (product.discountMapping === "Diskon 1") {
-                                                                            item.discount1 = product.discount;
-                                                                        } else {
-                                                                            item.discount2 = product.discount;
-                                                                        }
+
+                                                                        item.discount1 = product.discountOne;
+                                                                        item.discount2 = product.discountTwo;
                                                                     }
                                                                 }
                                                             });
@@ -135,20 +129,14 @@ export class DataForm {
                                                             if (itemDetail.code.code) {
                                                                 if (itemDetail.code.code === resultItem.code) {
 
-                                                                    if (product.discountMapping === "Diskon 1") {
-                                                                        item.discount1 = product.discount;
-                                                                    } else {
-                                                                        item.discount2 = product.discount;
-                                                                    }
+                                                                    item.discount1 = product.discountOne;
+                                                                    item.discount2 = product.discountTwo;
                                                                 }
                                                             } else {
                                                                 if (itemDetail.code === resultItem.code) {
 
-                                                                    if (product.discountMapping === "Diskon 1") {
-                                                                        item.discount1 = product.discount;
-                                                                    } else {
-                                                                        item.discount2 = product.discount;
-                                                                    }
+                                                                    item.discount1 = product.discountOne;
+                                                                    item.discount2 = product.discountTwo;
                                                                 }
                                                             }
                                                         });
