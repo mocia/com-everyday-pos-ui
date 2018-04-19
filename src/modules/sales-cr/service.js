@@ -90,4 +90,10 @@ export class Service extends RestService {
         var endpoint = `${serviceUriFinishedgood}/code/${code}`;
         return super.get(endpoint);
     }
+
+    getProductOnDiscount(thisDay) {
+        var config = Container.instance.get(Config);
+        var endpoint = config.getEndpoint("inventory").client.baseUrl + "master-discount/filter/date/"  + thisDay;
+        return super.get(endpoint);
+    }
 }

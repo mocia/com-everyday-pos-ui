@@ -110,14 +110,14 @@
                             </div>-->
                         </td>
                         <td>
-                            <numeric options.bind="numericOptions" label="" value.bind="item.discount1" error.bind="error.items[$index].discount1" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,$event)"></numeric>
+                            <numeric options.bind="numericOptions" label="" value.bind="item.discount1" error.bind="error.items[$index].discount1" read-only.bind="readOnlyTrue" change.delegate="sumRow(item,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].discount1?'has-error':''}">
                                 <input class="form-control" type="number" name="discount1" value.bind="item.discount1" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].discount1}</span>
                             </div>-->
                         </td>
                         <td>
-                            <numeric options.bind="numericOptions" label="" value.bind="item.discount2" error.bind="error.items[$index].discount2" read-only.bind="readOnlyFalse" change.delegate="sumRow(item,null,null,$event)"></numeric>
+                            <numeric options.bind="numericOptions" label="" value.bind="item.discount2" error.bind="error.items[$index].discount2" read-only.bind="readOnlyTrue" change.delegate="sumRow(item,null,null,$event)"></numeric>
                             <!--<div class="form-group ${error.items[$index].discount2?'has-error':''}">
                                 <input class="form-control" type="number" name="discount2" value.bind="item.discount2" change.delegate="sumRow(item)"/>
                                 <span class="help-block">${error.items[$index].discount2}</span>
