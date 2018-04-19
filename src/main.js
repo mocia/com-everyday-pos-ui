@@ -17,7 +17,7 @@ export async function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
     .feature('components')
-    .plugin("aurelia-api", config => {
+    .plugin("aurelia-api", config => {    
 
       var auth = "https://bateeq-auth-api-uat.mybluemix.net/v1/";
       var core = "https://bateeq-core-api-uat.mybluemix.net/v1/";
@@ -40,6 +40,7 @@ export async function configure(aurelia) {
       config.registerEndpoint('auth', auth);
       config.registerEndpoint('core', core);
       config.registerEndpoint('pos', pos);
+      config.registerEndpoint('inventory', inventory);
 
     })
     .plugin("aurelia-authentication", baseConfig => {
