@@ -18,11 +18,7 @@ export async function configure(aurelia) {
     .standardConfiguration()
     .feature('components')
     .plugin("aurelia-api", config => {
-
-     // var auth = "https://bateeq-auth-api-dev.mybluemix.net/v1/";
-     // var core = "https://bateeq-core-api-dev.mybluemix.net/v1/";
-      //var pos = "https://bateeq-pos-api-dev.mybluemix.net/v1/";
-
+    
        var auth = "https://bateeq-auth-api-uat.mybluemix.net/v1/";
        var core = "https://bateeq-core-api-uat.mybluemix.net/v1/";
        var pos = "https://bateeq-pos-api-uat.mybluemix.net/v1/";
