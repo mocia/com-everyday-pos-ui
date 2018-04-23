@@ -1,6 +1,6 @@
 export default {
     endpoint: "auth",
-    configureEndpoints: ["auth", "core", "pos", "inventory"],
+    configureEndpoints: ["auth", "core", "pos"],
 
     loginUrl: "/authenticate",
     profileUrl: "/me",
