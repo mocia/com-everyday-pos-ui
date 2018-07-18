@@ -1,11 +1,10 @@
-import { inject, Lazy } from 'aurelia-framework';
-import { HttpClient } from 'aurelia-fetch-client';
-import { RestService } from '../../utils/rest-service';
+import { inject, Lazy } from "aurelia-framework";
+import { HttpClient } from "aurelia-fetch-client";
+import { RestService } from "../../utils/rest-service";
 
-const serviceUri = 'sales/docs/sales';
-const serviceReportUri = 'sales/docs/sales/reports';
+const serviceUri = "sales/docs/sales";
+const serviceReportUri = "sales/docs/sales/reports";
 export class Service extends RestService {
-
   constructor(http, aggregator, config, api) {
     super(http, aggregator, config, "pos");
   }
@@ -36,7 +35,6 @@ export class Service extends RestService {
   // }
 
   generateExcel(storeId, dateFrom, dateTo, shift) {
-    debugger
     var endpoint = `${serviceReportUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
     return super.getXls(endpoint);
   }
