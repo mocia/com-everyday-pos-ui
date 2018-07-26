@@ -1,6 +1,7 @@
 import {inject, Lazy} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {RestService} from '../../utils/rest-service';
+import moment from 'moment';
 
 const serviceUri = 'sales/docs/salesreturns';
 const serviceUriStore = 'store';
@@ -66,7 +67,8 @@ export class Service extends RestService {
     }
     
     getPromoByStoreDatetimeItemQuantity(storeId, datetime, itemId, quantity) {
-        var endpoint = `${serviceUriPromo}/${storeId}/${datetime}/${itemId}/${quantity}`;
+        datetime = moment(datetime);
+        var endpoint = `${serviceUriPromo}/${storeId}/${datetime.format('MMMM Do YYYY, h:mm:ss a')}/${itemId}/${quantity}`;
         return super.get(endpoint);
     }
     
