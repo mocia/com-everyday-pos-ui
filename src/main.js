@@ -18,7 +18,6 @@ export async function configure(aurelia) {
     .standardConfiguration()
     .feature('components')
     .plugin("aurelia-api", config => {
-
       var auth = "https://bateeq-auth-api-uat.azurewebsites.net/v1/";
       var core = "https://bateeq-core-api-uat.azurewebsites.net/v1/";
       var pos = "https://bateeq-pos-api-uat.azurewebsites.net/v1/";
