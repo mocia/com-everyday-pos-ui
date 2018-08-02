@@ -92,4 +92,5 @@ export class Service extends RestService {
     getProductByCode(code) {
         var endpoint = `${serviceUriFinishedgood}/code/${code}`;
         return super.get(endpoint);
-    }}
+    }
+}
