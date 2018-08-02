@@ -19,7 +19,6 @@ export class Login {
                 console.log("success logged " + response);
                 this.authService.getMe()
                     .then(account => {
-                        debugger
                         // this.session.token = token;
                         // this.session.data = account;
                         if (account) {
