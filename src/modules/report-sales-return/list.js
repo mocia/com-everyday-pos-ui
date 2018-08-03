@@ -75,7 +75,7 @@ export class List {
                 var date = new Date(d);
                 var from = moment(d).startOf('day');
                 var to = moment(d).endOf('day');
-                getData.push(this.service.getAllSalesReturnByFilter(this.data.filter.storeId, from.format(), to.format(), this.data.filter.shift));
+                getData.push(this.service.getAllSalesReturnByFilter(this.data.filter.storeId, from.format('YYYY-MM-DD'), to.format('YYYY-MM-DD'), this.data.filter.shift));
             }
             Promise.all(getData)
                 .then(salesPerDays => {

@@ -70,7 +70,7 @@ export class List {
         else if (dateto < datefrom)
             this.error.filter.dateTo = "Tanggal To Harus Lebih Besar Dari From";
         else {
-            this.service.generateExcel(this.data.filter.storeId, datefrom.format(), dateto.format(), this.data.filter.shift);
+            this.service.generateExcel(this.data.filter.storeId, datefrom.format('YYYY-MM-DD'), dateto.format('YYYY-MM-DD'), this.data.filter.shift);
         }
     }
 
@@ -88,7 +88,7 @@ export class List {
                 var date = new Date(d);
                 var from = moment(d).startOf('day');
                 var to = moment(d).endOf('day');
-                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, from.format(), to.format(), this.data.filter.shift));
+                getData.push(this.service.getAllSalesByFilter(this.data.filter.storeId, from.format('YYYY-MM-DD'), to.format('YYYY-MM-DD'), this.data.filter.shift));
             }
             Promise.all(getData)
                 .then(salesPerDays => {
