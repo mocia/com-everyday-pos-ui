@@ -96,7 +96,6 @@ export class Service extends RestService {
 
     getProductOnDiscount(thisDay) {
         thisDay = moment(thisDay).format("YYYY-MM-DD HH:mm");
-        debugger	
         var config = Container.instance.get(Config);	
         var endpoint = config.getEndpoint("inventory").client.baseUrl + "master-discount/filter/date/"  + thisDay;	
         return super.get(endpoint);	
