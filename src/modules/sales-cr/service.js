@@ -93,7 +93,7 @@ export class Service extends RestService {
         var endpoint = `${serviceUriFinishedgood}/code/${code}`;
         return super.get(endpoint);
     }
-    
+
     getProductOnDiscount(thisDay) {
         thisDay = moment(thisDay).format("YYYY-MM-DD HH:mm");
         var config = Container.instance.get(Config);	
