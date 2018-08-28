@@ -18,14 +18,15 @@ export async function configure(aurelia) {
     .standardConfiguration()
     .feature('components')
     .plugin("aurelia-api", config => {
-      var auth = "https://bateeq-auth-api-uat.azurewebsites.net/v1/";
-      var core = "https://bateeq-core-api-uat.azurewebsites.net/v1/";
-      var pos = "https://bateeq-pos-api-uat.azurewebsites.net/v1/";
-      var inventory = "https://bateeq-inventory-api-uat.azurewebsites.net/v1/inventory/";
+      var auth = "https://bateeq-auth-api-dev.azurewebsites.net/v1/";
+      var core = "https://bateeq-core-api-dev.azurewebsites.net/v1/";
+      var pos = "https://bateeq-pos-api-dev.azurewebsites.net/v1/";
+      var inventory = "https://bateeq-inventory-api-dev.azurewebsites.net/v1/inventory/";
 
       config.registerEndpoint('auth', auth);
       config.registerEndpoint('core', core);
       config.registerEndpoint('pos', pos);
+      config.registerEndpoint('inventory', inventory);
 
     })
     .plugin("aurelia-authentication", baseConfig => {
