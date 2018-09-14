@@ -338,8 +338,6 @@ export class DataForm {
             else
                 i++;
         }
-        if (isAdd)
-            this.addItem();
     }
 
     sumRow(item, eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
