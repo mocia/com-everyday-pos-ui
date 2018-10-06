@@ -69,7 +69,7 @@ export class DataForm {
         if (e.which == 13) {
             this.service.getProductByCode(item.itemCode)
                 .then(results => {
-                    this.service.getProductOnDiscount(new Date())
+                    this.service.getProductOnDiscount(new Date(), item.itemCode)
                         .then(products => {
                             if (results.length > 0) {
                                 var resultItem = results[0];
