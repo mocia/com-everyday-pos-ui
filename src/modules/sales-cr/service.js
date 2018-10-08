@@ -100,4 +100,11 @@ export class Service extends RestService {
         var endpoint = config.getEndpoint("inventory").client.baseUrl + "master-discount/filter/date/"  + thisDay;	
         return super.get(endpoint);	
     }
+
+    getProductOnDiscount(thisDay, productBarcode) {
+        thisDay = moment(thisDay).format("YYYY-MM-DD HH:mm");
+        var config = Container.instance.get(Config);	
+        var endpoint = config.getEndpoint("inventory").client.baseUrl + "master-discount/filter/date/"  + thisDay + "/code/" + productBarcode;	
+        return super.get(endpoint);	
+    }
 }
