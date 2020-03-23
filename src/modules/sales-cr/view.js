@@ -292,6 +292,11 @@ export class View {
         this.printStruk += "        </td>";
         this.printStruk += "    </tr>";
         this.printStruk += "    <tr>";
+        this.printStruk += "        <td colspan='3' class='text-left'>";
+        this.printStruk += "            Keterangan : " + this.data.remark;
+        this.printStruk += "        </td>";
+        this.printStruk += "    </tr>";
+        this.printStruk += "    <tr>";
         this.printStruk += "        <td colspan='3' class='text-left'> =============================== </td>";
         this.printStruk += "    </tr>";
 
