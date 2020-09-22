@@ -291,6 +291,15 @@ export class View {
         // this.printStruk += "            <div class='col-xs-9'> " + this.data.dateString + " </div>";  
         this.printStruk += "        </td>";
         this.printStruk += "    </tr>";
+
+        this.printStruk += "    <tr>";
+        this.printStruk += "        <td colspan='3' class='text-left'>";
+        this.printStruk += " Account Bateeqshop : " + this.data.accountBateeqshop;
+        // this.printStruk += "            <div class='col-xs-3'> Nomor </div>"; 
+        // this.printStruk += "            <div class='col-xs-9'> " + this.data.code + " </div>";  
+        this.printStruk += "        </td>";
+        this.printStruk += "    </tr>";
+
         this.printStruk += "    <tr>";
         this.printStruk += "        <td colspan='3' class='text-left'> =============================== </td>";
         this.printStruk += "    </tr>";
