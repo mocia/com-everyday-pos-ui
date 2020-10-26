@@ -34,7 +34,7 @@ export class Create {
 
     voidSales() {
         for (var i = 0; i < this.data.items.length; i++) {
-            this.service.voidSales(this.data.items[i])
+            this.service.voidSales(this.data.items[i].sales)
                 .then(result => {
                     this.list();
                 })

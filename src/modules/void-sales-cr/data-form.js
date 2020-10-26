@@ -1,18 +1,34 @@
 import {inject, bindable, BindingEngine} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 import {Service} from './service';
+import {LocalStorage} from '../../utils/storage';
 
-@inject(Router, Service, BindingEngine)
+
+var VoidLoader = require('../../loader/sales-void-loader');
+
+@inject(Router, Service, BindingEngine, LocalStorage)
+//@inject(Router, Service, BindingEngine)
 export class DataForm {
     @bindable data = {};
     @bindable error = {};
+    @bindable selectedvoid;
 
     salesApiUri = 'sales/docs/sales';
 
-    constructor(router, service, bindingEngine) {
+    // constructor(router, service, bindingEngine) {
+    //     this.router = router;
+    //     this.service = service;
+        
+    //     this.bindingEngine = bindingEngine;
+        
+    // }
+
+    constructor(router, service, bindingEngine, localStorage) {
         this.router = router;
         this.service = service;
+        this.localStorage = localStorage;
         this.bindingEngine = bindingEngine;
+        this.storecode = this.localStorage.store.code;
     }
 
     attached() {
@@ -57,16 +73,53 @@ export class DataForm {
         var itemIndex = this.data.items.indexOf(item);
         this.data.items.splice(itemIndex, 1);
     }
+    // selectedvoidChanged(newvalue, oldValue){
+    //     console.log(oldValue);
+    //     if (newvalue) {
+            
+    //         this.data.items.salesId = newvalue.Id;
+    //         this.data.items.code = newvalue.Code;
+    //         this.data.items.storeName = newvalue.StoreName;
+    //         this.data.items.grandTotal = newvalue.GrandTotal;
+    //         this.data.items._createdBy = newvalue._CreatedBy;
+    //         this.data.items.date = this.getStringDate(new Date(newvalue.Date));
+    //     }
+    //     console.log(this.data.items);
 
+    // }
+    selectedvoidChanged(e, item){
+            console.log(item);
+            if (e) {
+                
+                this.data.items.salesId = newvalue.Id;
+                this.data.items.code = newvalue.Code;
+                this.data.items.storeName = newvalue.StoreName;
+                this.data.items.grandTotal = newvalue.GrandTotal;
+                this.data.items._createdBy = newvalue._CreatedBy;
+                this.data.items.date = this.getStringDate(new Date(newvalue.Date));
+            }
+            console.log(this.data.items);
+    
+    }
     salesChanged(e, item) {
         var sales = e.detail;
         if (sales) {
-            item.salesId = sales._id;
+            item.salesId = sales.Id;
             item.code = sales.code;
-            item.storeName = sales.store.name;
+            item.storeName = sales.store.Name;
             item.grandTotal = sales.grandTotal;
-            item._createdBy = sales._createdBy;
+            item._createdBy = sales._CreatedBy;
             item.date = this.getStringDate(new Date(sales.date));
         }
+        console.log(this.data.items);
+    }
+    get voidLoader(){
+        return VoidLoader;
+    }
+
+    get voidquery(){
+        var supp = {"StoreCode":this.storecode}
+        
+        return supp;
     }
 }

@@ -47,7 +47,7 @@ export class List {
 
 
         this.data.filter.shift = 0;
-        this.data.filter.storeId = this.localStorage.store._id;
+        this.data.filter.storeId = this.localStorage.store.code;
         this.data.filter.store = this.localStorage.store
         this.data.filter.user = this.localStorage.me.data.username;
         this.service.getStore(this.data.filter.storeId)
@@ -98,61 +98,63 @@ export class List {
                                 var itemRowSpan = 0;
                                 var itemData = {};
                                 itemData.details = [];
-                                result.tanggal = new Date(data.date);
+                                result.tanggal = new Date(data.Date);
 
-                                itemData.nomorPembayaran = data.code;
-                                itemData.isVoid = data.isVoid;
-                                itemData.voucherNominal = parseInt(data.salesDetail.voucher.value);
-                                if (data.salesDetail.cashAmount != 0 && data.salesDetail.cardAmount == 0)
-                                    itemData.cashNominal = parseInt(data.grandTotal) - parseInt(data.salesDetail.voucher.value);
+                                itemData.nomorPembayaran = data.Code;
+                                itemData.isVoid = data.IsVoid;
+                                itemData.voucherNominal = parseInt(data.salesDetail.VoucherValue);
+                                if (data.CashAmount != 0 && data.CardAmount == 0)
+                                    itemData.cashNominal = parseInt(data.GrandTotal) - parseInt(data.Voucher.Value);
                                 else
-                                    itemData.cashNominal = parseInt(data.salesDetail.cashAmount);
-                                if (data.salesDetail.card && data.salesDetail.card == "Debit") {
-                                    itemData.debitNominal = parseInt(data.salesDetail.cardAmount);
+                                    itemData.cashNominal = parseInt(data.CashAmount);
+                                if (data.Card && data.Card == "Debit") {
+                                    itemData.debitNominal = parseInt(data.CardAmount);
                                     itemData.creditNominal = 0;
                                 }
                                 else {
                                     itemData.debitNominal = 0;
-                                    itemData.creditNominal = parseInt(data.salesDetail.cardAmount);
+                                    itemData.creditNominal = parseInt(data.CardAmount);
                                 }
 
-                                itemData.paymentType = data.salesDetail.paymentType
+                                itemData.paymentType = data.PaymentType
 
-                                if (data.salesDetail.bank.name != null && data.salesDetail.bank._active != null && data.salesDetail.bank._active !== false) {
+                                //if (data.salesDetail.bank.name != null && data.salesDetail.bank._active != null && data.salesDetail.bank._active !== false) {
+                                if(data.BankName != null){
                                     itemData.bank = data.salesDetail.bank.name;
                                 }
                                 else
                                     itemData.bank = "Kartu tidak Teridentifikasi";
 
-                                if (data.salesDetail.bankCard.name != null && data.salesDetail.bankCard._active != null && data.salesDetail.bankCard._active !== false) {
+                                //if (data.salesDetail.bankCard.name != null && data.salesDetail.bankCard._active != null && data.salesDetail.bankCard._active !== false) {
+                                if (data.BankCardName != null ) {
                                     itemData.bankCard = data.salesDetail.bankCard.name;
                                 }
                                 else
                                     itemData.bankCard = "Kartu tidak Teridentifikasi";
 
-                                if (data.salesDetail.cardType.name == "Mastercard") {
+                                if (data.CardTypeName == "Mastercard") {
                                     itemData.debitNominalLainnya = 0;
-                                    itemData.creditMasterNominal = parseInt(data.salesDetail.cardAmount);
+                                    itemData.creditMasterNominal = parseInt(data.CardAmount);
                                     itemData.creditVisaNominal = 0;
                                     itemData.creditNominalLainnya = 0;
 
                                 }
-                                else if (data.salesDetail.cardType.name == "Visa") {
+                                else if (data.CardTypeName == "Visa") {
                                     itemData.debitNominalLainnya = 0;
                                     itemData.creditMasterNominal = 0;
-                                    itemData.creditVisaNominal = parseInt(data.salesDetail.cardAmount);
+                                    itemData.creditVisaNominal = parseInt(data.CardAmount);
                                     itemData.creditNominalLainnya = 0;
 
                                 }
-                                else if (data.salesDetail.cardType.name != "Visa" && data.salesDetail.cardType.name != "Mastercard") {
-                                    if (data.salesDetail.card == "Debit") {
+                                else if (data.CardTypeName != "Visa" && data.CardTypeName != "Mastercard") {
+                                    if (data.Card == "Debit") {
                                         itemData.creditNominalLainnya = 0;
-                                        itemData.debitNominalLainnya = parseInt(data.salesDetail.cardAmount);
+                                        itemData.debitNominalLainnya = parseInt(data.CardAmount);
                                         itemData.creditMasterNominal = 0;
                                         itemData.creditVisaNominal = 0;
                                     }
                                     else {
-                                        itemData.creditNominalLainnya = parseInt(data.salesDetail.cardAmount);
+                                        itemData.creditNominalLainnya = parseInt(data.CardAmount);
                                         itemData.debitNominalLainnya = 0;
                                         itemData.creditMasterNominal = 0;
                                         itemData.creditVisaNominal = 0;
@@ -195,7 +197,7 @@ export class List {
     setShift(e) {
         var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
         if (_shift.toLowerCase() == 'semua') {
-            this.data.filter.shift = 0;
+            this.data.filter.shift = "";
         } else {
             this.data.filter.shift = parseInt(_shift);
         }
@@ -305,8 +307,9 @@ export class List {
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalVoucher.toLocaleString() + "</td>";
         this.reportHTML += "        <td style='background-color:#48cbe2;'>" + totalTotalOmset.toLocaleString() + "</td>";
         this.reportHTML += "        </tbody>";
-        this.reportHTML += "    </table>";
+        //this.reportHTML += "    </table>";
         this.subtotalArrTotal = totalTotalOmset + this.data.filter.store.salesCapital;
+        this.subtotalArrTotal = totalTotalOmset;
 
 
         var detailData = [];
