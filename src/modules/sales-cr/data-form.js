@@ -69,12 +69,16 @@ export class DataForm {
         if (e.which == 13) {
             this.service.getProductByCode(item.itemCode)
                 .then(results => {
+                    
                     this.service.getProductOnDiscount(new Date(), item.itemCode)
                         .then(products => {
+                            
                             if (results.length > 0) {
                                 var resultItem = results[0];
+                                
                                 if (resultItem) {
                                     var isAny = false;
+                                    
                                     for (var dataItem of this.data.items) {
                                         if (dataItem.itemId == resultItem._id) {
                                             isAny = true;
@@ -83,6 +87,7 @@ export class DataForm {
                                             break;
                                         }
                                     }
+                                    console.log(this.data.items);
                                     if (!isAny) {
                                         item.itemCodeReadonly = true;
                                         item.itemCode = resultItem.code;
@@ -91,25 +96,24 @@ export class DataForm {
                                         item.quantity = parseInt(item.quantity) + 1;
 
                                         products.forEach(product => {
-
-                                            if (Array.isArray(product.stores)) {
-
-                                                product.stores.forEach(store => {
-
-                                                    if (store.code === thisStore.code) {
-
+                                            
+                                            if (Array.isArray(product.store)) {
+                                                console.log(thisStore)
+                                                product.store.forEach(store => {
+                                                    if (store.Code === thisStore.Code) {
+                                                        
                                                         product.items.forEach(dataItem => {
 
-                                                            dataItem.itemsDetails.forEach(itemDetail => {
+                                                            dataItem.details.forEach(itemDetail => {
 
-                                                                if (itemDetail.code.code) {
-                                                                    if (itemDetail.code.code === resultItem.code) {
+                                                                if (itemDetail.dataDestination.code) {
+                                                                    if (itemDetail.dataDestination.code === resultItem.code) {
 
                                                                         item.discount1 = product.discountOne;
                                                                         item.discount2 = product.discountTwo;
                                                                     }
                                                                 } else {
-                                                                    if (itemDetail.code === resultItem.code) {
+                                                                    if (itemDetail.dataDestination.code === resultItem.code) {
 
                                                                         item.discount1 = product.discountOne;
                                                                         item.discount2 = product.discountTwo;
@@ -120,20 +124,20 @@ export class DataForm {
                                                     }
                                                 });
                                             } else {
-                                                if (product.stores.code === thisStore.code) {
+                                                if (product.store.code == thisStore.code) {
 
                                                     product.items.forEach(dataItem => {
 
-                                                        dataItem.itemsDetails.forEach(itemDetail => {
+                                                        dataItem.details.forEach(itemDetail => {
 
-                                                            if (itemDetail.code.code) {
-                                                                if (itemDetail.code.code === resultItem.code) {
+                                                            if (itemDetail.dataDestination.code) {
+                                                                if (itemDetail.dataDestination.code === resultItem.code) {
 
                                                                     item.discount1 = product.discountOne;
                                                                     item.discount2 = product.discountTwo;
                                                                 }
                                                             } else {
-                                                                if (itemDetail.code === resultItem.code) {
+                                                                if (itemDetail.dataDestination.codee === resultItem.code) {
 
                                                                     item.discount1 = product.discountOne;
                                                                     item.discount2 = product.discountTwo;
@@ -170,10 +174,23 @@ export class DataForm {
     getShift() {
         var today = new Date();
         this.data.shift = 0;
+        var shifts = [];
+        var shift1 = {};
+        shift1.shift = 1;
+        shift1.dateFrom = new Date('2000-01-02T03:00:00+07:00');
+        shift1.dateTo = new Date('2000-01-01T15:59:59+07:00');
+        var shift2 = {};
+        shift2.shift = 2;
+        shift2.dateFrom = new Date('2000-01-01T16:00:00+07:00');
+        shift2.dateTo = new Date('2000-01-02T02:59:59+07:00');
+        shifts.push(shift1);
+        shifts.push(shift2);
+        //console.log(this.data.store.shifts)
         if (this.data.store.shifts) {
             for (var shift of this.data.store.shifts) {
-                var dateFrom = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateFrom)));
-                var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
+                //var date = new Date("2000-01-02T03:00:00+07:00");
+                var dateFrom = new Date(this.getUTCStringDate(date) + "T" + this.getUTCStringTime(new Date(shift.dateFrom)));
+                var dateTo = new Date(this.getUTCStringDate(date) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
                 if (dateFrom > dateTo) {
                     dateTo.setDate(dateTo.getDate + 1);
                 }
@@ -183,28 +200,45 @@ export class DataForm {
                 }
             }
         }
+        else{
+            for (var shift of shifts) {
+                var dateFrom = new Date(this.getUTCStringDate(today) + "T" + this.getStringTime(new Date(shift.dateFrom)));
+                var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getStringTime(new Date(shift.dateTo)));
+                if (dateFrom > dateTo) {
+                    dateTo.setDate(dateTo.getDate + 1);
+                }
+                if (dateFrom < today && today < dateTo) {
+                    this.data.shift = parseInt(shift.shift);
+                    break;
+                }
+            }
+
+        }
     }
 
     attached() {
         this.isPromos = false;
         // this.data.storeId = this.session.store._id;
         // this.data.store = this.session.store;
+        //console.log(this.localStorage);
         this.data.storeId = this.localStorage.store._id;
+        this.data.storeCode = this.localStorage.store.code;
         this.data.store = this.localStorage.store;
-        // this.data.shift = this.getShift();
-        this.service.getPromoNow(this.getStringDate(new Date()), this.data.store.code)
-            .then(result => {
-                this.promos = result;
-                if (this.promos.length > 0) {
-                    this.isPromos = true;
-                } else {
-                    this.isPromos = false;
-                }
-                console.log(this.isPromos);
-                this.data.salesDetail.promoDoc = [];
-            });
+        this.getShift();
+        //console.log(this.data.shift);
+        // this.service.getPromoNow(this.getStringDate(new Date()), this.data.store.code)
+        //     .then(result => {
+        //         this.promos = result;
+        //         if (this.promos.length > 0) {
+        //             this.isPromos = true;
+        //         } else {
+        //             this.isPromos = false;
+        //         }
+        //         console.log(this.isPromos);
+        //         this.data.salesDetail.promoDoc = [];
+        //     });
 
-        this.service.getStore(this.data.storeId)
+        this.service.getStore(this.data.storeCode)
             .then(result => {
                 this.data.store = result;
                 // this.getShift();
@@ -223,26 +257,27 @@ export class DataForm {
         this.data.salesDetail.cashAmount = 0;
         this.data.salesDetail.cardAmount = 0;
         this.data.salesDetail.refund = 0;
-        this.bindingEngine.collectionObserver(this.data.items)
-            .subscribe(splices => {
-                var index = splices[0].index;
-                var item = this.data.items[index];
-                if (item) {
-                    this.bindingEngine.propertyObserver(item, "itemId").subscribe((newValue, oldValue) => {
-                        item.price = parseInt(item.item.domesticSale);
-                        this.refreshPromo(index);
-                    });
-                    this.bindingEngine.propertyObserver(item, "quantity").subscribe((newValue, oldValue) => {
-                        this.refreshPromo(index);
-                    });
-                }
-            });
-        this.bindingEngine.propertyObserver(this.data, "storeId").subscribe((newValue, oldValue) => {
-            this.refreshPromo(-1);
-        });
-        this.bindingEngine.propertyObserver(this.data, "date").subscribe((newValue, oldValue) => {
-            this.refreshPromo(-1);
-        });
+        // this.bindingEngine.collectionObserver(this.data.items)
+        //     .subscribe(splices => {
+        //         var index = splices[0].index;
+        //         var item = this.data.items[index];
+        //         console.log(item)
+        //         if (item) {
+        //             this.bindingEngine.propertyObserver(item, "itemId").subscribe((newValue, oldValue) => {
+        //                 item.price = parseInt(item.DomesticSale);
+        //                 this.refreshPromo(index);
+        //             });
+        //             this.bindingEngine.propertyObserver(item, "quantity").subscribe((newValue, oldValue) => {
+        //                 this.refreshPromo(index);
+        //             });
+        //         }
+        //     });
+        // this.bindingEngine.propertyObserver(this.data, "storeId").subscribe((newValue, oldValue) => {
+        //     this.refreshPromo(-1);
+        // });
+        // this.bindingEngine.propertyObserver(this.data, "date").subscribe((newValue, oldValue) => {
+        //     this.refreshPromo(-1);
+        // });
         this.bindingEngine.propertyObserver(this.data.salesDetail.voucher, "value").subscribe((newValue, oldValue) => {
             this.refreshCash();
         });
@@ -257,9 +292,10 @@ export class DataForm {
 
     search() {
         var reference = this.data.reference
-        this.service.getSalesVoidsByCode(this.data.storeId, this.data.reference)
+        return this.service.getSalesVoidsByCode(this.data.storeCode, this.data.reference)
             .then(salesVoidsResult => {
-                var salesVoids = salesVoidsResult[0]
+                console.log(salesVoidsResult);
+                var salesVoids = salesVoidsResult
                 if (salesVoids) {
                     if (salesVoids.isVoid == true) {
                         //this.data.store = salesVoids.store;
@@ -267,22 +303,33 @@ export class DataForm {
                         this.data.datePicker = this.getStringDate(new Date(salesVoids.date));
                         this.data.date = new Date(salesVoids.date);
                         this.data.reference = salesVoids.code;
-                        this.data.remark = salesVoids.remark;
+                        this.data.remark = salesVoids.remark == null ? "" : salesVoids.remark;
                         for (var salesVoidsItem of salesVoids.items) {
                             var item = {};
                             item.itemCode = salesVoidsItem.item.code;
+                            console.log(salesVoidsItem.item.code)
                             item.itemId = salesVoidsItem.itemId;
+                            console.log(salesVoidsItem.itemId)
                             item.item = salesVoidsItem.item;
+                            console.log(salesVoidsItem.item)
                             item.quantity = salesVoidsItem.quantity;
+                            console.log(salesVoidsItem.quantity)
                             item.price = parseInt(salesVoidsItem.price);
+                            console.log(salesVoidsItem.price)
                             item.discount1 = parseInt(salesVoidsItem.discount1);
+                            console.log(salesVoidsItem.discount1)
                             item.discount2 = parseInt(salesVoidsItem.discount2);
+                            console.log(salesVoidsItem.discount2)
                             item.discountNominal = parseInt(salesVoidsItem.discountNominal);
+                            console.log(salesVoidsItem.discountNominal)
                             item.specialDiscount = salesVoidsItem.specialDiscount + "";
+                            console.log(salesVoidsItem.specialDiscount)
                             item.margin = parseInt(salesVoidsItem.margin);
+                            console.log(salesVoidsItem.margin)
                             this.data.items.push(item);
                             this.sumRow(item);
                         }
+                        console.log(salesVoids)
                     }
                     else {
                         alert("Transaksi harus di void dahulu");
@@ -294,14 +341,54 @@ export class DataForm {
             .catch(e => {
                 console.log(e);
             })
-    }
+        }
+    // async search() {
+    //     var reference = this.data.reference
+    //     const salesVoidsResult = await this.service.getSalesVoidsByCode(this.data.storeCode, this.data.reference)
+    //     this.setVoid(salesVoidsResult)
+    // }
+    
+    // setVoid(salesVoidsResult){
+    //         var salesVoids = salesVoidsResult
+    //         if (salesVoids) {
+    //             if (salesVoids.isVoid == true) {
+    //                 //this.data.store = salesVoids.store;
+    //                 //this.data.storeId = salesVoids.storeId;
+    //                 this.data.datePicker = this.getStringDate(new Date(salesVoids.date));
+    //                 this.data.date = new Date(salesVoids.date);
+    //                 this.data.reference = salesVoids.code;
+    //                 this.data.remark = salesVoids.remark;
+    //                 for (var salesVoidsItem of salesVoids.items) {
+    //                     var item = {};
+    //                     item.itemCode = salesVoidsItem.item.code;
+    //                     item.itemId = salesVoidsItem.itemId;
+    //                     item.item = salesVoidsItem.item;
+    //                     item.quantity = salesVoidsItem.quantity;
+    //                     item.price = parseInt(salesVoidsItem.price);
+    //                     item.discount1 = parseInt(salesVoidsItem.discount1);
+    //                     item.discount2 = parseInt(salesVoidsItem.discount2);
+    //                     item.discountNominal = parseInt(salesVoidsItem.discountNominal);
+    //                     item.specialDiscount = salesVoidsItem.specialDiscount + "";
+    //                     item.margin = parseInt(salesVoidsItem.margin);
+    //                     this.data.items.push(item);
+    //                     this.sumRow(item);
+    //                 }
+    //                 console.log(salesVoids)
+    //             }
+    //             else {
+    //                 alert("Transaksi harus di void dahulu");
+    //             }
+    //         }
+    //         else
+    //             alert('Referensi Void tidak ditemukan');
+    //     }
 
     addItem() {
         var item = {};
         item.itemCode = '';
         item.itemId = '';
         item.item = {};
-        item.item.domesticSale = 0;
+        item.item.DomesticSale = 0;
         item.quantity = 0;
         item.price = 0;
         item.discount1 = 0;
@@ -315,6 +402,7 @@ export class DataForm {
 
         var errorItem = {};
         errorItem.itemCode = '';
+        
         this.data.items.push(item);
         this.error.items.push(errorItem);
         this.sumRow(item);
@@ -326,9 +414,27 @@ export class DataForm {
         this.data.items.splice(itemIndex, 1);
         this.error.items.splice(itemIndex, 1);
         this.sumTotal();
-        this.refreshPromo(-1);
+        //this.refreshPromo(-1);
     }
 
+    cardChanged(newValue, oldValue) {
+        //console.log(this.data)
+        //console.log(newValue)
+        var selectedSupplier = newValue;
+        if (selectedSupplier._id) {
+            if (selectedSupplier) {
+                this.data.salesDetail.card = selectedSupplier;
+                // console.log(this.data.salesDetail.card)
+                //this.data.processname = selectedSupplier.name;
+                //this.process = selectedSupplier;
+            }
+        } else {
+            this.process = {};
+            this.data.salesDetail.card = undefined;
+            //this.data.processname = undefined;
+        }
+    }
+    
     rearrangeItem(isAdd) {
         for (var i = 0; i < this.data.items.length;) {
             var item = this.data.items[i];
@@ -344,53 +450,82 @@ export class DataForm {
     sumRow(item, eventSpecialDiscount, eventDiscount1, eventDiscount2, eventDiscountNominal, eventMargin) {
         var itemIndex = this.data.items.indexOf(item);
         var itemDetail = this.data.items[itemIndex];
+        
         var specialDiscount = eventSpecialDiscount ? (eventSpecialDiscount.srcElement.value ? parseInt(eventSpecialDiscount.srcElement.value) : parseInt(eventSpecialDiscount.detail || 0)) : parseInt(itemDetail.specialDiscount);
         var discount1 = eventDiscount1 ? (eventDiscount1.srcElement.value ? parseInt(eventDiscount1.srcElement.value) : parseInt(eventDiscount1.detail || 0)) : parseInt(itemDetail.discount1);
         var discount2 = eventDiscount2 ? (eventDiscount2.srcElement.value ? parseInt(eventDiscount2.srcElement.value) : parseInt(eventDiscount2.detail || 0)) : parseInt(itemDetail.discount2);
         var discountNominal = eventDiscountNominal ? (eventDiscountNominal.detail >= 0 ? parseInt(eventDiscountNominal.detail) : parseInt(item.discountNominal || 0)) : parseInt(itemDetail.discountNominal);
         var margin = eventMargin ? (eventMargin.srcElement.value ? parseInt(eventMargin.srcElement.value) : parseInt(eventMargin.detail || 0)) : parseInt(itemDetail.margin);
         itemDetail.total = 0;
+        console.log(itemDetail);
         if (parseInt(itemDetail.quantity) > 0) {
+            console.log(itemDetail.quantity)
             //Price
-            itemDetail.total = itemDetail.quantity * itemDetail.price;
+            console.log(itemDetail.item.DomesticSale)
+            itemDetail.total = itemDetail.quantity * itemDetail.item.DomesticSale;
+            
             //Diskon
+            console.log(discount1,discount2,discountNominal)
             itemDetail.total = (itemDetail.total * (100 - discount1) / 100 * (100 - discount2) / 100) - discountNominal;
+            
             //Spesial Diskon 
+            console.log(specialDiscount)
             itemDetail.total = itemDetail.total * (100 - specialDiscount) / 100;
+            
             //Margin
+            console.log(itemDetail.margin)
             itemDetail.total = itemDetail.total * (100 - margin) / 100;
-
+            
+            console.log(itemDetail.total)
             itemDetail.total = parseInt(Math.round(itemDetail.total));
+            
         }
         this.sumTotal();
     }
 
     sumTotal(event) {
         var discount = event ? (event.srcElement.value ? parseInt(event.srcElement.value) : parseInt(event.detail)) : parseInt(this.data.discount);
+        console.log(discount)
+        
         // var discount = event ? parseInt(event.srcElement.value) : parseInt(this.data.discount);
         this.data.totalProduct = 0;
+        
         this.data.subTotal = 0;
+        
         this.data.totalDiscount = 0;
+        
         this.data.total = 0;
+        
+        console.log(this.data);
         for (var item of this.data.items) {
+            console.log(item.total)
             this.data.subTotal = parseInt(this.data.subTotal) + parseInt(item.total);
             this.data.totalProduct = parseInt(this.data.totalProduct) + parseInt(item.quantity);
         }
         this.data.totalDiscount = parseInt(this.data.subTotal * discount / 100);
+        console.log(this.data.totalDiscount)
         this.data.total = parseInt(this.data.subTotal) - parseInt(this.data.totalDiscount);
+        console.log(this.data.total)
         this.data.sisaBayar = parseInt(this.data.total);
+        console.log(this.data.sisaBayar)
         this.data.grandTotal = parseInt(this.data.total);
+        console.log(this.data.grandTotal)
         this.data.totalBayar = parseInt(this.data.grandTotal);
+        console.log(this.data.totalBayar)
         this.refreshCash();
     }
 
     refreshCash() {
         this.data.salesDetail.cashAmount = 0;
+        console.log(this.data.salesDetail.cashAmount)
         this.refreshDetail();
     }
 
     refreshDetail() {
         this.data.total = parseInt(this.data.grandTotal) - parseInt(this.data.salesDetail.voucher.value);
+        console.log(this.data.salesDetail.voucher.value)
+        console.log(this.data.salesDetail.cardAmount)
+        console.log(this.data.salesDetail.cashAmount)
         if (this.data.total < 0)
             this.data.total = 0;
         this.data.sisaBayar = this.data.total;
@@ -486,6 +621,26 @@ export class DataForm {
         return date;
     }
 
+    getStringTime(date) {
+        var hh = date.getHours();
+        // console.log(hh);
+        var mm = date.getMinutes();
+        var ss = date.getSeconds();
+        if (hh < 10) {
+            hh = '0' + hh
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        if (ss < 10) {
+            ss = '0' + ss
+        }
+        date = hh + ':' + mm + ':' + ss;
+
+        return date;
+    }
+
+
     setDate() {
         this.data.date = new Date(this.data.datePicker);
     }
@@ -499,12 +654,12 @@ export class DataForm {
                 var itemId = item.itemId;
                 var quantity = item.quantity;
                 item.discountNominal = 0;
-                item.price = parseInt(item.item.domesticSale);
+                item.price = parseInt(item.details.domesticSale);
                 item.promoId = '';
                 item.promo = {};
-                if (storeId && itemId)
-                    getPromoes.push(this.service.getPromoByStoreDatetimeItemQuantity(storeId, date, itemId, quantity));
-                else
+                // if (storeId && itemId)
+                //     getPromoes.push(this.service.getPromoByStoreDatetimeItemQuantity(storeId, date, itemId, quantity));
+                // else
                     getPromoes.push(Promise.resolve(null));
             }
         }

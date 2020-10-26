@@ -2,8 +2,8 @@ import { inject, Lazy } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-fetch-client';
 import { RestService } from '../../utils/rest-service';
 
-const serviceUri = 'sales/docs/salesvoids';
-const serviceUriStoreSales = 'store';
+const serviceUri = 'sales-docs';
+const serviceUriStoreSales = 'sales-docs/readbystore';
 const serviceUriUpdate = 'sales/docs/sales';
 const serviceUriBank = 'master/banks';
 const serviceUriCardType = 'master/cardtypes';
@@ -19,7 +19,7 @@ export class Service extends RestService {
     }
 
     search(storeId, keyword) {
-        var endpoint = `${serviceUriStoreSales}/${storeId}/sales/docs/salesvoids?keyword=${keyword}`;
+        var endpoint = `${serviceUriStoreSales}/${storeId}?filter=${keyword}`;
         return super.get(endpoint);
     }
 
@@ -44,7 +44,7 @@ export class Service extends RestService {
     }
 
     voidSales(data) {
-        var endpoint = `${serviceUri}`;
+        var endpoint = `${serviceUri}/${data.Id}`;
         return super.put(endpoint, data);
     }
 

@@ -55,12 +55,15 @@ export class Create {
             this.data.salesDetail.bankCardId = this.data.salesDetail.bankCard._id;
         this.service.create(this.data)
             .then(id => {
+                console.log(id)
                 this.detail(id);
                 // this.list();
             })
             .catch(e => {
                 this.error = e;
             })
-    } 
+    }
+    
+    
 }
  
