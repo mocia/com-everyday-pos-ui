@@ -44,7 +44,8 @@ export class List {
 
     attached() {
         this.data.filter.shift = 0;
-        this.data.filter.storeId = this.localStorage.store._id;
+       // this.data.filter.storeId = this.localStorage.store._id;
+       this.data.filter.storeId = this.localStorage.store.code;
         this.data.filter.store = this.localStorage.store;
         this.getTargetPerMonth();
 
@@ -244,7 +245,7 @@ export class List {
     setShift(e) {
         var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
         if (_shift.toLowerCase() == 'semua') {
-            this.data.filter.shift = 0;
+            this.data.filter.shift = "";
         } else {
             this.data.filter.shift = parseInt(_shift);
         }
