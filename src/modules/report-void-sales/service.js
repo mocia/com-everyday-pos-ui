@@ -5,7 +5,7 @@ import {RestService} from '../../utils/rest-service';
 import { Container } from 'aurelia-dependency-injection';
 import { Config } from "aurelia-api"
 
-const serviceUri =  'sales/docs/salesvoids';
+const serviceUri =  'sales/sales-void';
 const serviceUriStore = 'master/stores';
 const serviceUriTransferInDoc ='inventory/docs/transfer-in';
 
@@ -15,8 +15,8 @@ export class Service extends RestService {
     super(http, aggregator,config,"pos");
   }
 
-  getAllSalesByFilter(storeId, dateFrom, dateTo, shift) {
-    var endpoint = `${serviceUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
+  getAllSalesByFilter(args) {
+    var endpoint = `${serviceUri}?storeCode=${args.storeCode}&&dateFrom=${args.dateFrom}&&dateTo=${args.dateTo}&&shift=${args.shift}`;
     return super.get(endpoint);
   }
 
@@ -28,7 +28,6 @@ export class Service extends RestService {
     var endpoint = `${serviceUri}`;
     return super.get(endpoint);
   }
-
 
   getById(id) {
     var endpoint = `${serviceUri}/${id}`;

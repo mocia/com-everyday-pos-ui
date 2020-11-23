@@ -2,7 +2,7 @@ import {inject, Lazy} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {RestService} from '../../utils/rest-service';
   
-const serviceUri = 'sales/docs/salesreturns';
+const serviceUri = 'sales/sales-return';
 export class Service extends RestService{
   
   constructor(http, aggregator,config,api) {
@@ -11,7 +11,7 @@ export class Service extends RestService{
 
   getAllSalesReturnByFilter(store, dateFrom, dateTo, shift)
   {
-    var endpoint = `${serviceUri}/${store}/${dateFrom}/${dateTo}/${shift}`;
+    var endpoint = `${serviceUri}?storecode=${store}&dateFrom=${dateFrom}&dateTo=${dateTo}&shift=${shift}`;
     return super.get(endpoint);
   } 
 }
