@@ -44,7 +44,7 @@ export class List {
 
     attached() {
         this.data.filter.shift = 0;
-        this.data.filter.storeId = this.localStorage.store._id;
+        this.data.filter.storeId = this.localStorage.store.code;
         this.data.filter.store = this.localStorage.store;
         this.getTargetPerMonth();
 
@@ -126,7 +126,7 @@ export class List {
                                         var detail = {};
                                         detail.barcode = item.item.code;
                                         detail.namaProduk = item.item.name;
-                                        detail.size = item.item.size;
+                                        detail.size = item.item.Size;
                                         detail.harga = item.price;
                                         detail.quantity = item.quantity;
                                         detail.omsetBrutto = parseInt(detail.harga) * parseInt(detail.quantity);
@@ -244,7 +244,7 @@ export class List {
     setShift(e) {
         var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
         if (_shift.toLowerCase() == 'semua') {
-            this.data.filter.shift = 0;
+            this.data.filter.shift = "";
         } else {
             this.data.filter.shift = parseInt(_shift);
         }
