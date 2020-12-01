@@ -44,7 +44,10 @@ export class List {
 
     attached() {
         this.data.filter.shift = 0;
-        this.data.filter.storeId = this.localStorage.store.code;
+
+       // this.data.filter.storeId = this.localStorage.store._id;
+       this.data.filter.storeId = this.localStorage.store.code;
+
         this.data.filter.store = this.localStorage.store;
         this.getTargetPerMonth();
 
