@@ -2,7 +2,9 @@ import { inject, Lazy } from "aurelia-framework";
 import { HttpClient } from "aurelia-fetch-client";
 import { RestService } from "../../utils/rest-service";
 
+
 //const serviceUri = "sales/docs/sales";
+
 const serviceUri = "sales/omzet-monitoring";
 const serviceReportUri = "sales/docs/sales/reports";
 export class Service extends RestService {
@@ -40,14 +42,15 @@ export class Service extends RestService {
   //   return super.getXls(endpoint);
   // }
 
+  generateExcel(store, dateFrom, dateTo, shift) {
+    var endpoint = `${serviceUri}/download?storecode=${store}&dateFrom=${dateFrom}&dateTo=${dateTo}&shift=${shift}`;
+
   // generateExcel(storeId, dateFrom, dateTo, shift) {
   //   var endpoint = `${serviceReportUri}/${storeId}/${dateFrom}/${dateTo}/${shift}`;
   //   return super.getXls(endpoint);
   // }
 
   
-  generateExcel(store, dateFrom, dateTo, shift) {
-    var endpoint = `${serviceUri}/download?storecode=${store}&dateFrom=${dateFrom}&dateTo=${dateTo}&shift=${shift}`;  
     return super.getXls(endpoint);
   }
 }

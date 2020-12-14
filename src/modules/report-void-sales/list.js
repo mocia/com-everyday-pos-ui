@@ -98,11 +98,12 @@ export class List {
                                 result.Toko = item.storeName
                                 result.barcode = item.ItemCode;
                                 result.itemName = item.ItemName;
+                                result.itemSize = item.ItemSize;
                                 result.quantity = item.Quantity;
                                 //result.grandTotal = data.grandTotal;
                                 result.subTotal = item.TotalPrice
                                 result.shift = item.shift;
-                                result._createdBy = item._createdBy;
+                                result._createdBy = item._CreatedBy;
                                 result._updatedBy = item._LastModifiedBy;
                                 result.itemRowSpan = itemRowSpan;
                                 totalSubTotal += parseInt(item.subTotal);
@@ -174,6 +175,7 @@ export class List {
         this.reportHTML += "                <th>Nomor Transaksi</th>";
         this.reportHTML += "                <th>Barcode</th>";
         this.reportHTML += "                <th>Nama Barang</th>";
+        this.reportHTML += "                <th>Size</th>";
         this.reportHTML += "                <th>Kuantitas</th>";
         this.reportHTML += "                <th>Total Harga</th>";
         this.reportHTML += "                <th>Toko</th>";
@@ -201,6 +203,8 @@ export class List {
                     this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + data.barcode + "</td>";
 
                     this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + data.itemName + "</td>";
+
+                    this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + data.itemSize + "</td>";
 
                     this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + data.quantity + "</td>";
 
