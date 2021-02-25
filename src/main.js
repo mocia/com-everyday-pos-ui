@@ -21,7 +21,9 @@ export async function configure(aurelia) {
       var auth = "https://bateeq-auth-api.azurewebsites.net/v1/";
       var core = "https://bateeq-core-api.azurewebsites.net/v1/";
       var pos = "https://bateeq-pos-api.azurewebsites.net/v1/";
+      //var pos = "http://127.0.0.1:8088/v1/";
       var inventory = "https://bateeq-inventory-api.azurewebsites.net/v1/inventory/";
+      //var inventory = "http://127.0.0.1:8088/v1/"
 
       config.registerEndpoint('auth', auth);
       config.registerEndpoint('core', core);

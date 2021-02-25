@@ -169,35 +169,35 @@ export class List {
 
 
         for (var data of this.data.results) {
-            var isTanggalRowSpan = false;
+            var isTanggalRowSpan = true;
 
             for (var item of data.items) {
                 var isItemRowSpan = false;
                 if (item.isVoid) {
                     this.reportHTML += "        <tr>";
+                    if(isTanggalRowSpan){
+                        this.reportHTML += "        <td width='300px'>" + data.tanggal.getDate() + " " + months[data.tanggal.getMonth()] + " " + data.tanggal.getFullYear() + "</td>";
 
-                    this.reportHTML += "        <td width='300px' rowspan='" + data.tanggalRowSpan + "'>" + data.tanggal.getDate() + " " + months[data.tanggal.getMonth()] + " " + data.tanggal.getFullYear() + "</td>";
+                        this.reportHTML += "            <td>" + item.nomorPembayaran + "</td>";
 
-                    this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + item.nomorPembayaran + "</td>";
+                        this.reportHTML += "            <td>" + item.Toko + "</td>";
 
-                    this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + item.Toko + "</td>";
+                        this.reportHTML += "            <td>" + item.grandTotal + "</td>";
 
-                    this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + item.grandTotal + "</td>";
+                        this.reportHTML += "            <td>" + item._createdBy + "</td>";
 
+                        this.reportHTML += "            <td>" + item.shift + "</td>";
 
-                    this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + item._createdBy + "</td>";
+                        this.reportHTML += "            <td>" + item._updatedBy + "</td>";
 
-                    this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + item.shift + "</td>";
-
-                    this.reportHTML += "            <td rowspan='" + data.tanggalRowSpan + "'>" + item._updatedBy + "</td>";
-
+                    }
                     this.reportHTML += "        </tr>";
+                    isTanggalRowSpan = true;
                 }
-                isTanggalRowSpan = true;
                 isItemRowSpan = true;
-
-
+                this.reportHTML += "<tr></tr>";
             }
+            this.reportHTML += "<tr></tr>";
         }
 
 
