@@ -18,10 +18,10 @@ export async function configure(aurelia) {
     .standardConfiguration()
     .feature('components')
     .plugin("aurelia-api", config => {
-      var auth = "https://bateeq-auth-api.azurewebsites.net/v1/";
-      var core = "https://bateeq-core-api.azurewebsites.net/v1/";
-      var pos = "https://bateeq-pos-api.azurewebsites.net/v1/";
-      var inventory = "https://bateeq-inventory-api.azurewebsites.net/v1/inventory/";
+      var auth = "https://com-bateeq-service-auth-dev.azurewebsites.net/v1/";
+      var core = "https://com-bateeq-service-core-dev.azurewebsites.net/v1/";
+      var pos = "https://com-efrata-service-pos-dev.azurewebsites.net/v1/";
+      var inventory = "https://com-efrata-service-warehouse-dev.azurewebsites.net/v1/inventory/";
 
       config.registerEndpoint('auth', auth);
       config.registerEndpoint('core', core);

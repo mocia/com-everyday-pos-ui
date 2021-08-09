@@ -69,13 +69,21 @@ export class DataForm {
         if (e.which == 13) {
             this.service.getProductByCode(item.itemCode)
                 .then(results => {
-                    
                     this.service.getProductOnDiscount(new Date(), item.itemCode)
                         .then(products => {
                             
                             if (results.length > 0) {
                                 var resultItem = results[0];
                                 
+                                resultItem.DomesticCOGS = resultItem.DomesticCOGS != null ? resultItem.DomesticCOGS : 0;
+                                resultItem.DomesticWholesale = resultItem.DomesticWholesale != null ? resultItem.DomesticWholesale : 0;
+                                resultItem.DomesticRetail = resultItem.DomesticRetail != null ? resultItem.DomesticRetail : 0;
+                                resultItem.DomesticSale = resultItem.DomesticSale != null ? resultItem.DomesticSale : 0;
+                                resultItem.InternationalCOGS = resultItem.InternationalCOGS != null ? resultItem.InternationalCOGS : 0;
+                                resultItem.InternationalWholesale = resultItem.InternationalWholesale != null ? resultItem.InternationalWholesale : 0;
+                                resultItem.InternationalRetail = resultItem.InternationalRetail != null ? resultItem.InternationalRetail : 0;
+                                resultItem.InternationalSale = resultItem.InternationalSale != null ? resultItem.InternationalSale : 0;
+
                                 if (resultItem) {
                                     var isAny = false;
                                     
