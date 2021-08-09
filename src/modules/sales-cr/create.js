@@ -53,7 +53,7 @@ export class Create {
                 this.error = e;
 
                 
-                alert('Terjadi Kesalahan');
+                alert('Barang sedang tidak tersedia, mohon periksa inventory');
             })
     }
 }
