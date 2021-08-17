@@ -125,4 +125,17 @@ export class Service extends RestService {
         var endpoint = `discount/code?code=${productBarcode}&date=${thisDay}`;
         return super.get(endpoint);	
     }
+
+    getItemInInventoryByCode(code, sourceId) {
+        var config = Container.instance.get(Config);	
+        var endpoint = config.getEndpoint("inventory").client.baseUrl + "code?"+`itemData=${code}&source=${sourceId}`;	
+        return super.get(endpoint);	
+    }
+
+    getProductById(Id) {
+        var config = Container.instance.get(Config);
+        //var endpoint = `${serviceUriFinishedgood}/code/${code}`;
+        var endpoint = config.getEndpoint("core").client.baseUrl + serviceUriFinishedgood + `/${Id}`
+        return super.get(endpoint);
+    }
 }

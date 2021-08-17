@@ -66,115 +66,162 @@ export class DataForm {
         e.preventDefault();
         var itemIndex = this.data.items.indexOf(item);
         var thisStore = this.data.store;
-        if (e.which == 13) {
-            this.service.getProductByCode(item.itemCode)
-                .then(results => {
-                    this.service.getProductOnDiscount(new Date(), item.itemCode)
-                        .then(products => {
-                            
-                            if (results.length > 0) {
-                                var resultItem = results[0];
-                                
-                                resultItem.DomesticCOGS = resultItem.DomesticCOGS != null ? resultItem.DomesticCOGS : 0;
-                                resultItem.DomesticWholesale = resultItem.DomesticWholesale != null ? resultItem.DomesticWholesale : 0;
-                                resultItem.DomesticRetail = resultItem.DomesticRetail != null ? resultItem.DomesticRetail : 0;
-                                resultItem.DomesticSale = resultItem.DomesticSale != null ? resultItem.DomesticSale : 0;
-                                resultItem.InternationalCOGS = resultItem.InternationalCOGS != null ? resultItem.InternationalCOGS : 0;
-                                resultItem.InternationalWholesale = resultItem.InternationalWholesale != null ? resultItem.InternationalWholesale : 0;
-                                resultItem.InternationalRetail = resultItem.InternationalRetail != null ? resultItem.InternationalRetail : 0;
-                                resultItem.InternationalSale = resultItem.InternationalSale != null ? resultItem.InternationalSale : 0;
 
-                                if (resultItem) {
-                                    var isAny = false;
+        const itemsLength = this.data.items.length;
+        const dataItems = this.data.items;
+        let isDuplicate = false
+        for(let k = 0; k < itemsLength; k++){
+            if(dataItems[k].itemId !== ""){
+                if(dataItems[k].itemCode === item.itemCode){
+                    isDuplicate = true;
+                    item.itemCode = "";
+                    this.error.items[itemIndex].itemCode = "Barcode has been added";
+                    break;
+                }
+            }
+        }
+        
+        if (e.which == 13 && !isDuplicate) {
+            this.service.getItemInInventoryByCode(item.itemCode, thisStore.storage._id)
+                .then(itemInventoryResutls => {
+                    if(itemInventoryResutls.length > 0){
+                        var itemInventory = itemInventoryResutls[0];
+                        this.service.getProductById(itemInventory.item._id)
+                        .then(results => {
+                            this.service.getProductOnDiscount(new Date(), item.itemCode)
+                                .then(products => {
                                     
-                                    for (var dataItem of this.data.items) {
-                                        if (dataItem.itemId == resultItem._id) {
-                                            isAny = true;
-                                            dataItem.itemCode = resultItem.code;
-                                            dataItem.quantity = parseInt(dataItem.quantity) + 1;
-                                            break;
-                                        }
-                                    }
-                                    console.log(this.data.items);
-                                    if (!isAny) {
-                                        item.itemCodeReadonly = true;
-                                        item.itemCode = resultItem.code;
-                                        item.item = resultItem;
-                                        item.itemId = resultItem._id;
-                                        item.quantity = parseInt(item.quantity) + 1;
+                                    if (results != null) {
+                                        var resultItem = {
+                                            code : itemInventory.item.code,
+                                            name : itemInventory.item.name,
+                                            ArticleRealizationOrder : itemInventory.item.articleRealizationOrder,
+                                            _id : results._id,
+                                            Description : results.dataDestination[0].Description,
+                                            ImagePath : results.dataDestination[0].ImagePath,
+                                            Remark : results.dataDestination[0].Remark,
+                                            Size : results.dataDestination[0].Size,
+                                            Tags : results.dataDestination[0].Tags,
+                                            Uom : results.dataDestination[0].Uom,
+                                            DomesticCOGS : itemInventory.item.domesticCOGS,
+                                            DomesticRetail : itemInventory.item.domesticRetail,
+                                            DomesticSale : itemInventory.item.domesticSale,
+                                            DomesticWholesale : itemInventory.item.domesticWholesale,
+                                            InternationalCOGS : itemInventory.itemInternationalCOGS,
+                                            InternationalRetail : itemInventory.itemInternationalRetail,
+                                            InternationalSale : itemInventory.itemInternationalSale,
+                                            InternationalWholesale : itemInventory.itemInternationalWholeSale,
+                                        };
+                                        
+                                        resultItem.DomesticCOGS = resultItem.DomesticCOGS != null ? resultItem.DomesticCOGS : 0;
+                                        resultItem.DomesticWholesale = resultItem.DomesticWholesale != null ? resultItem.DomesticWholesale : 0;
+                                        resultItem.DomesticRetail = resultItem.DomesticRetail != null ? resultItem.DomesticRetail : 0;
+                                        resultItem.DomesticSale = resultItem.DomesticSale != null ? resultItem.DomesticSale : 0;
+                                        resultItem.InternationalCOGS = resultItem.InternationalCOGS != null ? resultItem.InternationalCOGS : 0;
+                                        resultItem.InternationalWholesale = resultItem.InternationalWholesale != null ? resultItem.InternationalWholesale : 0;
+                                        resultItem.InternationalRetail = resultItem.InternationalRetail != null ? resultItem.InternationalRetail : 0;
+                                        resultItem.InternationalSale = resultItem.InternationalSale != null ? resultItem.InternationalSale : 0;
 
-                                        products.forEach(product => {
+                                        if (resultItem) {
+                                            var isAny = false;
                                             
-                                            if (Array.isArray(product.store)) {
-                                                console.log(thisStore)
-                                                product.store.forEach(store => {
-                                                    if (store.Code === thisStore.Code) {
-                                                        
-                                                        product.items.forEach(dataItem => {
+                                            // for (var dataItem of this.data.items) {
+                                            //     if (dataItem.itemId == resultItem._id) {
+                                            //         isAny = true;
+                                            //         dataItem.itemCode = resultItem.code;
+                                            //         dataItem.quantity = parseInt(dataItem.quantity) + 1;
+                                            //         break;
+                                            //     }
+                                            // }
+                                            
+                                            if (!isAny) {
+                                                item.itemCodeReadonly = true;
+                                                item.itemCode = resultItem.code;
+                                                item.item = resultItem;
+                                                item.itemId = resultItem._id;
+                                                item.quantity = parseInt(item.quantity) + 1;
 
-                                                            dataItem.details.forEach(itemDetail => {
+                                                products.forEach(product => {
+                                                    
+                                                    if (Array.isArray(product.store)) {
+                                                        console.log(thisStore)
+                                                        product.store.forEach(store => {
+                                                            if (store.Code === thisStore.Code) {
+                                                                
+                                                                product.items.forEach(dataItem => {
 
-                                                                if (itemDetail.dataDestination.code) {
-                                                                    if (itemDetail.dataDestination.code === resultItem.code) {
+                                                                    dataItem.details.forEach(itemDetail => {
 
-                                                                        item.discount1 = product.discountOne;
-                                                                        item.discount2 = product.discountTwo;
-                                                                    }
-                                                                } else {
-                                                                    if (itemDetail.dataDestination.code === resultItem.code) {
+                                                                        if (itemDetail.dataDestination.code) {
+                                                                            if (itemDetail.dataDestination.code === resultItem.code) {
 
-                                                                        item.discount1 = product.discountOne;
-                                                                        item.discount2 = product.discountTwo;
-                                                                    }
-                                                                }
-                                                            });
-                                                        });
-                                                    }
-                                                });
-                                            } else {
-                                                if (product.store.code == thisStore.code) {
+                                                                                item.discount1 = product.discountOne;
+                                                                                item.discount2 = product.discountTwo;
+                                                                            }
+                                                                        } else {
+                                                                            if (itemDetail.dataDestination.code === resultItem.code) {
 
-                                                    product.items.forEach(dataItem => {
-
-                                                        dataItem.details.forEach(itemDetail => {
-
-                                                            if (itemDetail.dataDestination.code) {
-                                                                if (itemDetail.dataDestination.code === resultItem.code) {
-
-                                                                    item.discount1 = product.discountOne;
-                                                                    item.discount2 = product.discountTwo;
-                                                                }
-                                                            } else {
-                                                                if (itemDetail.dataDestination.codee === resultItem.code) {
-
-                                                                    item.discount1 = product.discountOne;
-                                                                    item.discount2 = product.discountTwo;
-                                                                }
+                                                                                item.discount1 = product.discountOne;
+                                                                                item.discount2 = product.discountTwo;
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                });
                                                             }
                                                         });
-                                                    });
-                                                }
+                                                    } else {
+                                                        if (product.store.code == thisStore.code) {
+
+                                                            product.items.forEach(dataItem => {
+
+                                                                dataItem.details.forEach(itemDetail => {
+
+                                                                    if (itemDetail.dataDestination.code) {
+                                                                        if (itemDetail.dataDestination.code === resultItem.code) {
+
+                                                                            item.discount1 = product.discountOne;
+                                                                            item.discount2 = product.discountTwo;
+                                                                        }
+                                                                    } else {
+                                                                        if (itemDetail.dataDestination.codee === resultItem.code) {
+
+                                                                            item.discount1 = product.discountOne;
+                                                                            item.discount2 = product.discountTwo;
+                                                                        }
+                                                                    }
+                                                                });
+                                                            });
+                                                        }
+                                                    }
+                                                });
                                             }
-                                        });
+                                        }
+                                        this.error.items[itemIndex].itemCode = "";
+                                        this.rearrangeItem(true);
                                     }
-                                }
-                                this.error.items[itemIndex].itemCode = "";
-                                this.rearrangeItem(true);
-                            }
-                            else {
-                                item.itemCode = "";
-                                this.error.items[itemIndex].itemCode = "Barcode not found";
-                            }
-                        });
-                })
-                .catch(e => {
-                    //reject(e);
-                    this.error.items[itemIndex].itemCode = "Barcode not found";
+                                    else {
+                                        item.itemCode = "";
+                                        this.error.items[itemIndex].itemCode = "Barcode not found";
+                                    }
+                                });
+                        })
+                        .catch(e => {
+                            //reject(e);
+                            this.error.items[itemIndex].itemCode = "Barcode not found";
+                        })
+                    }else{
+                        this.error.items[itemIndex].itemCode = "Barcode not found";
+                    }
                 })
         }
         else {
-            if (!item.itemCodeReadonly)
-                item.itemCode = item.itemCode + e.key;
+            if (!item.itemCodeReadonly){
+
+                item.itemCode = item.itemCode;
+                if(e.key !== 'Enter'){
+                    item.itemCode = item.itemCode + e.key;
+                }
+            }
         }
         e.preventDefault(); // prevent the default action (scroll / move caret)
     }
@@ -410,7 +457,7 @@ export class DataForm {
 
         var errorItem = {};
         errorItem.itemCode = '';
-        
+
         this.data.items.push(item);
         this.error.items.push(errorItem);
         this.sumRow(item);

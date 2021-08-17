@@ -92,7 +92,7 @@
                                 <input type="text" class="form-control" name="itemName" value.bind="item.item.name" readonly/>  
                                 <span class="help-block">${error.items[$index].itemId}</span> 
                             </div>-->
-                            <textbox label="" error.bind="error.items[$index].itemId" read-only.bind="item.itemCodeReadonly" value.bind="item.item.name"></textbox>
+                            <textbox label="" error.bind="error.items[$index].itemId" read-only.bind="readOnlyTrue" value.bind="item.item.name"></textbox>
                             
                         </td>
                         <td>
