@@ -19,7 +19,7 @@ export async function configure(aurelia) {
     .feature('components')
     .plugin("aurelia-api", config => {
       var auth = "https://com-bateeq-service-auth-dev.azurewebsites.net/v1/";
-      var core = "https://com-bateeq-service-core-dev.azurewebsites.net/v1/";
+      var core = "https://com-efrata-service-core-dev.azurewebsites.net/v1/";
       var pos = "https://com-efrata-service-pos-dev.azurewebsites.net/v1/";
       var inventory = "https://com-efrata-service-warehouse-dev.azurewebsites.net/v1/inventory/";
 
