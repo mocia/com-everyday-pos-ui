@@ -142,8 +142,7 @@ export class Service extends RestService {
   getItemInInventoryByCode(code, sourceId) {
     var config = Container.instance.get(Config);
     var endpoint =
-      config.getEndpoint("inventory").client.baseUrl +
-      "code?" +
+      config.getEndpoint("inventory").client.baseUrl +`inventory/code?`+
       `itemData=${code}&source=${sourceId}`;
     return super.get(endpoint);
   }
