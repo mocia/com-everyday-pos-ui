@@ -59,11 +59,11 @@ export class DataForm {
     });
   }
 
-  onEnterProduct(e, item) {
+  async onEnterProduct(e, item) {
     e.preventDefault();
     var itemIndex = this.data.items.indexOf(item);
     var thisStore = this.data.store;
-
+    console.log(thisStore)
     const itemsLength = this.data.items.length;
     const dataItems = this.data.items;
     let isDuplicate = false;
@@ -77,19 +77,26 @@ export class DataForm {
         }
       }
     }
-
+ //var store= await this.service.getStore(thisStore.code);
+ console.log(item)
     if (e.which == 13 && !isDuplicate) {
       this.service
         .getItemInInventoryByCode(item.itemCode, thisStore.storage._id)
         .then((itemInventoryResutls) => {
+          console.log(itemInventory)
           if (itemInventoryResutls.length > 0) {
             var itemInventory = itemInventoryResutls[0];
+            console.log(itemInventory)
+
             this.service
               .getProductById(itemInventory.item._id)
               .then((results) => {
+                
+                console.log(results)
                 this.service
                   .getProductOnDiscount(new Date(), item.itemCode)
                   .then((products) => {
+                    console.log(results,products)
                     if (results != null) {
                       var resultItem = {
                         code: itemInventory.item.code,
@@ -226,6 +233,7 @@ export class DataForm {
                       this.error.items[itemIndex].itemCode = "";
                       this.rearrangeItem(true);
                     } else {
+                      console.log(item)
                       item.itemCode = "";
                       this.error.items[itemIndex].itemCode =
                         "Barcode not found";
