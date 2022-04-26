@@ -215,6 +215,7 @@ export class List {
                             this.data.results.push(result);
                         }
                     }
+                    console.log(this.data.results)
                     this.generateReportHTML();
                     this.isFilter = true;
                 })
@@ -252,6 +253,30 @@ export class List {
             this.data.filter.shift = parseInt(_shift);
         }
     }
+    columns = [
+        {
+            field: "date", title: "Tanggal",
+            formatter: function (value, data, index) {
+                var moment = require('moment');
+                return moment(value).format("DD MMMM YYYY");
+            }
+        },
+        { field: "sourceName", title: "Sumber Penyimpanan" },
+        {
+            field: "destinationName", title: "Tujuan Penyimpanan",
+            formatter: function (value, data, index) {
+                var destination = "";
+                if (value.length > 0) {
+                    destination = value[0].destinationName;
+                }
+                return destination;
+            }
+        },
+        { field: "transaksi", title: "Transaksi" },
+        { field: "packingList", title: "packingList" },
+        { field: "Quantity", title: "Total Kuantitas Barang" },
+        { field: "itemDomesticSale", title: "Total Harga Jual" }
+    ];
 
     generateReportHTML() {
         this.totalQty = 0;
