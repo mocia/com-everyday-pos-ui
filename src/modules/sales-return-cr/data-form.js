@@ -114,6 +114,14 @@ export class DataForm {
                 });
                 returnItem.itemCodeReadonly = true;
                 returnItem.itemCode = resultItem.code;
+                if(resultItem.DomesticRetail == null){
+                  resultItem.DomesticRetail = 0;
+                } 
+
+                if(resultItem.DomesticWholesale == null){
+                  resultItem.DomesticWholesale = 0;
+                }
+
                 returnItem.item = resultItem;
                 returnItem.itemId = resultItem._id;
                 //returnItem.quantity = parseInt(returnItem.quantity) + 1;
