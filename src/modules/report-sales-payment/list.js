@@ -124,6 +124,7 @@ export class List {
                                 var itemData = {};
                                 itemData.details = [];
                                 result.tanggal = new Date(data.date);
+                                console.log(data.items);
                                 for (var item of data.items) {
                                     if (!item.isReturn) {
                                         var detail = {};
