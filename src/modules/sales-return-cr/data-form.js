@@ -110,7 +110,7 @@ export class DataForm {
                 this.service.getStock(returnItem.itemCode, this.localStorage.store.code)
                 .then(result => {
                   returnItem.stock = result.quantity
-                  returnItem.quantity = parseInt(result.quantity);
+                  returnItem.quantity = parseInt(result.quantity) > 0 ? 1: 0;
                 });
                 returnItem.itemCodeReadonly = true;
                 returnItem.itemCode = resultItem.code;
