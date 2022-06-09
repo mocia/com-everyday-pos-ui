@@ -172,6 +172,7 @@ export class DataForm {
                           item.itemCode = resultItem.code;
                           item.item = resultItem;
                           item.itemId = resultItem._id;
+                          item.price = resultItem.DomesticSale;
                           item.quantity = parseInt(item.quantity) + 1;
 
                           products.forEach((product) => {
