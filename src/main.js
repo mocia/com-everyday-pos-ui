@@ -18,12 +18,12 @@ export async function configure(aurelia) {
     .standardConfiguration()
     .feature("components")
     .plugin("aurelia-api", (config) => {
-      var auth = "https://com-everyday-service-auth-dev.azurewebsites.net/v1/";
-      var core = "https://com-everyday-service-core-dev.azurewebsites.net/v1/";
-      var pos = "https://com-everyday-service-pos-dev.azurewebsites.net/v1/";
+      var auth = "https://com-everyday-service-auth.azurewebsites.net/v1/";
+      var core = "https://com-everyday-service-core.azurewebsites.net/v1/";
+      var pos = "https://com-everyday-service-pos.azurewebsites.net/v1/";
       // var inventory = "https://com-efrata-service-warehouse-dev.azurewebsites.net/v1/inventory/";
       var inventory =
-        "https://com-everyday-service-warehouse-dev.azurewebsites.net/v1/";
+        "https://com-everyday-service-warehouse.azurewebsites.net/v1/";
 
       config.registerEndpoint("auth", auth);
       config.registerEndpoint("core", core);
