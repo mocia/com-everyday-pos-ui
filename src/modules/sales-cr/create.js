@@ -51,9 +51,7 @@ export class Create {
             })
             .catch(e => {
                 this.error = e;
-
-                
-                alert('Barang sedang tidak tersedia, mohon periksa inventory');
+                alert('Terjadi Kesalahan');
             })
     }
 }
