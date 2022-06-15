@@ -260,7 +260,7 @@
 
             <div class="row">
                 <div class="col-md-8">
-                    <dropdown label="Tipe Pembayaran" error.bind="error.salesDetail.paymentType" value.bind="data.salesDetail.paymentType" change.delegate="checkPaymentType($event)" items.bind="paymentTypes"></dropdown> 
+                    <dropdown label="Tipe Pembayaran" error.bind="error.paymentType" value.bind="data.salesDetail.paymentType" change.delegate="checkPaymentType($event)" items.bind="paymentTypes"></dropdown> 
                 </div>
                 <div class="col-md-4">
                     <numeric label="Total Bayar" value.bind="data.totalBayar" error.bind="error.totalBayar" read-only.bind="readOnlyTrue"></numeric>  
@@ -278,7 +278,7 @@
             
             <div class="row">
                 <div class="col-md-8">
-                    <radiobutton label="Kartu" value.bind="data.salesDetail.card" error.bind="error.salesDetail.card" selections.bind="cards" if.bind="isCard"></radiobutton>
+                    <radiobutton label="Kartu" value.bind="data.salesDetail.card" error.bind="error.card" selections.bind="cards" if.bind="isCard"></radiobutton>
                 </div>
                 <div class="col-md-4">
                     <numeric label="Card" value.bind="data.salesDetail.cardAmount" error.bind="error.salesDetail.cardAmount" read-only.bind="readOnlyTrue" if.bind="isCard"></numeric>
@@ -287,7 +287,7 @@
 
             <div class="row">
                 <div class="col-md-8">
-                    <dropdown label="Jenis Kartu" value.bind="data.salesDetail.cardType" error.bind="error.salesDetail.cardTypeId" items.bind="CardTypes" if.bind="isCard"></dropdown>
+                    <dropdown label="Jenis Kartu" value.bind="data.salesDetail.cardType" error.bind="error.cardType" items.bind="CardTypes" if.bind="isCard"></dropdown>
                 </div>
                 <div class="col-md-4">
                     <numeric label="Cash" value.bind="data.salesDetail.cashAmount" error.bind="error.salesDetail.cashAmount" read-only.bind="readOnlyFalse" if.bind="isCash"></numeric>            
@@ -296,7 +296,7 @@
 
             <div class="row">
                 <div class="col-md-8">
-                    <dropdown label="Bank (EDC)" value.bind="data.salesDetail.bank" error.bind="error.salesDetail.bankId" items.bind="Banks" if.bind="isCard"></dropdown>
+                    <dropdown label="Bank (EDC)" value.bind="data.salesDetail.bank" error.bind="error.bank" items.bind="Banks" if.bind="isCard"></dropdown>
                 </div>
                 <div class="col-md-4">
                     <strong><numeric label="kembali" value.bind="data.salesDetail.refund" error.bind="error.salesDetail.refund" read-only.bind="readOnlyTrue"></numeric></strong>
@@ -305,19 +305,19 @@
 
             <div class="row">
                 <div class="col-md-8">
-                    <dropdown label="Bank (Kartu)" value.bind="data.salesDetail.bankCard" error.bind="error.salesDetail.bankCardId" items.bind="Banks" if.bind="isCard"></dropdown>
+                    <dropdown label="Bank (Kartu)" value.bind="data.salesDetail.bankCard" error.bind="error.bankCard" items.bind="Banks" if.bind="isCard"></dropdown>
                 </div> 
             </div>
 
             <div class="row">
                 <div class="col-md-8">
-                    <textbox label="Nomor Kartu" value.bind="data.salesDetail.cardNumber" error.bind="error.salesDetail.cardNumber" if.bind="isCard"></textbox>
+                    <textbox label="Nomor Kartu" value.bind="data.salesDetail.cardNumber" error.bind="error.cardNumber" if.bind="isCard"></textbox>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-8">
-                    <textbox label="Nama Kartu" value.bind="data.salesDetail.cardName" error.bind="error.salesDetail.cardName" if.bind="isCard"></textbox>    
+                    <textbox label="Nama Kartu" value.bind="data.salesDetail.cardName" error.bind="error.cardName" if.bind="isCard"></textbox>    
                 </div> 
             </div>
             
