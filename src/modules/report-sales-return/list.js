@@ -1,4 +1,4 @@
-import { inject, Lazy, BindingEngine } from 'aurelia-framework';
+import { inject, bindable, BindingEngine } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 import { Service } from './service';
 import {LocalStorage} from '../../utils/storage';
@@ -7,7 +7,7 @@ import moment from 'moment';
 
 @inject(Router, Service, BindingEngine, LocalStorage)
 export class List {
-
+@bindable totalQtyReturn=0;
     shifts = ["Semua", "1", "2", "3", "4", "5"];
 
     constructor(router, service, bindingEngine, localStorage) {
@@ -28,8 +28,7 @@ export class List {
         this.isFilter = false;
         this.reportHTML = ""
 
-        this.totalQty = 0;
-        this.totalQtyReturn = 0;
+        this.totalQty = 0; 
         this.totalOmsetBruto = 0;
         this.totalOmsetNetto = 0;
         this.targetPerMonth = 0;
@@ -61,6 +60,7 @@ export class List {
     }
     
     filter() {
+        this.totalQtyReturn=0;
         this.error = { filter: {}, results: [] };
         var datefrom = new Date(this.data.filter.dateFrom);
         var dateto = new Date(this.data.filter.dateTo);
@@ -97,8 +97,7 @@ export class List {
                                 var totalDiscountMarginNominal = 0;
                                 var totalDiscountMarginNetto = 0;
                                 var totalTotal = 0;
-                                
-                                var totalQtyReturn = 0;
+                                 
                                 var totalOmsetBrutoReturn = 0;
                                 var totalDiscount1NominalReturn = 0;
                                 var totalDiscount1NettoReturn = 0;
@@ -154,7 +153,7 @@ export class List {
                                         
                                         if(item.isReturn) {
                                             subtotalReturn = parseInt(subtotalReturn) + parseInt(product.total);
-                                            totalQtyReturn += parseInt(product.quantity);
+                                            this.totalQtyReturn += parseInt(product.quantity);
                                             totalOmsetBrutoReturn += parseInt(product.omsetBrutto);
                                             totalDiscount1NominalReturn += parseInt(product.discount1Nominal);
                                             totalDiscount1NettoReturn += parseInt(product.discount1Netto);
@@ -205,7 +204,7 @@ export class List {
                                 totalGrandTotal += parseInt(result.grandTotal);
                                     
                                 result.totalQty = totalQty;
-                                result.totalQtyReturn = totalQtyReturn;
+                                result.totalQtyReturn = this.totalQtyReturn;
                                 result.totalOmsetBruto = totalOmsetBruto - totalOmsetBrutoReturn;
                                 result.totalDiscount1Nominal = totalDiscount1Nominal;
                                 result.totalDiscount1Netto = totalDiscount1Netto;
@@ -261,7 +260,6 @@ export class List {
 
     generateReportHTML() {
         this.totalQty = 0;
-        this.totalQtyReturn = 0;
         this.totalOmsetBruto = 0;
         this.totalOmsetNetto = 0;
 
@@ -398,7 +396,7 @@ export class List {
             this.reportHTML += "        <td></td>";
             this.reportHTML += "    </tr>";
             this.totalQty += parseInt(data.totalQty);
-            this.totalQtyReturn += parseInt(data.totalQtyReturn);
+            // this.totalQtyReturn += parseInt(data.totalQtyReturn);
             this.totalOmsetBruto += parseInt(data.totalOmsetBruto);
             this.totalOmsetNetto += parseInt(data.totalGrandTotal);
         
