@@ -1,4 +1,4 @@
-import { inject, Lazy, BindingEngine } from 'aurelia-framework';
+import { inject,bindable, Lazy, BindingEngine } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 import { AuthService } from 'aurelia-authentication';
 import { Service } from './service';
@@ -11,8 +11,11 @@ export class List {
 
     // storeApiUri = require('../../host').master + '/stores';
     shifts = ["Semua", "1", "2", "3", "4", "5"];
-
-    constructor(router, service, bindingEngine, authService, localStorage) {
+    @bindable storeName="";
+    @bindable storeAddress=""; 
+    @bindable storePhone="";
+    constructor(router, service, 
+        bindingEngine, authService, localStorage) {
         this.router = router;
         this.service = service;
         this.bindingEngine = bindingEngine;
@@ -54,6 +57,10 @@ export class List {
             .then(result => {
                 this.data.filter.store = result;
             })
+            this.storeName=this.data.filter.store.name;
+            this.storeAddress=this.data.filter.store.address;
+            this.storePhone=this.data.filter.store.phone;
+           
         this.detailData = [];
     }
 
@@ -289,6 +296,7 @@ export class List {
                             this.data.results.push(result);
                         }
                     }
+                
                     this.generateReportHTML();
                     this.isFilter = true;
                 })
