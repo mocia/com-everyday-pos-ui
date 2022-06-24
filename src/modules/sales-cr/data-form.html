@@ -92,7 +92,7 @@
                                 <input type="text" class="form-control" name="itemName" value.bind="item.item.name" readonly/>  
                                 <span class="help-block">${error.items[$index].itemId}</span> 
                             </div>-->
-                            <textbox label="" error.bind="error.items[$index].itemId" read-only.bind="item.itemCodeReadonly" value.bind="item.item.name"></textbox>
+                            <textbox label="" error.bind="error.items[$index].itemId" read-only.bind="readOnlyTrue" value.bind="item.item.name"></textbox>
                             
                         </td>
                         <td>
@@ -103,7 +103,7 @@
                             </div>-->
                         </td>
                         <td>
-                            <numeric options.bind="numericOptions" label="" value.bind="item.price" error.bind="error.items[$index].price" read-only.bind="readOnlyTrue"></numeric>
+                            <numeric options.bind="numericOptions" label="" value.bind="item.item.DomesticSale" error.bind="error.items[$index].price" read-only.bind="readOnlyTrue"></numeric>
                             <!--<div class="form-group ${error.items[$index].price?'has-error':''}">
                                 <input class="form-control" type="number" name="price" value.bind="item.price" change.delegate="sumRow(item)" readonly/>
                                 <span class="help-block">${error.items[$index].price}</span>
@@ -236,10 +236,11 @@
     <div class="alert alert-info text-center" role="alert" if.bind="data.subCounters.length == 0">
         Tidak ada data.
     </div>
-    
-    <div>
-        <form class="form-horizontal"> 
 
+    <hr>
+    
+    <div class="col-sm-12">
+        <form class="form-horizontal"> 
             <div class="form-group" if.bind="isPromos">
                 <div class="row">
                     <div class="col-md-1"></div>
@@ -257,7 +258,94 @@
                 </ol>
             </div>
 
-            <dropdown label="Tipe Pembayaran" error.bind="error.salesDetail.paymentType" value.bind="data.salesDetail.paymentType" change.delegate="checkPaymentType($event)" items.bind="paymentTypes"></dropdown>
+            <div class="row">
+                <div class="col-md-8">
+                    <dropdown label="Tipe Pembayaran" error.bind="error.salesDetail.paymentType" value.bind="data.salesDetail.paymentType" change.delegate="checkPaymentType($event)" items.bind="paymentTypes"></dropdown> 
+                </div>
+                <div class="col-md-4">
+                    <numeric label="Total Bayar" value.bind="data.totalBayar" error.bind="error.totalBayar" read-only.bind="readOnlyTrue"></numeric>  
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <numeric label="Voucher" value.bind="data.salesDetail.voucher.value" error.bind="error.salesDetail.voucher.value" read-only.bind="readOnlyFalse"></numeric>
+                </div>
+                <div class="col-md-4">
+                    <numeric label="Sisa Bayar" value.bind="data.sisaBayar" error.bind="error.sisaBayar" read-only.bind="readOnlyTrue"></numeric>    
+                </div>    
+            </div>   
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <radiobutton label="Kartu" value.bind="data.salesDetail.card" error.bind="error.salesDetail.card" selections.bind="cards" if.bind="isCard"></radiobutton>
+                </div>
+                <div class="col-md-4">
+                    <numeric label="Card" value.bind="data.salesDetail.cardAmount" error.bind="error.salesDetail.cardAmount" read-only.bind="readOnlyTrue" if.bind="isCard"></numeric>
+                </div>    
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <dropdown label="Jenis Kartu" value.bind="data.salesDetail.cardType" error.bind="error.salesDetail.cardTypeId" items.bind="CardTypes" if.bind="isCard"></dropdown>
+                </div>
+                <div class="col-md-4">
+                    <numeric label="Cash" value.bind="data.salesDetail.cashAmount" error.bind="error.salesDetail.cashAmount" read-only.bind="readOnlyFalse" if.bind="isCash"></numeric>            
+                </div>    
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <dropdown label="Bank (EDC)" value.bind="data.salesDetail.bank" error.bind="error.salesDetail.bankId" items.bind="Banks" if.bind="isCard"></dropdown>
+                </div>
+                <div class="col-md-4">
+                    <strong><numeric label="kembali" value.bind="data.salesDetail.refund" error.bind="error.salesDetail.refund" read-only.bind="readOnlyTrue"></numeric></strong>
+                </div>    
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <dropdown label="Bank (Kartu)" value.bind="data.salesDetail.bankCard" error.bind="error.salesDetail.bankCardId" items.bind="Banks" if.bind="isCard"></dropdown>
+                </div> 
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <textbox label="Nomor Kartu" value.bind="data.salesDetail.cardNumber" error.bind="error.salesDetail.cardNumber" if.bind="isCard"></textbox>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <textbox label="Nama Kartu" value.bind="data.salesDetail.cardName" error.bind="error.salesDetail.cardName" if.bind="isCard"></textbox>    
+                </div> 
+            </div>
+            
+        </form>
+    </div>
+
+    <hr>
+
+    <!-- <div>
+        <form class="form-horizontal"> 
+            <div class="form-group" if.bind="isPromos">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4"><strong>PROMO :</strong></div>
+                </div>
+                <br>
+                <ol>
+                    <ul repeat.for="promo of promos">
+                        <div class="col-sm-4">
+                            <label>
+                                <input type="checkbox" model.bind="promo._id" checked.bind="data.salesDetail.promoDoc"> ${promo.name}
+                            </label>
+                        </div>
+                    </ul>
+                </ol>
+            </div>
+
+            <dropdown label="Tipe Pembayaran" error.bind="error.salesDetail.paymentType" value.bind="data.salesDetail.paymentType" change.delegate="checkPaymentType($event)" items.bind="paymentTypes"></dropdown> -->
 
             <!--<div class="form-group ${error.salesDetail.paymentType?'has-error':''}">
                 <label for="paymentType" class="col-sm-2 control-label">Tipe Pembayaran</label>
@@ -279,7 +367,7 @@
                 </div>
             </div>  -->   
             
-            <radiobutton label="Kartu" value.bind="data.salesDetail.card" error.bind="error.salesDetail.card" selections.bind="cards" if.bind="isCard"></radiobutton>
+            <!-- <radiobutton label="Kartu" value.bind="data.salesDetail.card" error.bind="error.salesDetail.card" selections.bind="cards" if.bind="isCard"></radiobutton> -->
 
             <!--<div class="form-group ${error.salesDetail.card?'has-error':''}" if.bind="isCard"> 
                 <label for="card" class="col-sm-2 control-label">Kartu</label>
@@ -290,7 +378,7 @@
                 </div>
             </div> -->
 
-            <dropdown label="Jenis Kartu" value.bind="data.salesDetail.cardType" error.bind="error.salesDetail.cardTypeId" items.bind="CardTypes" if.bind="isCard"></dropdown>
+            <!-- <dropdown label="Jenis Kartu" value.bind="data.salesDetail.cardType" error.bind="error.salesDetail.cardTypeId" items.bind="CardTypes" if.bind="isCard"></dropdown> -->
 
             <!--<div class="form-group ${error.salesDetail.cardTypeId?'has-error':''}" if.bind="isCard">
                 <label for="cardTypeId" class="col-sm-2 control-label">Jenis Kartu</label>
@@ -302,7 +390,7 @@
                     <span class="help-block">${error.salesDetail.cardTypeId}</span>
                 </div>
             </div>  -->
-            <dropdown label="Bank (EDC)" value.bind="data.salesDetail.bank" error.bind="error.salesDetail.bankId" items.bind="Banks" if.bind="isCard"></dropdown>
+            <!-- <dropdown label="Bank (EDC)" value.bind="data.salesDetail.bank" error.bind="error.salesDetail.bankId" items.bind="Banks" if.bind="isCard"></dropdown> -->
 <!--            
             <div class="form-group ${error.salesDetail.bankId?'has-error':''}" if.bind="isCard">
                 <label for="bankId" class="col-sm-2 control-label">Bank (EDC)</label>
@@ -314,7 +402,7 @@
                     <span class="help-block">${error.salesDetail.bankId}</span>
                 </div>
             </div>  -->
-            <dropdown label="Bank (Kartu)" value.bind="data.salesDetail.bankCard" error.bind="error.salesDetail.bankCardId" items.bind="Banks" if.bind="isCard"></dropdown>
+            <!-- <dropdown label="Bank (Kartu)" value.bind="data.salesDetail.bankCard" error.bind="error.salesDetail.bankCardId" items.bind="Banks" if.bind="isCard"></dropdown> -->
             
             <!--<div class="form-group ${error.salesDetail.bankCardId?'has-error':''}" if.bind="isCard">
                 <label for="bankCardId" class="col-sm-2 control-label">Bank (Kartu)</label>
@@ -326,7 +414,7 @@
                     <span class="help-block">${error.salesDetail.bankCardId}</span>
                 </div>
             </div>  -->
-            <textbox label="Nomor Kartu" value.bind="data.salesDetail.cardNumber" error.bind="error.salesDetail.cardNumber" if.bind="isCard"></textbox>
+            <!-- <textbox label="Nomor Kartu" value.bind="data.salesDetail.cardNumber" error.bind="error.salesDetail.cardNumber" if.bind="isCard"></textbox> -->
             <!--<div class="form-group ${error.salesDetail.cardNumber?'has-error':''}" if.bind="isCard">
                 <label for="cardNumber" class="col-sm-2 control-label">Nomor Kartu</label>
                 <div class="col-sm-10"> 
@@ -334,7 +422,7 @@
                     <span class="help-block">${error.salesDetail.cardNumber}</span>
                 </div>
             </div>-->
-            <textbox label="Nama Kartu" value.bind="data.salesDetail.cardName" error.bind="error.salesDetail.cardName" if.bind="isCard"></textbox>
+            <!-- <textbox label="Nama Kartu" value.bind="data.salesDetail.cardName" error.bind="error.salesDetail.cardName" if.bind="isCard"></textbox> -->
             <!--<div class="form-group ${error.salesDetail.cardName?'has-error':''}" if.bind="isCard">
                 <label for="cardName" class="col-sm-2 control-label">Nama Kartu</label>
                 <div class="col-sm-10"> 
@@ -343,7 +431,7 @@
                 </div>
             </div> -->
             
-            <numeric label="Total Bayar" value.bind="data.totalBayar" error.bind="error.totalBayar" read-only.bind="readOnlyTrue"></numeric>            
+            <!-- <numeric label="Total Bayar" value.bind="data.totalBayar" error.bind="error.totalBayar" read-only.bind="readOnlyTrue"></numeric>             -->
             <!--<div class="form-group">
                 <label for="totalBayar" class="col-sm-2 control-label">Total Bayar</label>
                 <div class="col-sm-10"> 
@@ -351,7 +439,7 @@
                 </div>
             </div>-->
             
-            <numeric label="Voucher" value.bind="data.salesDetail.voucher.value" error.bind="error.salesDetail.voucher.value" read-only.bind="readOnlyFalse"></numeric>            
+            <!-- <numeric label="Voucher" value.bind="data.salesDetail.voucher.value" error.bind="error.salesDetail.voucher.value" read-only.bind="readOnlyFalse"></numeric>             -->
             <!--<div class="form-group ${error.salesDetail.voucher.value?'has-error':''}">
                 <label for="voucher" class="col-sm-2 control-label">Voucher</label>
                 <div class="col-sm-10"> 
@@ -360,7 +448,7 @@
                 </div>
             </div> -->
             
-            <numeric label="Sisa Bayar" value.bind="data.sisaBayar" error.bind="error.sisaBayar" read-only.bind="readOnlyTrue"></numeric>            
+            <!-- <numeric label="Sisa Bayar" value.bind="data.sisaBayar" error.bind="error.sisaBayar" read-only.bind="readOnlyTrue"></numeric>             -->
             <!--<div class="form-group ${error.sisaBayar?'has-error':''}">
                 <label for="sisaBayar" class="col-sm-2 control-label">Sisa Bayar</label>
                 <div class="col-sm-10"> 
@@ -369,7 +457,7 @@
                 </div>
             </div>-->
             
-            <numeric label="Card" value.bind="data.salesDetail.cardAmount" error.bind="error.salesDetail.cardAmount" read-only.bind="readOnlyTrue" if.bind="isCard"></numeric>            
+            <!-- <numeric label="Card" value.bind="data.salesDetail.cardAmount" error.bind="error.salesDetail.cardAmount" read-only.bind="readOnlyTrue" if.bind="isCard"></numeric>             -->
             <!--<div class="form-group ${error.salesDetail.cardAmount?'has-error':''}" if.bind="isCard">
                 <label for="cardAmount" class="col-sm-2 control-label">Card</label>
                 <div class="col-sm-10"> 
@@ -378,7 +466,7 @@
                 </div>
             </div> -->
             
-            <numeric label="Cash" value.bind="data.salesDetail.cashAmount" error.bind="error.salesDetail.cashAmount" read-only.bind="readOnlyFalse" if.bind="isCash"></numeric>            
+            <!-- <numeric label="Cash" value.bind="data.salesDetail.cashAmount" error.bind="error.salesDetail.cashAmount" read-only.bind="readOnlyFalse" if.bind="isCash"></numeric>             -->
             <!--<div class="form-group ${error.salesDetail.cashAmount?'has-error':''}" if.bind="isCash">
                 <label for="cashAmount" class="col-sm-2 control-label">Cash</label>
                 <div class="col-sm-10"> 
@@ -387,13 +475,13 @@
                 </div>
             </div>-->
             
-            <numeric label="Kembali" value.bind="data.salesDetail.refund" error.bind="error.salesDetail.refund" read-only.bind="readOnlyTrue"></numeric>            
+            <!-- <numeric label="Kembali" value.bind="data.salesDetail.refund" error.bind="error.salesDetail.refund" read-only.bind="readOnlyTrue"></numeric>             -->
             <!--<div class="form-group">
                 <label for="refund" class="col-sm-2 control-label">Kembali</label>
                 <div class="col-sm-10"> 
                     <input type="number" class="form-control" name="refund" value.bind="data.salesDetail.refund" readonly/>   
                 </div>
             </div> -->
-        </form>
-    </div>
+        <!-- </form>
+    </div> -->
 </template>

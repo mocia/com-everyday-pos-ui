@@ -44,7 +44,10 @@ export class List {
 
     attached() {
         this.data.filter.shift = 0;
-        this.data.filter.storeId = this.localStorage.store._id;
+
+       // this.data.filter.storeId = this.localStorage.store._id;
+       this.data.filter.storeId = this.localStorage.store.code;
+
         this.data.filter.store = this.localStorage.store;
         this.getTargetPerMonth();
 
@@ -121,12 +124,13 @@ export class List {
                                 var itemData = {};
                                 itemData.details = [];
                                 result.tanggal = new Date(data.date);
+                                console.log(data.items);
                                 for (var item of data.items) {
                                     if (!item.isReturn) {
                                         var detail = {};
                                         detail.barcode = item.item.code;
                                         detail.namaProduk = item.item.name;
-                                        detail.size = item.item.size;
+                                        detail.size = item.item.Size;
                                         detail.harga = item.price;
                                         detail.quantity = item.quantity;
                                         detail.omsetBrutto = parseInt(detail.harga) * parseInt(detail.quantity);
@@ -212,6 +216,7 @@ export class List {
                             this.data.results.push(result);
                         }
                     }
+                    console.log(this.data.results)
                     this.generateReportHTML();
                     this.isFilter = true;
                 })
@@ -244,11 +249,35 @@ export class List {
     setShift(e) {
         var _shift = (e ? (e.srcElement.value ? e.srcElement.value : e.detail) : this.shift);
         if (_shift.toLowerCase() == 'semua') {
-            this.data.filter.shift = 0;
+            this.data.filter.shift = "";
         } else {
             this.data.filter.shift = parseInt(_shift);
         }
     }
+    columns = [
+        {
+            field: "date", title: "Tanggal",
+            formatter: function (value, data, index) {
+                var moment = require('moment');
+                return moment(value).format("DD MMMM YYYY");
+            }
+        },
+        { field: "sourceName", title: "Sumber Penyimpanan" },
+        {
+            field: "destinationName", title: "Tujuan Penyimpanan",
+            formatter: function (value, data, index) {
+                var destination = "";
+                if (value.length > 0) {
+                    destination = value[0].destinationName;
+                }
+                return destination;
+            }
+        },
+        { field: "transaksi", title: "Transaksi" },
+        { field: "packingList", title: "packingList" },
+        { field: "Quantity", title: "Total Kuantitas Barang" },
+        { field: "itemDomesticSale", title: "Total Harga Jual" }
+    ];
 
     generateReportHTML() {
         this.totalQty = 0;

@@ -54,6 +54,8 @@ export class DataForm {
     this.stores = this.localStorage.me.data.stores;
     // this.stores = session.stores;
 
+    console.log(this.data);
+
     var getData = [];
     getData.push(this.service.getBank());
     getData.push(this.service.getCardType());
@@ -86,22 +88,43 @@ export class DataForm {
         .then(results => {
           if (results.length > 0) {
             var resultItem = results[0];
+            console.log(resultItem)
             if (resultItem) {
               var isAny = false;
               for (var dataItem of item.returnItems) {
                 if (dataItem.itemId == resultItem._id) {
+                  console.log(dataItem.itemCode);
+                  this.service.getStock(dataItem.itemCode, this.localStorage.store.code)
+                  .then(result => {
+                    dataItem.stock = result.quantity
+                    dataItem.quantity = result.quantity
+                  });
                   isAny = true;
                   dataItem.itemCode = resultItem.code;
-                  dataItem.quantity = parseInt(dataItem.quantity) + 1;
+                  //dataItem.quantity = parseInt(dataItem.quantity) + 1;
                   break;
                 }
               }
               if (!isAny) {
+                console.log(returnItem.itemCode);
+                this.service.getStock(returnItem.itemCode, this.localStorage.store.code)
+                .then(result => {
+                  returnItem.stock = result.quantity
+                  returnItem.quantity = parseInt(result.quantity) > 0 ? 1: 0;
+                });
                 returnItem.itemCodeReadonly = true;
                 returnItem.itemCode = resultItem.code;
+                if(resultItem.DomesticRetail == null){
+                  resultItem.DomesticRetail = 0;
+                } 
+
+                if(resultItem.DomesticWholesale == null){
+                  resultItem.DomesticWholesale = 0;
+                }
+
                 returnItem.item = resultItem;
                 returnItem.itemId = resultItem._id;
-                returnItem.quantity = parseInt(returnItem.quantity) + 1;
+                //returnItem.quantity = parseInt(returnItem.quantity) + 1;
               }
             }
             this.error.items[itemIndex].returnItems[returnItemIndex].itemCode =
@@ -123,23 +146,37 @@ export class DataForm {
         returnItem.itemCode = returnItem.itemCode + e.key;
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
+    console.log(returnItem);
   }
 
   getShift() {
+    var shifts = [];
+    var shift1 = {};
+    shift1.shift = 1;
+    shift1.dateFrom = new Date('2000-01-02T03:00:00+07:00');
+    shift1.dateTo = new Date('2000-01-01T15:59:59+07:00');
+    var shift2 = {};
+    shift2.shift = 2;
+    shift2.dateFrom = new Date('2000-01-01T16:00:00+07:00');
+    shift2.dateTo = new Date('2000-01-02T02:59:59+07:00');
+    shifts.push(shift1);
+    shifts.push(shift2);
     var today = new Date();
     this.data.shift = 0;
     if (this.data.store.shifts) {
       for (var shift of this.data.store.shifts) {
-        var dateFrom = new Date(
-          this.getUTCStringDate(today) +
-            "T" +
-            this.getUTCStringTime(new Date(shift.dateFrom))
-        );
-        var dateTo = new Date(
-          this.getUTCStringDate(today) +
-            "T" +
-            this.getUTCStringTime(new Date(shift.dateTo))
-        );
+        var dateFrom = new Date(this.getUTCStringDate(today) + "T" +  this.getUTCStringTime(new Date(shift.dateFrom)));
+        var dateTo = new Date(this.getUTCStringDate(today) + "T" + this.getUTCStringTime(new Date(shift.dateTo)));
+        if (dateFrom < today && today < dateTo) {
+          this.data.shift = parseInt(shift.shift);
+          break;
+        }
+      }
+    }
+    else{
+      for (var shift of shifts) {
+        var dateFrom = new Date( this.getUTCStringDate(today) + "T" + this.getStringTime(new Date(shift.dateFrom)));
+        var dateTo = new Date(this.getUTCStringDate(today) +"T" + this.getStringTime(new Date(shift.dateTo)));
         if (dateFrom < today && today < dateTo) {
           this.data.shift = parseInt(shift.shift);
           break;
@@ -151,27 +188,32 @@ export class DataForm {
   attached() {
     this.isPromos = false;
     this.data.storeId = this.localStorage.store._id;
+    this.data.storeCode = this.localStorage.store.code;
     // this.data.storeId = this.session.store._id;
+    console.log(localStorage.store);
     this.data.store = this.localStorage.store;
+    console.log(this.data.store)
+    console.log(this.data); 
     // this.data.store = this.session.store;
-    // this.data.shift = this.getShift();
+    this.getShift();
 
-    this.service
-      .getPromoNow(this.getStringDate(new Date()), this.data.store.code)
-      .then(result => {
-        this.promos = result;
-        if (this.promos.length > 0) {
-          this.isPromos = true;
-        } else {
-          this.isPromos = false;
-        }
-        console.log(this.isPromos);
-        this.data.salesDetail.promoDoc = [];
-      });
+    // this.service
+    //   .getPromoNow(this.getStringDate(new Date()), this.data.store.code)
+    //   .then(result => {
+    //     this.promos = result;
+    //     if (this.promos.length > 0) {
+    //       this.isPromos = true;
+    //     } else {
+    //       this.isPromos = false;
+    //     }
+    //     console.log(this.isPromos);
+    //     this.data.salesDetail.promoDoc = [];
+    //   });
 
-    this.service.getStore(this.data.storeId).then(result => {
+    this.service.getStore(this.data.storeCode).then(result => {
       this.data.store = result;
-      // this.getShift();
+
+    this.getShift();
     });
 
     this.itemReturs = [];
@@ -208,12 +250,13 @@ export class DataForm {
               item.specialDiscount = 0;
               item.margin = 0;
               for (var itemReturn of this.itemReturs) {
+                console.log(itemReturn)
                 if (newValue.itemId && itemReturn.itemId == newValue.itemId) {
                   item.itemId = itemReturn.itemId;
                   // item.item = itemReturn.item;
                   item.quantityPurchase = parseInt(itemReturn.quantity);
                   item.quantity = parseInt(itemReturn.quantity);
-                  item.price = parseInt(itemReturn.price);
+                  item.price = parseInt(itemReturn.item.DomesticSale);
                   item.discount1 = parseInt(itemReturn.discount1);
                   item.discount2 = parseInt(itemReturn.discount2);
                   item.discountNominal = parseInt(itemReturn.discountNominal);
@@ -225,7 +268,7 @@ export class DataForm {
                 }
               }
               this.sumRow(item);
-              this.refreshPromo(index, -1);
+              //this.refreshPromo(index, -1);
               this.addItemDetail(index);
             });
 
@@ -238,15 +281,15 @@ export class DataForm {
                 this.bindingEngine
                   .propertyObserver(returnItem, "itemId")
                   .subscribe((newValue, oldValue) => {
-                    returnItem.price = parseInt(returnItem.item.domesticSale);
+                    returnItem.price = parseInt(returnItem.item.DomesticSale);
                     //returnItem.quantity = 1 + parseInt(returnItem.quantity);
                     this.sumRow(returnItem);
-                    this.refreshPromo(index, returnIndex);
+                    //this.refreshPromo(index, returnIndex);
                   });
                 this.bindingEngine
                   .propertyObserver(returnItem, "quantity")
                   .subscribe((newValue, oldValue) => {
-                    this.refreshPromo(index, returnIndex);
+                    //this.refreshPromo(index, returnIndex);
                   });
               }
             });
@@ -278,12 +321,12 @@ export class DataForm {
     this.bindingEngine
       .propertyObserver(this.data, "storeId")
       .subscribe((newValue, oldValue) => {
-        this.refreshPromo(-1, -1);
+        //this.refreshPromo(-1, -1);
       });
     this.bindingEngine
       .propertyObserver(this.data, "date")
       .subscribe((newValue, oldValue) => {
-        this.refreshPromo(-1, -1);
+        //this.refreshPromo(-1, -1);
       });
     this.bindingEngine
       .propertyObserver(this.data.salesDetail.voucher, "value")
@@ -300,8 +343,8 @@ export class DataForm {
   salesChanged(e) {
     var sales = e.detail;
     if (sales) {
-      this.data.reference = sales._id;
-      this.data.salesId = sales._id;
+      this.data.reference = sales.Id;
+      this.data.salesId = sales.Id;
     }
   }
 
@@ -325,6 +368,7 @@ export class DataForm {
     var errorItem = {};
     errorItem.returnItems = [];
     this.data.items.push(item);
+    console.log(this.error);
     this.error.items.push(errorItem);
     this.sumRow(item);
   }
@@ -356,6 +400,7 @@ export class DataForm {
     var errorItem = {};
     errorItem.itemCode = "";
     this.data.items[index].returnItems.push(item);
+    console.log(this.data.items[index])
     this.error.items[index].returnItems.push(errorItem);
     this.sumRow(item);
   }
@@ -365,56 +410,33 @@ export class DataForm {
     this.data.items[index].returnItems.splice(itemIndex, 1);
     this.error.items[index].returnItems.splice(itemIndex, 1);
     this.sumTotal();
-    this.refreshPromo(index, -1);
+    //this.refreshPromo(index, -1);
   }
 
   rearrangeItemDetail(item, isAdd) {
     var itemIndex = this.data.items.indexOf(item);
+    console.log(item.returnItems.length);
     for (var i = 0; i < item.returnItems.length; ) {
       var returnItem = item.returnItems[i];
+      console.log(returnItem);
+      console.log(returnItem.itemId)
       if (returnItem.itemId == "") {
         this.removeItemDetail(itemIndex, returnItem);
       } else i++;
     }
+    
     if (isAdd) this.addItemDetail(itemIndex);
   }
 
-  sumRow(
-    item,
-    eventSpecialDiscount,
-    eventDiscount1,
-    eventDiscount2,
-    eventDiscountNominal,
-    eventMargin
-  ) {
+  sumRow(item,eventSpecialDiscount,eventDiscount1,eventDiscount2,eventDiscountNominal,eventMargin) {
     var itemIndex = this.data.items.indexOf(item);
-    var specialDiscount = eventSpecialDiscount
-      ? eventSpecialDiscount.srcElement.value
-        ? parseInt(eventSpecialDiscount.srcElement.value)
-        : parseInt(eventSpecialDiscount.detail || 0)
-      : parseInt(item.specialDiscount);
-    var discount1 = eventDiscount1
-      ? eventDiscount1.srcElement.value
-        ? parseInt(eventDiscount1.srcElement.value)
-        : parseInt(eventDiscount1.detail || 0)
-      : parseInt(item.discount1);
-    var discount2 = eventDiscount2
-      ? eventDiscount2.srcElement.value
-        ? parseInt(eventDiscount2.srcElement.value)
-        : parseInt(eventDiscount2.detail || 0)
-      : parseInt(item.discount2);
+    var specialDiscount = eventSpecialDiscount ? eventSpecialDiscount.srcElement.value ? parseInt(eventSpecialDiscount.srcElement.value) : parseInt(eventSpecialDiscount.detail || 0): parseInt(item.specialDiscount);
+    var discount1 = eventDiscount1 ? eventDiscount1.srcElement.value ? parseInt(eventDiscount1.srcElement.value) : parseInt(eventDiscount1.detail || 0) : parseInt(item.discount1);
+    var discount2 = eventDiscount2 ? eventDiscount2.srcElement.value ? parseInt(eventDiscount2.srcElement.value) : parseInt(eventDiscount2.detail || 0) : parseInt(item.discount2);
     //var discountNominal = eventDiscountNominal ? (eventDiscountNominal.srcElement.value ? parseInt(eventDiscountNominal.srcElement.value) : parseInt(eventDiscountNominal.detail || 0)) : parseInt(item.discountNominal);
-    var discountNominal = eventDiscountNominal
-      ? eventDiscountNominal.detail >= 0
-        ? parseInt(eventDiscountNominal.detail)
-        : parseInt(item.discountNominal || 0)
-      : parseInt(item.discountNominal);
-    var margin = eventMargin
-      ? eventMargin.srcElement.value
-        ? parseInt(eventMargin.srcElement.value)
-        : parseInt(eventMargin.detail || 0)
-      : parseInt(item.margin);
-
+    var discountNominal = eventDiscountNominal ? eventDiscountNominal.detail >= 0 ? parseInt(eventDiscountNominal.detail) : parseInt(item.discountNominal || 0) : parseInt(item.discountNominal);
+    var margin = eventMargin ? eventMargin.srcElement.value ? parseInt(eventMargin.srcElement.value) : parseInt(eventMargin.detail || 0) : parseInt(item.margin);
+    console.log(item);
     item.total = 0;
     // var specialDiscount = event ? parseInt(event.srcElement.value) : parseInt(item.specialDiscount);
     if (parseInt(item.quantity) > 0) {
@@ -441,11 +463,13 @@ export class DataForm {
     this.data.grandTotal = 0;
     this.data.total = 0;
     //this.data.totalDiscount = 0;
-
+    console.log(this.data.items.length)
     for (var item of this.data.items) {
       this.data.subTotalRetur =
         parseInt(this.data.subTotalRetur) + parseInt(item.total);
       for (var returnItem of item.returnItems) {
+        console.log(returnItem.total);
+        console.log(returnItem.quantity);
         this.data.subTotal =
           parseInt(this.data.subTotal) + parseInt(returnItem.total);
         this.data.totalProduct =
@@ -566,6 +590,25 @@ export class DataForm {
     date = hh + ":" + mm + ":" + ss;
     return date;
   }
+
+  getStringTime(date) {
+    var hh = date.getHours();
+    // console.log(hh);
+    var mm = date.getMinutes();
+    var ss = date.getSeconds();
+    if (hh < 10) {
+        hh = '0' + hh
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+    if (ss < 10) {
+        ss = '0' + ss
+    }
+    date = hh + ':' + mm + ':' + ss;
+
+    return date;
+}
 
   setDate() {
     this.data.date = new Date(this.data.datePicker);

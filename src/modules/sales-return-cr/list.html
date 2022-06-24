@@ -1,8 +1,12 @@
 <template>
     <h1 class="page-header">Retur Penjualan</h1>
 
-    <b>Filter</b> : <input type="text" value.bind="filter" />
-    <input type="button" value="Filter" click.delegate="filterData()" />
+    <div class="btn-group pull-right">
+        <b>Filter</b> : <input type="text" value.bind="filter" />
+        <input type="button" value="Filter" click.delegate="filterData()" />
+    </div>
+
+    <button class="btn btn-primary" click.delegate="create()">Buat</button>
 
     <table class="table table-bordered">
         <thead>
@@ -14,9 +18,9 @@
         </thead>
         <tbody>
             <tr repeat.for="item of data" click.delegate="view(item)">
-                <td>${item.date}</td>
-                <td>${item.code}</td>
-                <td>${item.store.name}</td>
+                <td>${item.Date}</td>
+                <td>${item.Code}</td>
+                <td>${item.StoreName}</td>
             </tr>
         </tbody>
     </table>
@@ -24,7 +28,4 @@
         Tidak ada data.
     </div>
     <hr/>
-    <div class="btn-group pull-right">
-        <button class="btn btn-primary" click.delegate="create()">Buat</button>
-    </div>
 </template>

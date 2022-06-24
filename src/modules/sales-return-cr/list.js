@@ -15,6 +15,7 @@ export class List {
         this.localStorage = localStorage;
 
         this.storeId = this.localStorage.store._id;
+        this.storecode = this.localStorage.store.code;
         // this.storeId = this.session.store._id;
     }
 
@@ -23,7 +24,7 @@ export class List {
     }
 
     view(data) {
-        this.router.navigateToRoute('view', { id: data._id });
+        this.router.navigateToRoute('view', { id: data.Id });
     }
     
     create() {
@@ -31,11 +32,11 @@ export class List {
     }
     
     getData() {
-        this.service.search(this.storeId, this.filter)
+        this.service.search(this.storecode, this.filter)
             .then(data => { 
                 this.data = data; 
                 for(var i of this.data) {
-                    i.date = this.getStringDate(new Date(i.date));
+                    i.Date = this.getStringDate(new Date(i.Date));
                 }
             })
     }

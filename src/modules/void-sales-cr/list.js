@@ -12,16 +12,20 @@ export class List {
         this.service = service;
         this.localStorage = localStorage;
         this.storeId = this.localStorage.store._id;
+        this.storeCode = this.localStorage.store.code;
         this.filter = "";
         // this.storeId = this.session.store._id;
     }
 
     activate() { 
-        this.service.search(this.storeId, this.filter)
+        var filter = JSON.stringify({
+            isVoid : true
+        })
+        this.service.search(this.storeCode, filter)
             .then(data => { 
                 this.data = data;
                 for(var i of this.data) {
-                    i._updatedDate = this.getStringDate(new Date(i._updatedDate));
+                    i._LastModifiedUtc = this.getStringDate(new Date(i._LastModifiedUtc));
                 }
             })
     }
