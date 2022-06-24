@@ -217,6 +217,7 @@ export class List {
                             result.items = [];
                             
                             for (var data of salesPerDay) {
+                                console.log(salesPerDay);
                                 var itemRowSpan = 0;
                                 var itemData = {};
                                 itemData.details = [];
@@ -248,8 +249,8 @@ export class List {
                                     itemData.bank = "Kartu tidak Teridentifikasi";
 
                                // if (data.BankCardName != null && data.salesDetail.bankCard._active != null && data.salesDetail.bankCard._active !== false) {
-                                if (data.BankCardName != null ) {
-                                    itemData.bankCard = data.BankCardName;
+                                if (data.BankCard != null ) {
+                                    itemData.bankCard = data.BankCard;
                                 }
                                 else
                                     itemData.bankCard = "Kartu tidak Teridentifikasi";
